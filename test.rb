@@ -1,9 +1,11 @@
-5.times do |counter|/ブロック引数0~取られる/
-    puts "Iteration #{counter}"
-  end
+user = {:user1 => "ユーザー1", :user2 => "ユーザー2"}
+puts user
 
-/Iteration 0
-Iteration 1
-Iteration 2
-Iteration 3
-Iteration 4
+#{:user1=>"ユーザー1", :user2=>"ユーザー2"}
+
+hash = {:user1 => "ユーザー1", :user2 => "ユーザー2"}
+puts hash[:user1]
+
+#ユーザー1
+
+#%i[hoge fuga] => [:hoge, :fuga]
