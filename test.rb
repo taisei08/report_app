@@ -1,11 +1,9 @@
-user = {:user1 => "ユーザー1", :user2 => "ユーザー2"}
-puts user
-
-#{:user1=>"ユーザー1", :user2=>"ユーザー2"}
-
-hash = {:user1 => "ユーザー1", :user2 => "ユーザー2"}
-puts hash[:user1]
-
-#ユーザー1
-
-#%i[hoge fuga] => [:hoge, :fuga]
+def example_method
+    puts "Start of the method"
+    yield  # ブロックを実行
+    puts "End of the method"
+  end
+  
+  example_method do
+    puts "Inside the block"
+  end
