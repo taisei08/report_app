@@ -1,6 +1,6 @@
 // サインアップ
 export interface SignUpData {
-    name: string
+    userName: string
     email: string
     password: string
     passwordConfirmation: string
@@ -18,8 +18,8 @@ export interface SignUpData {
     uid: string
     provider: string
     email: string
-    name: string
-    nickname?: string
-    image?: string
+    userName: string
+    account_name?: string
+    image_path?: string
     allowPasswordChange: boolean
   }
