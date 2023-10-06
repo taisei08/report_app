@@ -23,3 +23,11 @@ export interface SignUpData {
     image_path?: string
     allowPasswordChange: boolean
   }
+
+  // 投稿
+  export interface Posts {
+    post_id: number
+    user_id: number
+    title: string
+    description: string
+  }
