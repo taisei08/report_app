@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_05_153426) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_09_181834) do
   create_table "fields", primary_key: "field_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "field_name", limit: 15, null: false
   end
@@ -28,7 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_05_153426) do
     t.string "description", limit: 400, null: false
     t.integer "field_id", null: false
     t.integer "sub_field_id", null: false
-    t.string "document_type", limit: 10, null: false
+    t.integer "document_type", null: false
     t.string "document_path", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

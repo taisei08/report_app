@@ -1,6 +1,8 @@
 class Api::V1::PostsController < ApplicationController
     # app/controllers/posts_controller.rb
     before_action :set_post, only: [:show, :edit, :update, :destroy]
+    before_action :authenticate_api_v1_user!, only: [:create]
+
   
     def index
       @posts = Post.select(:post_id, :title, :description, :created_at,
@@ -18,14 +20,16 @@ class Api::V1::PostsController < ApplicationController
     end
   
     def create
-      @post = Post.new(post_params)
-  
-      if @post.save
-        redirect_to @post, notice: 'Post was successfully created.'
-      else
-        render :new
+        @post = current_api_v1_user.posts.new(post_params)
+        @post.document_type = assign_document_type(params[:document_path].content_type)
+
+        p @post
+        if @post.save
+          render json: { status: 'success', message: 'Post created successfully' }
+        else
+          render json: { status: 'error', message: @post.errors.full_messages.join(', ') }
+        end
       end
-    end
   
     def edit
     end
@@ -50,6 +54,20 @@ class Api::V1::PostsController < ApplicationController
     end
   
     def post_params
-      params.require(:post).permit(:user_id, :title, :description, :field_id, :sub_field_id, :document_type, :document_path)
+        params.permit(:user_id, :title, :description, :document_path, :document_type,
+        :field_id, :sub_field_id)
     end
+
+    def assign_document_type(content_type)
+        case content_type
+        when 'application/pdf'
+          1
+        when 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          2
+        else
+          nil # 未知のファイルタイプの場合は適切な処理を行うか、エラーとして扱う
+        end
+    end
+    
+
   end

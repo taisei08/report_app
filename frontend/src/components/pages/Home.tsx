@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
 import PostList from "components/utils/PostList"
+import { Link } from "react-router-dom";
 import { AuthContext } from "App"
 
 // とりあえず認証済みユーザーの名前やメールアドレスを表示
@@ -17,6 +18,8 @@ const Home: React.FC = () => {
             <div>
       <PostList />
     </div>
+              {/* Post コンポーネントへのリンクを追加 */}
+              <Link to="/post">投稿一覧へ</Link>
           </>
         ) : (
           <></>

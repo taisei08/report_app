@@ -30,4 +30,18 @@ export interface SignUpData {
     user_id: number
     title: string
     description: string
+    field_id: number
+    sub_field_id: number
+    document_type: string
+    document_path: string
+  }
+
+  export interface Fields {
+    fieldId: number;
+    fieldName: string;
+  }
+
+  export interface Tags {
+    tag_id: number;
+    tag_name: string;
   }
