@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import client from "lib/api/client"
-import { Posts, Fields } from "interfaces/index"
+import { Posts, Fields, Tags } from "interfaces/index"
 import { getAuthHeaders } from "lib/api/auth"
+import { WithContext as ReactTags } from 'react-tag-input';
+
+
 
 const Post: React.FC = () => {
   const [fields, setFields] = useState<Fields[]>([]); 
@@ -12,6 +15,7 @@ const Post: React.FC = () => {
     sub_field_id: 0,
     document_path: null,
     document_type: 0,
+    tag_name: '',
   });
   const [tag, setTag] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
@@ -37,19 +41,41 @@ const Post: React.FC = () => {
     }));
   };
 
-  const handleTagChange = (e) => {
-    setTag(e.target.value);
+  const handleDelete = i => {
+    setTags(tags.filter((tag, index) => index !== i));
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && tag.trim() !== '') {
-      if (tags.length < 10) {
-        // エンターキーを押したらタグを追加
-        setTags([...tags, tag.trim()]);
-        setTag('');
-      }
-    }
+  const handleAddition = tag => {
+    setTags([...tags, tag]);
   };
+
+  const handleDrag = (tag, currPos, newPos) => {
+    const newTags = tags.slice();
+
+    newTags.splice(currPos, 1);
+    newTags.splice(newPos, 0, tag);
+
+    // re-render
+    setTags(newTags);
+  };
+
+  const handleTagClick = index => {
+    console.log('The tag at index ' + index + ' was clicked');
+  };
+
+  useEffect(() => {
+    console.log(tag);
+    console.log(tags);
+  }, [tag, tags]);
+
+  const convertSetTagsToTagArrays = (setTags) => {
+    const tagArray = Object.values(setTags).map(i => i.text);
+    return tagArray.map((tag) => ({
+      tag_name: tag, // 仮のフィールド名を付与する例
+    }));
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -62,8 +88,15 @@ const Post: React.FC = () => {
     return;
   }
 
+  const tagObjects = convertSetTagsToTagArrays(tags);
+  console.log(tags)
+  setPostData((prevData) => ({
+    ...prevData,
+    tag_name: JSON.stringify(tagObjects),
+  }));
+
             try {
-            console.log(postData)
+            console.log(postData.tag_name)
             const response = await client.post('/posts', createFormData(postData), 
             { headers: getAuthHeaders()
             });
@@ -90,7 +123,6 @@ const Post: React.FC = () => {
 
   return (
     <div>
-    <form onSubmit={handleSubmit}>
       <label>
         Title:
         <input type="text" name="title" value={postData.title} onChange={handleChange} />
@@ -129,22 +161,21 @@ const Post: React.FC = () => {
       </label>
       <br />
       <br />
-      {tags.map((t, index) => (
-        <div key={index}>{t}</div>
-      ))}
       <label>
         Tags:
-        <input
-          type="text"
-          placeholder="Enter a tag"
-          value={tag}
-          onChange={handleTagChange}
-          onKeyPress={handleKeyPress}
+        <ReactTags
+          tags={tags}
+          handleDelete={handleDelete}
+          handleAddition={handleAddition}
+          handleDrag={handleDrag}
+          handleTagClick={handleTagClick}
+          inputFieldPosition="bottom"
+          autocomplete
         />
+        {console.log(Object.values(tags).map(i => i.text))}
       </label>
       <br />
-      <button type="submit">Submit</button>
-    </form>
+      <button type="submit"　onClick={handleSubmit}>Submit</button>
     </div>
   );
   

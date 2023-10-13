@@ -23,13 +23,32 @@ class Api::V1::PostsController < ApplicationController
         @post = current_api_v1_user.posts.new(post_params)
         @post.document_type = assign_document_type(params[:document_path].content_type)
 
-        p @post
-        if @post.save
-          render json: { status: 'success', message: 'Post created successfully' }
-        else
-          render json: { status: 'error', message: @post.errors.full_messages.join(', ') }
+        tag_names = JSON.parse(params[:tag_name])
+
+
+        @post.transaction do
+            if @post.save
+              tag_names.each do |tag|
+                puts tag_name: tag["tag_name"]
+                existing_tag = Tag.find_by(tag_name: tag["tag_name"])
+                puts "見てみて！"
+                p existing_tag
+                if existing_tag
+                  # 既に存在する場合はそれを使用
+                  tag_to_use = existing_tag
+                  @post.set_tags.create(tag: tag_to_use)
+                else
+                  # 存在しない場合は新しく作成
+                  tag_to_use = @post.tags.create(tag_name: tag["tag_name"])
+                end
+          
+              end
+              render json: { status: 'success', message: 'Post created successfully' }
+            else
+              render json: { status: 'error', message: @post.errors.full_messages.join(', ') }
+            end
         end
-      end
+    end
   
     def edit
     end
@@ -70,4 +89,4 @@ class Api::V1::PostsController < ApplicationController
     end
     
 
-  end
+end
