@@ -6,14 +6,14 @@ import { WithContext as ReactTags } from 'react-tag-input';
 
 
 
-const Post: React.FC = () => {
+const Post: React.FC = (props) => {
   const [fields, setFields] = useState<Fields[]>([]); 
   const [postData, setPostData] = useState({
     title: '',
     description: '',
     field_id: 0,
     sub_field_id: 0,
-    document_path: null,
+    document_path: props.submitFile,
     document_type: 0,
     tag_name: '',
   });
@@ -90,14 +90,14 @@ const Post: React.FC = () => {
 
   const tagObjects = convertSetTagsToTagArrays(tags);
   console.log(tags)
-  setPostData((prevData) => ({
-    ...prevData,
+  let Data = postData
+  Data = {
+    ...Data,
     tag_name: JSON.stringify(tagObjects),
-  }));
+  };
 
             try {
-            console.log(postData.tag_name)
-            const response = await client.post('/posts', createFormData(postData), 
+            const response = await client.post('/posts', createFormData(Data), 
             { headers: getAuthHeaders()
             });
             console.log('Post created successfully', response.data);
@@ -106,7 +106,7 @@ const Post: React.FC = () => {
             }
   };
 
-  const createFormData = (data: Partial<Posts>): FormData => {
+  const createFormData = (data): FormData => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined) {
@@ -131,11 +131,6 @@ const Post: React.FC = () => {
       <label>
         Description:
         <textarea name="description" value={postData.description} onChange={handleChange} />
-      </label>
-      <br />
-      <label>
-        Document:
-        <input type="file" name="document_path" onChange={handleChange} />
       </label>
       <br />
       <label>
@@ -172,7 +167,6 @@ const Post: React.FC = () => {
           inputFieldPosition="bottom"
           autocomplete
         />
-        {console.log(Object.values(tags).map(i => i.text))}
       </label>
       <br />
       <button type="submit"　onClick={handleSubmit}>Submit</button>
