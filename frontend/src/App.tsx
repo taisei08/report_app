@@ -6,6 +6,7 @@ import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
 import Post3 from "components/pages/Post3"
+import PostPage from "components/pages/PostPage"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -79,6 +80,7 @@ const App: React.FC = () => {
               <Routes>
               <Route path="/" element={<Home />} />
                 <Route path="/post" element={<Post3 />} />
+                <Route path="/postpage" element={<PostPage />} />
             </Routes>
             </Private>
           }

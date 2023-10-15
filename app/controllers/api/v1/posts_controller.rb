@@ -5,10 +5,27 @@ class Api::V1::PostsController < ApplicationController
 
   
     def index
-      @posts = Post.select(:post_id, :title, :description, :created_at,
-      :updated_at).order("created_at DESC").page(params[:page])
-      p @posts
-      render json: { status: 200, posts: @posts}
+      @posts = Post.joins(:user, :tags)      
+      .select("users.user_name", "posts.*")
+      .order("created_at DESC")
+      .page(params[:page])
+      .per(2)
+
+      @posts = Post.joins(:user, :tags)      
+      .select("users.user_name", "posts.*")
+      .order("created_at DESC")
+      .page(params[:page])
+      .per(2)
+
+      @posts.each do |post|
+        tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
+        # タグ名をTagモデルのインスタンスに変換してtags属性に代入
+        post.tags = tag_names.map { |tag_name| Tag.find_or_initialize_by(tag_name: tag_name) }
+      end
+
+      render json: { status: 200, posts: @posts.as_json(include: :tags)}
+
+
 
     end
   
@@ -36,7 +53,7 @@ class Api::V1::PostsController < ApplicationController
                 if existing_tag
                   # 既に存在する場合はそれを使用
                   tag_to_use = existing_tag
-                  @post.set_tags.create(tag: tag_to_use)
+                  @post.set_tags.create(tag:tag_to_use)
                 else
                   # 存在しない場合は新しく作成
                   tag_to_use = @post.tags.create(tag_name: tag["tag_name"])

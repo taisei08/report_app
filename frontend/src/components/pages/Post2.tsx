@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 const Post2 = (props) => {
   console.log(props);
 

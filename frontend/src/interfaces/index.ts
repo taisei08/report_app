@@ -36,6 +36,17 @@ export interface SignUpData {
     document_path: string
   }
 
+  export interface PostLists {
+    postId: number
+    userId: number
+    userName: string
+    title: string
+    description: string
+    documentPath: string
+    createdAt: string
+    tags: string[]
+  }
+
   export interface Fields {
     fieldId: number;
     fieldName: string;

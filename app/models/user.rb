@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  mount_uploader :image_path, ImageUploader
+  #mount_uploader :icon_path, ImageUploader
 
   has_many :ratings, class_name: "Rating", dependent: :destroy
   has_many :posts, class_name: "Post", dependent: :destroy

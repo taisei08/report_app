@@ -19,7 +19,10 @@ const Home: React.FC = () => {
       <PostList />
     </div>
               {/* Post コンポーネントへのリンクを追加 */}
-              <Link to="/post">投稿一覧へ</Link>
+              <Link to="/postpage">投稿一覧へ</Link>
+              <br>
+              </br>
+              <Link to="/post">投稿</Link>
           </>
         ) : (
           <></>

@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import client from "lib/api/client"
-import { Posts, Fields, Tags } from "interfaces/index"
+import { Fields } from "interfaces/index"
 import { getAuthHeaders } from "lib/api/auth"
 import { WithContext as ReactTags } from 'react-tag-input';
-
-
 
 const Post: React.FC = (props) => {
   const [fields, setFields] = useState<Fields[]>([]); 
