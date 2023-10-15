@@ -21,10 +21,16 @@ export const AuthContext = createContext({} as {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>
 })
 
+export const PostIdContext = React.createContext({} as {
+  sendPostId: number
+  setSendPostId: React.Dispatch<React.SetStateAction<number>>
+})
+
 const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | undefined>()
+  const [sendPostId, setSendPostId] = useState(0)
 
   // 認証済みのユーザーがいるかどうかチェック
   // 確認できた場合はそのユーザーの情報を取得
@@ -70,6 +76,7 @@ const App: React.FC = () => {
 
     
     <Router>
+      <PostIdContext.Provider value={{ sendPostId, setSendPostId }}>
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Routes>
@@ -78,9 +85,12 @@ const App: React.FC = () => {
             <Route path="/*" element={
               <Private>
               <Routes>
-              <Route path="/" element={<Home />} />
+                <>
+                <Route path="/" element={<Home />} />
                 <Route path="/post" element={<Post3 />} />
-                <Route path="/postpage" element={<PostPage />} />
+                {console.log("見てみて" + sendPostId)}
+                <Route path="/article/:postId" element={<PostPage />} />
+                </>
             </Routes>
             </Private>
           }
@@ -88,6 +98,8 @@ const App: React.FC = () => {
           </Routes>
         </CommonLayout>
       </AuthContext.Provider>
+      </PostIdContext.Provider>
+
     </Router>
   )
 }

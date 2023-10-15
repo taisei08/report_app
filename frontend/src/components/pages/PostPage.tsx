@@ -1,16 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import client from 'lib/api/client';
 import Avatar from 'react-avatar';
 import { Document, Page } from 'react-pdf';
 import Rating from 'react-rating';
+import { useParams } from 'react-router-dom';
+
+
 
 const PostPage = () => {
   const [postData, setPostData] = useState({});
   const [reviews, setReviews] = useState([]);
   const [reviewComment, setReviewComment] = useState('');
   const [rating, setRating] = useState(0);
-
-  useEffect(() => {
+  const postId = useParams()
+  console.log(postId)
+  /*useEffect(() => {
     // Fetch post data
     client.get('API_ENDPOINT_TO_FETCH_POST_DATA')
       .then(response => setPostData(response.data))
@@ -20,7 +24,7 @@ const PostPage = () => {
     client.get('API_ENDPOINT_TO_FETCH_REVIEWS')
       .then(response => setReviews(response.data))
       .catch(error => console.error('Error fetching reviews: ', error));
-  }, []);
+  }, []);*/
 
   const handleRatingChange = value => {
     setRating(value);
