@@ -1,9 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
 import Avatar from 'react-avatar';
-import { Document, Page } from 'react-pdf';
 import Rating from 'react-rating';
 import { useParams } from 'react-router-dom';
+import PdfViewer from 'components/utils/PdfViewer';
+
 
 
 
@@ -12,22 +13,27 @@ const PostPage = () => {
   const [reviews, setReviews] = useState([]);
   const [reviewComment, setReviewComment] = useState('');
   const [rating, setRating] = useState(0);
-  const postId = useParams()
-  console.log(postId)
-  /*useEffect(() => {
-    // Fetch post data
-    client.get('API_ENDPOINT_TO_FETCH_POST_DATA')
-      .then(response => setPostData(response.data))
-      .catch(error => console.error('Error fetching post data: ', error));
+  const Id = useParams()
+  const postId = {
+    postCurrentId: Id.postId,
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await client.get('/post_detail', { params: postId });
+        console.log("Response from server:", response.data.posts[0]);
+        setPostData(response.data.posts[0]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-    // Fetch reviews
-    client.get('API_ENDPOINT_TO_FETCH_REVIEWS')
-      .then(response => setReviews(response.data))
-      .catch(error => console.error('Error fetching reviews: ', error));
-  }, []);*/
+    fetchData();
+  }, [postId.postCurrentId]);
 
   const handleRatingChange = value => {
     setRating(value);
+    console.log(value)
     // You may want to handle the rating change here, e.g., send it to the server.
   };
 
@@ -39,15 +45,14 @@ const PostPage = () => {
   return (
     <div>
       <div>
-        <Avatar size="50" name={postData.user_name} />
+        <Avatar size="50" name={postData.userName} />
         <span>{postData.uid}</span>
       </div>
       <h2>{postData.title}</h2>
-      <p>Created at: {postData.created_at}</p>
-      <p>Last Updated: {postData.updated_at}</p>
-      <Document file={postData.document_path}>
-        <Page pageNumber={1} />
-      </Document>
+      <p>Created at: {postData.createdAt}</p>
+      <p>Last Updated: {postData.updatedAt}</p>
+      <PdfViewer fileData={"http://localhost:3010/uploads/post/document_path/125/Discussion_Debate_Task_Guide-1.pdf"}>
+      </PdfViewer>
       <Rating
         initialRating={rating}
         onChange={handleRatingChange}
@@ -69,6 +74,7 @@ const PostPage = () => {
             <Rating
               readonly
               initialRating={review.rating}
+              fractions={2}
             />
           </div>
         ))}
