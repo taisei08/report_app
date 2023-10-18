@@ -5,6 +5,8 @@ import CommonLayout from "components/layouts/CommonLayout"
 import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
+import Post3 from "components/pages/Post3"
+import PostPage from "components/pages/PostPage"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -19,10 +21,16 @@ export const AuthContext = createContext({} as {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>
 })
 
+export const PostIdContext = React.createContext({} as {
+  sendPostId: number
+  setSendPostId: React.Dispatch<React.SetStateAction<number>>
+})
+
 const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | undefined>()
+  const [sendPostId, setSendPostId] = useState(0)
 
   // 認証済みのユーザーがいるかどうかチェック
   // 確認できた場合はそのユーザーの情報を取得
@@ -68,15 +76,21 @@ const App: React.FC = () => {
 
     
     <Router>
+      <PostIdContext.Provider value={{ sendPostId, setSendPostId }}>
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Routes>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
-            <Route path="/" element={
+            <Route path="/*" element={
               <Private>
               <Routes>
-              <Route path="/" element={<Home />} />
+                <>
+                <Route path="/" element={<Home />} />
+                <Route path="/post" element={<Post3 />} />
+                {console.log("見てみて" + sendPostId)}
+                <Route path="/article/:postId" element={<PostPage />} />
+                </>
             </Routes>
             </Private>
           }
@@ -84,6 +98,8 @@ const App: React.FC = () => {
           </Routes>
         </CommonLayout>
       </AuthContext.Provider>
+      </PostIdContext.Provider>
+
     </Router>
   )
 }

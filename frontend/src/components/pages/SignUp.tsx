@@ -37,7 +37,7 @@ const SignUp: React.FC = () => {
 
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext)
 
-  const [name, setName] = useState<string>("")
+  const [userName, setUserName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
@@ -47,7 +47,7 @@ const SignUp: React.FC = () => {
     e.preventDefault()
 
     const data: SignUpData = {
-      name: name,
+      userName: userName,
       email: email,
       password: password,
       passwordConfirmation: passwordConfirmation
@@ -55,7 +55,6 @@ const SignUp: React.FC = () => {
 
     try {
       const res = await signUp(data)
-      console.log(data)
       console.log(res)
 
       if (res.status === 200) {
@@ -91,9 +90,9 @@ const SignUp: React.FC = () => {
               required
               fullWidth
               label="名前"
-              value={name}
+              value={userName}
               margin="dense"
-              onChange={event => setName(event.target.value)}
+              onChange={event => setUserName(event.target.value)}
             />
             <TextField
               variant="outlined"
@@ -131,7 +130,7 @@ const SignUp: React.FC = () => {
                 type="submit"
                 variant="outlined"
                 color="primary"
-                disabled={!name || !email || !password || !passwordConfirmation ? true : false}
+                disabled={!userName || !email || !password || !passwordConfirmation ? true : false}
                 onClick={handleSubmit}
               >
                 送信
