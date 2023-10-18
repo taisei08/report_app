@@ -5,7 +5,7 @@ class Api::V1::PostDetailController < ApplicationController
 
     @posts = Post.joins(:user, :field, :sub_field)
       .select("users.user_name", "posts.*", "fields.field_name as main_field_name", "sub_fields_posts.field_name as sub_field_name")
-      .where(post_id: post_detail_params[:post_current_id])
+      .where(post_id: post_detail_params[:post_id])
 
     @posts.each do |post|
       tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
@@ -22,6 +22,6 @@ class Api::V1::PostDetailController < ApplicationController
   private
 
     def post_detail_params
-    params.permit(:post_current_id)
+    params.permit(:post_id)
   end
 end

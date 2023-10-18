@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_17_062246) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_18_105823) do
   create_table "fields", primary_key: "field_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "field_name", limit: 15, null: false
   end
@@ -53,9 +53,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_062246) do
   create_table "reviews", primary_key: "review_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "post_id", null: false
-    t.string "review", limit: 1000, null: false
+    t.string "review", limit: 1000, default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "value", default: 0
   end
 
   create_table "set_tags", primary_key: "set_tag_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
