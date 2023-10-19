@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :post_detail, only: %i[index]
       resources :ratings, only: %i[index create]
       resources :reviews, only: %i[index create]
+      resources :users, only: %i[index update]
 
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
