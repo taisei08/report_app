@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
   def update
     @user = current_api_v1_user
     p "見てみて"
-    p params[:icon_path]
+    p params
     if @user.update(user_params)
       render json: @user, status: :ok
     else
@@ -22,7 +22,7 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.permit(:account_name, :profile_statement, :icon_path,
-    :school, :faculty_department)
+    :school, :faculty_department, :user_name)
   end
 
 end
