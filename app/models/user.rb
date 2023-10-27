@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
+
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  #mount_uploader :icon_path, ImageUploader
+  mount_uploader :icon_path, ImageUploader
 
   has_many :ratings, class_name: "Rating", dependent: :destroy
   has_many :posts, class_name: "Post", dependent: :destroy

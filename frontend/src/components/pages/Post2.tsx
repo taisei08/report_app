@@ -9,6 +9,7 @@ const Post2 = (props) => {
 
   const handleFileInputChange = (e) => {
     const selectedFile = e.target.files[0];
+    console.log(selectedFile)
     props.handleFileData(selectedFile);
   };
 

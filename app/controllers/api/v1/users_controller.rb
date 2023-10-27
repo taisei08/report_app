@@ -8,8 +8,9 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    @user = current_api_v1_user  
-
+    @user = current_api_v1_user
+    p "見てみて"
+    p params[:icon_path]
     if @user.update(user_params)
       render json: @user, status: :ok
     else
