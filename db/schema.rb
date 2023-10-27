@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_18_184349) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_19_182959) do
   create_table "fields", primary_key: "field_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "field_name", limit: 15, null: false
   end
@@ -85,7 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_184349) do
     t.text "tokens"
     t.string "user_name", limit: 14
     t.string "account_name", default: "", null: false
-    t.string "icon_path", default: "", null: false
+    t.string "icon_path", default: ""
     t.integer "gender", default: 0, null: false
     t.date "birthday", default: "1700-01-01", null: false
     t.string "school", limit: 30, default: "", null: false

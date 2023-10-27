@@ -1,16 +1,26 @@
 import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
 import AvatarEditor from 'react-avatar-editor'
+import Modal from 'react-modal';
 import { getAuthHeaders } from 'lib/api/auth';
 
 const UserProfileEditPage = () => {
   const [image, setImage] = useState();
   const [editor, setEditor] = useState();
   const [scale, setScale] = useState(1);
-  const [userData, setUserData] = useState({
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userData, setUserData] = useState<{
+    userId: number;
+    accountName: string;
+    iconPath: File | null; // iconPathの型をFileまたはnullに変更
+    school: string;
+    facultyDepartment: string;
+    profileStatement: string;
+  }>({
+    
     userId: 0,
     accountName: '',
-    iconPath: '',
+    iconPath: null,
     school: '',
     facultyDepartment: '',
     profileStatement: '',
@@ -33,14 +43,37 @@ const UserProfileEditPage = () => {
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    const canvas = editor.getImageScaledToCanvas();
+    canvas.toBlob((blob) => {
+      // BlobをFileに変換
+      const fileName = "icon.png"; // ファイル名を設定
+      const file = new File([blob], fileName, {
+        type: "image/png", // MIMEタイプを設定
+        lastModified: new Date().getTime(),
+      });
+      console.log(file); // ファイルオブジェクトが表示される
+      setUserData((prevUserData) => ({
+        ...prevUserData,
+        iconPath: file,
+      }));
+    }, "image/png");
+
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
+    openModal();
   };
 
   const handleScaleChange = (e) => {
     const newScale = parseFloat(e.target.value);
-    console.log(newScale)
     setScale(newScale);
   };
   
@@ -54,10 +87,9 @@ const UserProfileEditPage = () => {
 
   const handleSave = async () => {
     try {
-      const canvas = editor.getImageScaledToCanvas().toDataURL();
-
       // ユーザーデータを更新するAPIリクエスト
-      await client.put(`/users/${userData.userId}`, userData,
+      console.log(userData)
+      await client.put(`/users/${userData.userId}`, createFormData(userData),
       { headers: getAuthHeaders() });
       console.log('User data updated successfully!');
     } catch (error) {
@@ -65,11 +97,33 @@ const UserProfileEditPage = () => {
     }
   };
 
+  const createFormData = (data): FormData => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined) {
+        formData.append(key, value);
+      }
+    });
+    return formData;
+  };
+
   return (
     <div>
       <h1>Edit Profile</h1>
       <form>
+        {console.log(userData.iconPath)}
+      {userData.iconPath !== null && (
+        <img
+        src={Object.values(userData.iconPath)}
+        alt="アイコン"
+        style={{ width: '100px', height: '100px' }}
+        />
+      )
+      }
+
       <input type="file" onChange={handleImageChange} />
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
+
       <input
         type="range"
         min="0.1"
@@ -91,11 +145,13 @@ const UserProfileEditPage = () => {
             />
           }
         </label>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
         <label>
           Account Name:
           <input
             type="text"
-            name="account_name"
+            name="accountName"
             value={userData.accountName}
             onChange={handleInputChange}
           />
@@ -104,7 +160,7 @@ const UserProfileEditPage = () => {
         Profile Statement:
           <input
             type="text"
-            name="profile_statement"
+            name="profileStatement"
             value={userData.profileStatement}
             onChange={handleInputChange}
           />
@@ -122,7 +178,7 @@ const UserProfileEditPage = () => {
         Faculty Department:
           <input
             type="text"
-            name="faculty_department"
+            name="facultyDepartment"
             value={userData.facultyDepartment}
             onChange={handleInputChange}
           />
