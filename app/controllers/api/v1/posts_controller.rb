@@ -3,19 +3,16 @@ class Api::V1::PostsController < ApplicationController
     before_action :set_post, only: [:show, :edit, :update, :destroy]
     before_action :authenticate_api_v1_user!, only: [:create]
 
-  
     def index
       @posts = Post.joins(:user, :tags)      
-      .select("users.user_name", "posts.*")
+      .select("users.user_name", "users.icon_path", "posts.*")
       .order("created_at DESC")
       .page(params[:page])
       .per(2)
 
-      @posts = Post.joins(:user, :tags)      
-      .select("users.user_name", "posts.*")
-      .order("created_at DESC")
-      .page(params[:page])
-      .per(2)
+      @posts.each do |post|
+        post.icon_path = post.user.icon_path.url
+      end
 
       @posts.each do |post|
         tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
@@ -23,6 +20,12 @@ class Api::V1::PostsController < ApplicationController
         post.tags = tag_names.map { |tag_name| Tag.find_or_initialize_by(tag_name: tag_name) }
       end
 
+      @posts.each do |post|
+        # ポストに関連するレビューの平均評価を計算
+        average_rating = post.reviews.average(:value)
+        post[:average_rating] = average_rating
+      end
+      
       render json: { status: 200, posts: @posts.as_json(include: :tags)}
 
 
