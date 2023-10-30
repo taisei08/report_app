@@ -1,6 +1,8 @@
 class Post < ApplicationRecord
 
   mount_uploader :document_path, DocumentUploader
+  
+  attribute :average_rating, :integer, default: 0
 
   belongs_to :user, class_name: "User", foreign_key: :user_id
   belongs_to :field, class_name: "Field", foreign_key: :field_id

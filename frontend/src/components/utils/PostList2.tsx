@@ -8,7 +8,7 @@ import Rating from 'react-rating';
 
 
 
-const PostList = () => {
+const PostList2 = (props) => {
   const [posts, setPosts] = useState<PostLists[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [allPosts, setAllPosts] = useState<PostLists[]>([]);
@@ -18,7 +18,8 @@ const PostList = () => {
     // データを取得するための関数
     const fetchData = async () => {
       try {
-        const response = await client.get(`/posts?page=${currentPage}`)
+        const response = await client.get(`/posts_by_user?page=${currentPage}`,
+        {params: {userId: props.id}})
         console.log("Response from server:", response.data);
         const response2 = response.data
         const tempdata = response2.posts
@@ -119,4 +120,4 @@ const PostList = () => {
   );
 };
 
-export default PostList
+export default PostList2

@@ -40,11 +40,13 @@ export interface SignUpData {
     postId: number
     userId: number
     userName: string
+    iconPath: string
     title: string
     description: string
     documentPath: string
     createdAt: string
     tags: string[]
+    averageRating: number
   }
 
   export interface Fields {

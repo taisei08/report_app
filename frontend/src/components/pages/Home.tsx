@@ -16,7 +16,7 @@ const Home: React.FC = () => {
             <h2>メールアドレス: {currentUser?.email}</h2>
             <h2>名前: {currentUser?.userName}</h2>
             <div>
-      <PostList />
+      <PostList/>
     </div>
               {/* Post コンポーネントへのリンクを追加 */}
               <Link to="/postpage">投稿一覧へ</Link>

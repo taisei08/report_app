@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
-import AvatarEditor from 'react-avatar-editor'
-import Modal from 'react-modal';
 import { getAuthHeaders } from 'lib/api/auth';
 
 const UserProfileEditPage2 = () => {

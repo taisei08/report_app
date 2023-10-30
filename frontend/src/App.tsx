@@ -9,6 +9,7 @@ import Post3 from "components/pages/Post3"
 import PostPage from "components/pages/PostPage"
 import UserPage from "components/pages/UserPage"
 import UserProfileEditPage2 from "components/pages/UserPage2"
+import UserProfileEditPage3 from "components/pages/UserPage3"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -93,6 +94,7 @@ const App: React.FC = () => {
                 <Route path="/article/:postId" element={<PostPage />} />
                 <Route path="/userpage" element={<UserPage />} />
                 <Route path="/userpage2" element={<UserProfileEditPage2 />} />
+                <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
 
                 </>
             </Routes>
