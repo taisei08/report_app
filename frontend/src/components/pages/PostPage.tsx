@@ -5,6 +5,7 @@ import Rating from 'react-rating';
 import { useParams } from 'react-router-dom';
 import PdfViewer from 'components/utils/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
+import { ReplyForm, ReplyList } from 'components/utils/Reply';
 
 
 const PostPage = () => {
@@ -13,6 +14,8 @@ const PostPage = () => {
   const [reviewComment, setReviewComment] = useState('');
   const [rating, setRating] = useState(0);
   const [userId, setUserId] = useState('')
+  const [replyFormVisible, setReplyFormVisible] = useState({}); // レビューIDをキーとした返信フォームの表示ステート
+  const [replyData, setReplyData] = useState({}); // レビューIDをキーとしたリプライデータ
   const Id = useParams()
   const postId = {
     postId: Id.postId,
@@ -30,7 +33,7 @@ const PostPage = () => {
         setPostData(response1.data.posts[0]);
         setReviews(response2.data.reviews);
         setUserId(response2.data.currentUserId);
-
+        console.log(response1.data)
 
         const currentUserId = response2.data.currentUserId;
         console.log(currentUserId)
@@ -78,6 +81,23 @@ const PostPage = () => {
     });
   };
 
+
+  const toggleReplyForm = (reviewId) => {
+    // 返信フォームの表示を切り替える
+    setReplyFormVisible((prevVisible) => ({
+      ...prevVisible,
+      [reviewId]: !prevVisible[reviewId],
+    }));
+  };
+
+  const toggleReplies = (reviewId) => {
+    // リプライの表示を切り替える
+    setReplyData((prevData) => ({
+      ...prevData,
+      [reviewId]: prevData[reviewId] || [],
+    }));
+  };
+
   if (postData.documentPath == undefined) {
     return null;
   }
@@ -119,19 +139,39 @@ const PostPage = () => {
         ))}
       </div>
       <div>
-        {reviews.map(review => (
-          userId !== review.userId && (
-          <div key={review.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
-            <Avatar size="30" name={review.userName} />
-            <span>{review.userName} {review.createdAt}</span>
-            <p>{review.review}</p>
-            <Rating
-              readonly
-              initialRating={review.value}
-              fractions={2}
-            />
-          </div>)
-        ))}
+      {reviews.map(review => (
+  userId !== review.userId && (
+    <div key={review.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
+      <Avatar size="30" name={review.userName} />
+      <span>{review.userName} {review.createdAt}</span>
+      <p>{review.review}</p>
+      <Rating
+        readonly
+        initialRating={review.value}
+        fractions={2}
+      />
+
+      <button onClick={() => toggleReplyForm(review.reviewId)}>
+        {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
+      </button>
+      <button onClick={() => toggleReplies(review.reviewId)}>
+        {replyData[review.reviewId] ? '隠す' : 'リプライを表示'}
+      </button>
+
+      {replyFormVisible[review.reviewId] && (
+        // 返信フォームを表示
+        <ReplyForm
+        id = {review.reviewId}
+        />
+      )}
+
+      {replyData[review.reviewId] && (
+        // リプライを表示
+        <ReplyList replies={replyData[review.reviewId]} />
+      )}
+    </div>
+  )
+))}
       </div>
     </div>
   );

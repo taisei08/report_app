@@ -4,7 +4,7 @@ class Api::V1::PostsController < ApplicationController
     before_action :authenticate_api_v1_user!, only: [:create]
 
     def index
-      @posts = Post.joins(:user, :tags)      
+      @posts = Post.joins(:user)      
       .select("users.user_name", "users.icon_path", "posts.*")
       .order("created_at DESC")
       .page(params[:page])
@@ -17,7 +17,7 @@ class Api::V1::PostsController < ApplicationController
       @posts.each do |post|
         tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
         # タグ名をTagモデルのインスタンスに変換してtags属性に代入
-        post.tags = tag_names.map { |tag_name| Tag.find_or_initialize_by(tag_name: tag_name) }
+        post[:tags] = tag_names
       end
 
       @posts.each do |post|
@@ -26,7 +26,7 @@ class Api::V1::PostsController < ApplicationController
         post[:average_rating] = average_rating
       end
       
-      render json: { status: 200, posts: @posts.as_json(include: :tags)}
+      render json: { status: 200, posts: @posts}
 
 
 
