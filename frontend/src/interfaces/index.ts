@@ -57,3 +57,15 @@ export interface SignUpData {
   export interface Tags {
     tag_name: string;
   }
+
+  export interface ReviewLists {
+    postId: number
+    userId: number
+    userName: string
+    iconPath: string
+    title: string
+    review: string
+    documentPath: string
+    createdAt: string
+    value: number
+  }

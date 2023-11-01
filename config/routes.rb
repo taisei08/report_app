@@ -6,8 +6,11 @@ Rails.application.routes.draw do
       resources :posts, only: %i[index create]
       resources :post_detail, only: %i[index]
       resources :posts_by_user, only: %i[index]
+      resources :post_counts, only: %i[index]
       resources :ratings, only: %i[index create]
       resources :reviews, only: %i[index create]
+      resources :reviews_by_user, only: %i[index]
+      resources :review_counts, only: %i[index]
       resources :users, only: %i[index update]
       
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
