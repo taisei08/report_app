@@ -11,6 +11,8 @@ Rails.application.routes.draw do
       resources :reviews, only: %i[index create]
       resources :reviews_by_user, only: %i[index]
       resources :review_counts, only: %i[index]
+      resources :replies, only: %i[index create]
+      resources :reply_counts, only: %i[index]
       resources :users, only: %i[index update]
       
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {

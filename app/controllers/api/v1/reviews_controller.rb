@@ -5,11 +5,22 @@ class Api::V1::ReviewsController < ApplicationController
   def index
     @review = Review
     .joins(:user)
-    .select("users.user_name", "reviews.*")
+    .select("users.user_name", "users.icon_path", "reviews.*")
     .where(post_id: review_index_params[:post_id])
     .order(created_at: :desc)
     
     user_id = current_api_v1_user&.id
+
+    @review.each do |review|
+      review.icon_path = review.user.icon_path.url
+    end
+
+    @review.each do |review|
+      reply_length = Reply.joins(:review)      
+      .where('reviews.review_id' => review.review_id)
+      .count
+      review[:reply_length] = reply_length
+    end
 
     render json: { status: 'success', current_user_id: user_id, reviews: @review }
   end
@@ -21,19 +32,24 @@ class Api::V1::ReviewsController < ApplicationController
 
     existing_review = current_api_v1_user.reviews.find_by(user_id: review_create_params[:user_id], post_id: review_create_params[:post_id])
 
+    user = Post
+    .joins(:user)
+    .select("users.user_id")
+    .where('posts.post_id' => review_create_params[:post_id])
+    .pluck(:user_id)
+
+    p user[0]
+    p current_api_v1_user.id
+
     @review.transaction do
-      if existing_review
-        action_result = existing_review.update(review: review_create_params[:review])
-      else
-        action_result = @review.save
-      end
-    end
-    
-      if action_result
+      if user[0] != current_api_v1_user.id
+        @review.save
         render json: { status: 'success', message: 'Review operation successful' }
       else
         render json: { status: 'error', message: 'Review operation failed' }
       end
+    end
+
   end
 
   private
