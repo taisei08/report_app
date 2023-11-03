@@ -10,6 +10,7 @@ const Post4: React.FC = (props) => {
   const Id = useParams()
   const [fields, setFields] = useState<Fields[]>([]); 
   const [postData, setPostData] = useState({
+    post_id: 0,
     title: '',
     description: '',
     field_id: 0,
@@ -31,6 +32,7 @@ const Post4: React.FC = (props) => {
         console.log(response.data.posts)
         setPostData(response.data.posts[0]); // サーバーからの応答に.fieldsを追加することを確認
         setFields(response1.data.fields);
+        setTags(response.data.posts[0].tags.map(tag =>({ id: tag.tagName, text: tag.tagName })))
       } catch (error) {
         console.error('Failed to fetch fields', error);
       }
@@ -71,11 +73,6 @@ const Post4: React.FC = (props) => {
     console.log('The tag at index ' + index + ' was clicked');
   };
 
-  useEffect(() => {
-    console.log(tag);
-    console.log(tags);
-  }, [tag, tags]);
-
   const convertSetTagsToTagArrays = (setTags) => {
     const tagArray = Object.values(setTags).map(i => i.text);
     return tagArray.map((tag) => ({
@@ -90,7 +87,6 @@ const Post4: React.FC = (props) => {
 
     if (postData.title.trim() === '' ||
         postData.description.trim() === '' ||
-        postData.document_path === null ||
         postData.field_id === 0) {
     // 未記入の場合は送信を防ぐ
     alert('全ての項目を記入してください。');
@@ -106,7 +102,7 @@ const Post4: React.FC = (props) => {
   };
 
             try {
-            const response = await client.post('/posts', createFormData(Data), 
+            const response = await client.put('/posts_edit', createFormData(Data), 
             { headers: getAuthHeaders()
             });
             console.log('Post created successfully', response.data);
@@ -116,6 +112,7 @@ const Post4: React.FC = (props) => {
   };
 
   const createFormData = (data): FormData => {
+    {console.log(tags)}
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined) {
@@ -153,8 +150,7 @@ const Post4: React.FC = (props) => {
       <br />
       <label>
         Sub field:
-        {console.log(postData.subFieldId)}
-        <select name="sub_field_id" value={Number(postData.subFieldId)} onChange={handleChange}>
+        <select name="subFieldId" value={Number(postData.subFieldId)} onChange={handleChange}>
           <option value={0} disabled>Select a subfield</option>
           {fields
       .filter(field => field.fieldId !== Number(postData.field_id)) // 選択された field を除外
@@ -178,7 +174,7 @@ const Post4: React.FC = (props) => {
         />
       </label>
       <br />
-      <button type="submit" onClick={handleSubmit}>Submit</button>
+      <button type="submit" onClick={handleSubmit}>Update</button>
     </div>
   );
   

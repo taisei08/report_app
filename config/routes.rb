@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :posts_by_user, only: %i[index]
       resources :post_counts, only: %i[index]
       resources :posts_edit, only: %i[index update]
+      put '/posts_edit', to: 'posts_edit#update', as: 'update'
       resources :ratings, only: %i[index create]
       resources :reviews, only: %i[index create]
       resources :reviews_by_user, only: %i[index]
