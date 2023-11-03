@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import PdfViewer from 'components/utils/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
 import { ReplyForm, ReplyList } from 'components/utils/Reply';
+import { Link } from 'react-router-dom';
 
 
 const PostPage = () => {
@@ -16,6 +17,7 @@ const PostPage = () => {
   const [userId, setUserId] = useState('')
   const [replyFormVisible, setReplyFormVisible] = useState({}); // レビューIDをキーとした返信フォームの表示ステート
   const [replyData, setReplyData] = useState({}); // レビューIDをキーとしたリプライデータ
+  const [menuVisible, setMenuVisible] = useState(false);
   const Id = useParams()
   const postId = {
     postId: Id.postId,
@@ -81,6 +83,10 @@ const PostPage = () => {
     });
   };
 
+  // メニューの表示/非表示を切り替える関数
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
 
   const toggleReplyForm = (reviewId) => {
     // 返信フォームの表示を切り替える
@@ -114,12 +120,19 @@ const PostPage = () => {
       <p>Created at: {postData.createdAt}</p>
       <p>Last Updated: {postData.updatedAt}</p>
       <PdfViewer fileData={postData.documentPath.url} />
+      <div>
+      <button onClick={toggleMenu}>メニューを表示</button>
+      {menuVisible && (
+        <div className="menu">
+          <Link to={`/article/${Id.postId}/edit`}>
+            <button>編集</button>
+          </Link>
+          <button>削除</button>
+        </div>
+      )}
+      </div>
       <Rating initialRating={rating} onChange={handleRatingChange} />
       <p>{postData.description}</p>
-      {console.log(reviews.map(review => review.userId))}
-      {console.log(userId)}
-      {console.log(postData.userId)}
-      {console.log(reviews.some(review => review.userId !== userId))};
 
       {(reviews.some(review => review.userId !== userId) &&
       postData.userId !== userId) && (

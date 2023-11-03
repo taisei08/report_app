@@ -6,6 +6,7 @@ import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
 import Post3 from "components/pages/Post3"
+import Post4 from "components/pages/Post4"
 import PostPage from "components/pages/PostPage"
 import UserPage from "components/pages/UserPage"
 import UserProfileEditPage2 from "components/pages/UserPage2"
@@ -92,6 +93,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/post" element={<Post3 />} />
                 <Route path="/article/:postId" element={<PostPage />} />
+                <Route path="/article/:postId/edit" element={<Post4 />} />
                 <Route path="/userpage" element={<UserPage />} />
                 <Route path="/userpage2" element={<UserProfileEditPage2 />} />
                 <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
