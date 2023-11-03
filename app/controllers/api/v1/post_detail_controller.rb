@@ -3,7 +3,7 @@ class Api::V1::PostDetailController < ApplicationController
   def index
 
     @posts = Post.joins(:user)
-      .select("users.user_name", "posts.*")
+      .select("users.user_id", "users.user_name", "posts.*")
       .where(post_id: post_detail_params[:post_id])
 
     p "見てみて"
