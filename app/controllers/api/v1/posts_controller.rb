@@ -1,7 +1,7 @@
 class Api::V1::PostsController < ApplicationController
     # app/controllers/posts_controller.rb
     before_action :set_post, only: [:show, :edit, :update, :destroy]
-    before_action :authenticate_api_v1_user!, only: [:create]
+    before_action :authenticate_api_v1_user!, only: [:create, :destroy]
 
     def index
       @posts = Post.joins(:user)      
@@ -80,10 +80,15 @@ class Api::V1::PostsController < ApplicationController
         render :edit
       end
     end
-  
+
     def destroy
-      @post.destroy
-      redirect_to posts_url, notice: 'Post was successfully destroyed.'
+      @post = current_api_v1_user.posts
+      .find(destroy_params[:id])
+      if @post.destroy
+        render json: { message: '投稿が削除されました' }, status: :ok
+      else
+        render json: { error: '投稿の削除に失敗しました' }, status: :unprocessable_entity
+      end
     end
   
     private
@@ -96,6 +101,10 @@ class Api::V1::PostsController < ApplicationController
         params.permit(:user_id, :title, :description, :document_path, :document_type,
         :field_id, :sub_field_id)
     end
+
+    def destroy_params
+      params.permit(:id)
+  end
 
     def assign_document_type(content_type)
         case content_type

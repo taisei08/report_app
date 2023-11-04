@@ -8,6 +8,8 @@ import { getAuthHeaders } from "lib/api/auth"
 import { ReplyForm, ReplyList } from 'components/utils/Reply';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const PostPage = () => {
@@ -25,6 +27,8 @@ const PostPage = () => {
   };
 
   const [show, setShow] = useState(false);
+  const navigate = useNavigate();
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -91,11 +95,12 @@ const PostPage = () => {
 
   const handleDelete = () => {
     // 削除のロジック
-    client.delete('/post_detail')
+    client.delete(`/posts/${Id.postId}`, { headers: getAuthHeaders() })
       .then(response => {
         // 削除が成功した場合の処理
         console.log('削除が成功しました', response);
         handleClose(); // モーダルを閉じる
+        navigate('/');
       })
       .catch(error => {
         // エラー処理

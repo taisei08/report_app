@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :test, only: %i[index]
       resources :fields, only: %i[index]
-      resources :posts, only: %i[index create]
+      resources :posts, only: %i[index create destroy]
       resources :post_detail, only: %i[index]
       resources :posts_by_user, only: %i[index]
       resources :post_counts, only: %i[index]
