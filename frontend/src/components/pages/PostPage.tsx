@@ -7,6 +7,7 @@ import PdfViewer from 'components/utils/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
 import { ReplyForm, ReplyList } from 'components/utils/Reply';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
 
 
 const PostPage = () => {
@@ -22,6 +23,11 @@ const PostPage = () => {
   const postId = {
     postId: Id.postId,
   };
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,6 +89,21 @@ const PostPage = () => {
     });
   };
 
+  const handleDelete = () => {
+    // 削除のロジック
+    client.delete('/post_detail')
+      .then(response => {
+        // 削除が成功した場合の処理
+        console.log('削除が成功しました', response);
+        handleClose(); // モーダルを閉じる
+      })
+      .catch(error => {
+        // エラー処理
+        console.error('削除中にエラーが発生しました', error);
+        handleClose(); // モーダルを閉じる
+      });
+  };
+
   // メニューの表示/非表示を切り替える関数
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -127,7 +148,18 @@ const PostPage = () => {
           <Link to={`/article/${Id.postId}/edit`}>
             <button>編集</button>
           </Link>
-          <button>削除</button>
+          <button onClick={handleShow}>削除</button>
+
+          <Modal
+        isOpen={show}
+        onRequestClose={handleClose}
+        contentLabel="削除の確認"
+      >
+        <h2>削除の確認</h2>
+        <p>本当に削除してもよろしいですか？</p>
+        <button onClick={handleDelete}>削除</button> 
+        <button onClick={handleClose}>中止</button>
+      </Modal>
         </div>
       )}
       </div>
