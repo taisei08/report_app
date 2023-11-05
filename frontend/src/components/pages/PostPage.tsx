@@ -148,7 +148,8 @@ const PostPage = () => {
   };
 
   const handleSaveReview = () => {
-    client.post('/reviews', { review: editingReviewId, review: editedReviewText },
+    console.log(editedReviewText)
+    client.put(`/reviews/${editingReviewId}`, { review: editedReviewText },
     { headers: getAuthHeaders() })
     .then(response => {
       console.log('Rating data sent successfully:', response.data);
