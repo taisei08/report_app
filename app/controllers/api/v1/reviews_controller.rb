@@ -1,6 +1,6 @@
 class Api::V1::ReviewsController < ApplicationController
 
-  before_action :authenticate_api_v1_user!, only: [:index, :create]
+  before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
 
   def index
     @review = Review
@@ -52,6 +52,19 @@ class Api::V1::ReviewsController < ApplicationController
 
   end
 
+  def update
+    p "エジフェイw"
+    p current_api_v1_user.reviews.find(review_update_params[:id])
+    @review = current_api_v1_user.reviews.find(review_update_params[:id])
+
+
+    if @review.update(review: review_update_params[:review])
+      render json: { message: 'Review updated successfully' }, status: :ok
+    else
+      render json: { error: 'Review update failed' }, status: :unprocessable_entity
+    end
+  end
+
   private
   
   def review_index_params
@@ -60,6 +73,10 @@ class Api::V1::ReviewsController < ApplicationController
 
   def review_create_params
     params.permit(:post_id, :review).merge(user_id: current_api_v1_user.id)
+  end
+
+  def review_update_params
+    params.permit(:id, :review)
   end
 
 end
