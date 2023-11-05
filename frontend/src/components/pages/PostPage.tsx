@@ -32,6 +32,7 @@ const PostPage = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +46,7 @@ const PostPage = () => {
         setPostData(response1.data.posts[0]);
         setReviews(response2.data.reviews);
         setUserId(response2.data.currentUserId);
-        console.log(response1.data)
+        console.log(response2.data.reviews)
 
         const currentUserId = response2.data.currentUserId;
         console.log(currentUserId)
@@ -132,6 +133,32 @@ const PostPage = () => {
 
   };
 
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editedReviewText, setEditedReviewText] = useState('');
+
+  const handleEditReview = (reviewId, reviewText) => {
+    // 編集ボタンがクリックされたときの処理
+    setEditingReviewId(reviewId);
+    setEditedReviewText(reviewText);
+  };
+
+  const handleCancelEdit = () => {
+    // キャンセルボタンがクリックされたときの処理
+    setEditingReviewId(null);
+  };
+
+  const handleSaveReview = () => {
+    client.post('/reviews', { review: editingReviewId, review: editedReviewText },
+    { headers: getAuthHeaders() })
+    .then(response => {
+      console.log('Rating data sent successfully:', response.data);
+    })
+    .catch(error => {
+      console.error('Error sending rating data:', error);
+    });
+    setEditingReviewId(null)
+  };
+
   if (postData.documentPath == undefined) {
     return null;
   }
@@ -171,7 +198,7 @@ const PostPage = () => {
       <Rating initialRating={rating} onChange={handleRatingChange} />
       <p>{postData.description}</p>
 
-      {(reviews.some(review => review.userId !== userId) &&
+      {(reviews.length === 0 || reviews.some(review => review.userId !== userId) &&
       postData.userId !== userId) && (
         <div>
           <textarea
@@ -187,20 +214,47 @@ const PostPage = () => {
           // 条件に基づいてレビューを表示
           review.userId === userId && (
             <div key={review.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
-              <Avatar
-              size="30"
-              name={review.userName}
-              round={true}
-              src={review.iconPath}
-              />
-              <span>{review.userName} {review.createdAt}</span>
-              <p>{review.review}</p>
-              <Rating readonly initialRating={review.value} fractions={2} />
-                    {review.review !== "" && (
+                  <Avatar
+      size="30"
+      name={review.userName}
+      round={true}
+      src={review.iconPath}
+    />
+    <span>
+      {review.userName} {review.createdAt}
+    </span>
+{editingReviewId === review.reviewId ? (
+  // Edit mode
+  <div>
+    <textarea
+      value={editedReviewText}
+      onChange={e => setEditedReviewText(e.target.value)}
+    />
+    <button onClick={() => handleSaveReview(review.reviewId)}>
+      保存
+    </button>
+    <button onClick={handleCancelEdit}>
+      キャンセル
+    </button>
+  </div>
+) : (
+  <div>
+    <p>{review.review}</p>
+    <button onClick={() => handleEditReview(review.reviewId, review.review)}>
+      編集
+    </button>
+  </div>
+)
+}
+<div>
+<Rating readonly initialRating={review.value} fractions={2} />
+{review.review !== "" && (
       <button onClick={() => toggleReplyForm(review.reviewId)}>
         {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
       </button>
-      )}
+      
+    )}
+</div>     
 
       {review.review !== "" && review.replyLength > 0 && (
       <button onClick={() => toggleReplies(review.reviewId)}>
