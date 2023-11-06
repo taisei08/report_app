@@ -1,6 +1,6 @@
 class Api::V1::RepliesController < ApplicationController
   # app/controllers/posts_controller.rb
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [:show, :edit, :destroy]
   before_action :authenticate_api_v1_user!, only: [:create]
 
   def index
@@ -51,10 +51,12 @@ class Api::V1::RepliesController < ApplicationController
   end
 
   def update
-    if @post.update(post_params)
-      redirect_to @post, notice: 'Post was successfully updated.'
+    @reply = current_api_v1_user.replies.find(reply_update_params[:id])
+
+    if @reply.update(reply: reply_update_params[:reply])
+      render json: { message: 'Review updated successfully' }, status: :ok
     else
-      render :edit
+      render json: { error: 'Review update failed' }, status: :unprocessable_entity
     end
   end
 
@@ -71,7 +73,10 @@ class Api::V1::RepliesController < ApplicationController
 
   def reply_params
     params.permit(:review_id, :reply)
+  end
 
+  def reply_update_params
+    params.permit(:id, :reply)
   end
   
 

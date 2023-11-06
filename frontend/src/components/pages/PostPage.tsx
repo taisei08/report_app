@@ -198,8 +198,9 @@ const PostPage = () => {
       </div>
       <Rating initialRating={rating} onChange={handleRatingChange} />
       <p>{postData.description}</p>
-
-      {(reviews.length === 0 || reviews.some(review => review.userId !== userId) &&
+      {console.log(postData.userId !== userId)}
+      {console.log(userId)}
+      {((reviews.length === 0 || !reviews.some(review => review.userId === userId)) &&
       postData.userId !== userId) && (
         <div>
           <textarea
@@ -231,7 +232,11 @@ const PostPage = () => {
       value={editedReviewText}
       onChange={e => setEditedReviewText(e.target.value)}
     />
-    <button onClick={() => handleSaveReview(review.reviewId)}>
+    <button onClick={() =>{
+      handleSaveReview(review.reviewId)
+      review.review = editedReviewText;
+      }
+    }>
       保存
     </button>
     <button onClick={handleCancelEdit}>
@@ -241,7 +246,8 @@ const PostPage = () => {
 ) : (
   <div>
     <p>{review.review}</p>
-    <button onClick={() => handleEditReview(review.reviewId, review.review)}>
+    <button onClick={() =>
+      handleEditReview(review.reviewId, review.review)}>
       編集
     </button>
   </div>

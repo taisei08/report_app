@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       resources :reviews, only: %i[index create update]
       resources :reviews_by_user, only: %i[index]
       resources :review_counts, only: %i[index]
-      resources :replies, only: %i[index create]
+      resources :replies, only: %i[index create update]
       resources :reply_counts, only: %i[index]
       resources :users, only: %i[index update]
       

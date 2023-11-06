@@ -36,6 +36,39 @@ export const ReplyList = (props) => {
   const [replies, setReplies] = useState([]);
   console.log(props.id)
 
+  const [editingReplyId, setEditingReplyId] = useState(null);
+  const [editedReplyText, setEditedReplyText] = useState('');
+  const [editingReplyIds, setEditingReplyIds] = useState([]); // 編集中のリプライIDの配列
+  const [editedReplyTexts, setEditedReplyTexts] = useState({});
+
+
+  const enableEditing = (replyId, replyText) => {
+    if (!editingReplyIds.includes(replyId)) {
+      setEditingReplyIds([...editingReplyIds, replyId]);
+      setEditedReplyTexts({ ...editedReplyTexts, [replyId]: replyText });
+    }
+  };
+
+  // 編集モードを無効化する関数
+  const disableEditing = (replyId) => {
+    setEditingReplyIds(editingReplyIds.filter(id => id !== replyId));
+  };
+
+  const isEditing = (replyId) => editingReplyIds.includes(replyId);
+
+
+  const handleSaveReview = (replyId) => {
+    client.put(`/replies/${replyId}`, { reply: editedReplyTexts[replyId] },
+    { headers: getAuthHeaders() })
+    .then(response => {
+      console.log('Rating data sent successfully:', response.data);
+    })
+    .catch(error => {
+      console.error('Error sending rating data:', error);
+    });
+    setEditingReplyId(null)
+  };
+
   useEffect(() => {
     // データを取得するための関数
     const fetchData = async () => {
@@ -72,32 +105,61 @@ export const ReplyList = (props) => {
       <ul>
         {replies.map(reply => (
           <li key={reply.replyId}>
-              <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+            <div style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
+              {isEditing(reply.replyId) ? (
                 <div>
-                <Link
-                to={`/userpage/${reply.userId}`}
-                >
-                  <Avatar
-                  name={reply.userName}
-                  size="40"
-                  round={true}
-                  src={reply.iconPath}
-                  /> {/* Avatar コンポーネント */}
-                  <span style={{ marginLeft: '10px' }}>{reply.userName}</span> {/* ユーザー名 */}
-                  </Link>
+                  <textarea
+                    value={editedReplyTexts[reply.replyId] || ''}
+                    onChange={e => {
+                      // 編集中のリプライテキストを更新
+                      setEditedReplyTexts({
+                        ...editedReplyTexts,
+                        [reply.replyId]: e.target.value
+                      });
+                    }}
+                  />
+                  <button onClick={() => handleSaveReview(reply.replyId)}>
+                    保存
+                  </button>
+                  <button onClick={() => {
+                    disableEditing(reply.replyId); // キャンセル時に編集モードを無効化
+                  }}>
+                    キャンセル
+                  </button>
                 </div>
+              ) : (
                 <div>
-                  <span>Created At: {reply.createdAt}</span> {/* 最終更新日 */}
+                  <div>
+                    <Link to={`/userpage/${reply.userId}`}>
+                      <Avatar
+                        name={reply.userName}
+                        size="40"
+                        round={true}
+                        src={reply.iconPath}
+                      />
+                      <span style={{ marginLeft: '10px' }}>{reply.userName}</span>
+                    </Link>
+                  </div>
+                  <div>
+                    <span>Created At: {reply.createdAt}</span>
+                  </div>
+                  <div>
+                    <p>{reply.reply}</p>
+                    <button onClick={() => {
+                      enableEditing(reply.replyId, reply.reply); // 編集ボタンをクリックして編集モードを有効化
+                      setEditedReplyText(reply.reply); // 編集モードでテキストを表示
+                    }}>
+                      編集
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <p>{reply.reply}</p>
-                </div>
-              </div>
+              )}
+            </div>
           </li>
         ))}
         <button onClick={loadMore}>Load More</button>
       </ul>
-      </div>
-      );
+    </div>
+  );
 };
 
