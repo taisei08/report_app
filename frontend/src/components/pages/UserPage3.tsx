@@ -4,6 +4,8 @@ import PostList2 from 'components/utils/PostList2';
 import ReviewList from 'components/utils/ReviewList';
 import { useParams } from 'react-router-dom';
 import { getAuthHeaders } from 'lib/api/auth';
+import FollowButton from 'components/utils/FollowButton';
+
 const UserProfileEditPage3 = () => {
   const Id = useParams()
   const [contentType, setContentType] = useState('post'); // デフォルトは投稿
@@ -63,6 +65,7 @@ const UserProfileEditPage3 = () => {
     <p>School: {userData.school}</p>
     <p>Faculty Department: {userData.facultyDepartment}</p>
     <p>Profile Statement: {userData.profileStatement}</p>
+    <FollowButton id={Id.userId}/>
     <div>
         <button onClick={() => handleButtonClick('post')}>投稿を表示</button>
         <button onClick={() => handleButtonClick('review')}>レビューを表示</button>

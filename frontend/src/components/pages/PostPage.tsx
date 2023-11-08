@@ -9,6 +9,7 @@ import { ReplyForm, ReplyList } from 'components/utils/Reply';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
+import FollowButton from 'components/utils/FollowButton';
 
 
 
@@ -198,8 +199,12 @@ const PostPage = () => {
       </div>
       <Rating initialRating={rating} onChange={handleRatingChange} />
       <p>{postData.description}</p>
-      {console.log(postData.userId !== userId)}
+      {console.log(postData.userId)}
       {console.log(userId)}
+      <FollowButton
+      id = {postData.userId}
+      selfId = {userId}
+      />
       {((reviews.length === 0 || !reviews.some(review => review.userId === userId)) &&
       postData.userId !== userId) && (
         <div>
