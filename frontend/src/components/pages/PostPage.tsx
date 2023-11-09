@@ -10,8 +10,7 @@ import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import FollowButton from 'components/utils/FollowButton';
-
-
+import LikeButton from 'components/utils/LikeButton';
 
 const PostPage = () => {
   const [postData, setPostData] = useState({});
@@ -175,6 +174,10 @@ const PostPage = () => {
       <p>Created at: {postData.createdAt}</p>
       <p>Last Updated: {postData.updatedAt}</p>
       <PdfViewer fileData={postData.documentPath.url} />
+      <LikeButton
+      id = {postData.postId}
+      type = "post"
+      />
       <div>
       <button onClick={toggleMenu}>メニューを表示</button>
       {menuVisible && (
