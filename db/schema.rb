@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_06_085411) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_09_152334) do
   create_table "fields", primary_key: "field_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "field_name", limit: 15, null: false
   end
@@ -25,6 +25,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_085411) do
   create_table "interests", primary_key: "interest_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "field_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "post_id"
+    t.integer "review_id"
+    t.integer "reply_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

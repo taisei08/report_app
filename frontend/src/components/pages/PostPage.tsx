@@ -9,8 +9,8 @@ import { ReplyForm, ReplyList } from 'components/utils/Reply';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-
-
+import FollowButton from 'components/utils/FollowButton';
+import LikeButton from 'components/utils/LikeButton';
 
 const PostPage = () => {
   const [postData, setPostData] = useState({});
@@ -174,6 +174,10 @@ const PostPage = () => {
       <p>Created at: {postData.createdAt}</p>
       <p>Last Updated: {postData.updatedAt}</p>
       <PdfViewer fileData={postData.documentPath.url} />
+      <LikeButton
+      id = {postData.postId}
+      type = "post"
+      />
       <div>
       <button onClick={toggleMenu}>メニューを表示</button>
       {menuVisible && (
@@ -198,8 +202,12 @@ const PostPage = () => {
       </div>
       <Rating initialRating={rating} onChange={handleRatingChange} />
       <p>{postData.description}</p>
-      {console.log(postData.userId !== userId)}
+      {console.log(postData.userId)}
       {console.log(userId)}
+      <FollowButton
+      id = {postData.userId}
+      selfId = {userId}
+      />
       {((reviews.length === 0 || !reviews.some(review => review.userId === userId)) &&
       postData.userId !== userId) && (
         <div>
@@ -255,6 +263,10 @@ const PostPage = () => {
 }
 <div>
 <Rating readonly initialRating={review.value} fractions={2} />
+<LikeButton
+      id = {review.reviewId}
+      type = "review"
+      />
 {review.review !== "" && (
       <button onClick={() => toggleReplyForm(review.reviewId)}>
         {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
@@ -308,6 +320,7 @@ const PostPage = () => {
         initialRating={review.value}
         fractions={2}
       />
+      
 
       {review.review !== "" && (
       <button onClick={() => toggleReplyForm(review.reviewId)}>

@@ -32,13 +32,6 @@ class Api::V1::PostsController < ApplicationController
 
     end
   
-    def show
-    end
-  
-    def new
-      @post = Post.new
-    end
-  
     def create
         @post = current_api_v1_user.posts.new(post_params)
         @post.document_type = assign_document_type(params[:document_path].content_type)

@@ -3,6 +3,7 @@ import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import { Link } from 'react-router-dom';
 import Avatar from 'react-avatar';
+import LikeButton from './LikeButton';
 
 // 返信フォームコンポーネント
 export const ReplyForm = (props) => {
@@ -151,6 +152,10 @@ export const ReplyList = (props) => {
                     }}>
                       編集
                     </button>
+                    <LikeButton
+                    id = {reply.replyId}
+                    type = "reply"
+                    />
                   </div>
                 </div>
               )}

@@ -10,10 +10,6 @@ class Post < ApplicationRecord
   has_many :reviews, class_name: "Review", dependent: :destroy
   has_many :set_tags, class_name: "SetTag", dependent: :destroy  
   has_many :tags, through: :set_tags, class_name: "Tag", dependent: :destroy
-  
-  has_many :active_follows, class_name: 'Follow', foreign_key: 'follower_id', dependent: :destroy
-  has_many :following, through: :active_follows, source: :followed
-  has_many :passive_follows, class_name: 'Follow', foreign_key: 'followed_id', dependent: :destroy
-  has_many :followers, through: :passive_follows, source: :follower
+  has_many :likes, class_name: "Like", dependent: :destroy
 
 end
