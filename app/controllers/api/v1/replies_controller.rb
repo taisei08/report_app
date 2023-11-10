@@ -19,13 +19,6 @@ class Api::V1::RepliesController < ApplicationController
 
   end
 
-  def show
-  end
-
-  def new
-    @post = Post.new
-  end
-
   def create
     @replies = current_api_v1_user.replies.new(reply_params)
 

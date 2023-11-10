@@ -14,6 +14,7 @@ class Api::V1::LikesController < ApplicationController
 
   def create
     @like = current_api_v1_user.likes.new(like_params)
+    p @like
     if @like.save
       render json: { status: 'success', message: 'Post created successfully' }
     else
@@ -24,7 +25,7 @@ class Api::V1::LikesController < ApplicationController
 
   def destroy
     @like = current_api_v1_user.likes
-    .find(like_params)
+    .find_by(like_params)
     if @like.destroy
       render json: { message: 'Like Deleted' }, status: :ok
     else

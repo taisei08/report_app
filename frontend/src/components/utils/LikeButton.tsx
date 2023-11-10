@@ -36,7 +36,7 @@ const LikeButton = ( props ) => {
         client.get('/like_counts', { params: id, headers: getAuthHeaders()}),
       ]);
       setlikeUser(response1.data.likes);
-      setLiked(response2.data.is_liked);
+      setLiked(response2.data.isLiked);
       setLikeCount(response2.data.count);
     } catch (error) {
       console.error('Error fetching like count:', error);
@@ -46,7 +46,7 @@ const LikeButton = ( props ) => {
   const handleLike = async () => {
     try {
       if (liked) {
-        await client.delete('/likes', { params: id, headers: getAuthHeaders() });
+        await client.delete('/likes/1', { params: id, headers: getAuthHeaders() });
         setLikeCount(likeCount - 1); // いいねが削除されたので総数を減らす
       } else {
         await client.post('/likes', id, { headers: getAuthHeaders() });

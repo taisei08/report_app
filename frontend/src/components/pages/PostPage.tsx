@@ -263,6 +263,10 @@ const PostPage = () => {
 }
 <div>
 <Rating readonly initialRating={review.value} fractions={2} />
+<LikeButton
+      id = {review.reviewId}
+      type = "review"
+      />
 {review.review !== "" && (
       <button onClick={() => toggleReplyForm(review.reviewId)}>
         {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
@@ -316,6 +320,7 @@ const PostPage = () => {
         initialRating={review.value}
         fractions={2}
       />
+      
 
       {review.review !== "" && (
       <button onClick={() => toggleReplyForm(review.reviewId)}>

@@ -5,7 +5,8 @@ class Api::V1::LikeCountsController < ApplicationController
     @like_count = Like
     .where(like_params)
     .count
-  
+    
+
     is_liked = current_api_v1_user.likes
     .exists?(like_params)
 

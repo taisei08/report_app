@@ -167,7 +167,7 @@ const Post: React.FC = (props) => {
         />
       </label>
       <br />
-      <button type="submit"　onClick={handleSubmit}>Submit</button>
+      <button type="submit" onClick={handleSubmit}>Submit</button>
     </div>
   );
   
