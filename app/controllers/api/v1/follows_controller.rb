@@ -12,11 +12,10 @@ class Api::V1::FollowsController < ApplicationController
 
   # フォローを作成
   def create
-    user = User.find(follow_params[:user_id])
-    p "fwこpふぇ"
-    p current_api_v1_user.user_id
-    if user.user_id != current_api_v1_user.user_id
-      if current_api_v1_user.follow(user)
+    @user = User.find(follow_params[:user_id])
+    if @user.user_id != current_api_v1_user.user_id
+      if current_api_v1_user.follow(@user)
+        @user.create_notification_follow!(current_api_v1_user)
         render json: { message: 'Follow Succeeded' }, status: :ok
       else
         render json: { error: 'Follow Failed' }, status: :unprocessable_entity

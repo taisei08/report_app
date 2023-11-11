@@ -89,7 +89,7 @@ const SignUp: React.FC = () => {
               variant="outlined"
               required
               fullWidth
-              label="名前"
+              label="ID"
               value={userName}
               margin="dense"
               onChange={event => setUserName(event.target.value)}

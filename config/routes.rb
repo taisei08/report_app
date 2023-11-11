@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       resources :follows, only: %i[index create destroy]
       resources :likes, only: %i[index create destroy]
       resources :like_counts, only: %i[index]
+      resources :notifications, only: %i[index]
       resources :posts, only: %i[index create destroy]
       resources :post_detail, only: %i[index]
       resources :posts_by_user, only: %i[index]
@@ -13,7 +14,7 @@ Rails.application.routes.draw do
       resources :posts_edit, only: %i[index update]
       put '/posts_edit', to: 'posts_edit#update', as: 'update'
       resources :ratings, only: %i[index create]
-      resources :reviews, only: %i[index create update]
+      resources :reviews, only: %i[index create update destroy]
       resources :reviews_by_user, only: %i[index]
       resources :review_counts, only: %i[index]
       resources :replies, only: %i[index create update]

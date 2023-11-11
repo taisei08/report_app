@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_09_152334) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_10_185533) do
   create_table "fields", primary_key: "field_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "field_name", limit: 15, null: false
   end
@@ -36,6 +36,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_09_152334) do
     t.integer "reply_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "active_user_id", null: false
+    t.integer "passive_user_id", null: false
+    t.integer "post_id"
+    t.integer "review_id"
+    t.integer "like_id"
+    t.string "action", default: "", null: false
+    t.boolean "checked", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "reply_id"
+    t.index ["active_user_id"], name: "index_notifications_on_active_user_id"
+    t.index ["like_id"], name: "index_notifications_on_like_id"
+    t.index ["passive_user_id"], name: "index_notifications_on_passive_user_id"
+    t.index ["post_id"], name: "index_notifications_on_post_id"
+    t.index ["reply_id"], name: "index_notifications_on_reply_id"
+    t.index ["review_id"], name: "index_notifications_on_review_id"
   end
 
   create_table "posts", primary_key: "post_id", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

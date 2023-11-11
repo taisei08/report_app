@@ -24,6 +24,9 @@ class User < ActiveRecord::Base
   has_many :passive_follows, class_name: 'Follow', foreign_key: 'followed_id', dependent: :destroy
   has_many :followings, through: :active_follows, source: :followed
   has_many :followers, through: :passive_follows, source: :follower
+  has_many :active_notifications, class_name: 'Notification', foreign_key: 'active_user_id', dependent: :destroy
+  has_many :passive_notifications, class_name: 'Notification', foreign_key: 'passive_user_id', dependent: :destroy
+
 
 
   # 指定したユーザーをフォローする
@@ -38,6 +41,17 @@ class User < ActiveRecord::Base
 
   def following?(user)
     followings.include?(user)
+  end
+
+  def create_notification_follow!(current_api_v1_user)
+    temp = Notification.where(["active_user_id = ? and passive_user_id = ? and action = ? ",current_api_v1_user.user_id, user_id, 'follow'])
+    if temp.blank?
+      @notification = current_api_v1_user.active_notifications.new(
+        passive_user_id: user_id,
+        action: 'follow'
+      )
+      @notification.save if @notification.valid?
+    end
   end
   
 end
