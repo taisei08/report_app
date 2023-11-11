@@ -40,10 +40,9 @@ class Like < ApplicationRecord
         action: 'like'
       )
       # 自分の投稿に対するいいねの場合は、通知済みとする
-      if notification.active_user_id == notification.passive_user_id
-        notification.checked = true
+      if notification.active_user_id != notification.passive_user_id
+        notification.save if notification.valid?
       end
-      notification.save if notification.valid?
     end
   end
 end

@@ -61,7 +61,6 @@ class Api::V1::ReviewsController < ApplicationController
 
 
     if @review.update(review: review_update_params[:review])
-      @review.create_notification_comment!(current_user, @comment.id)
       render json: { message: 'Review updated successfully' }, status: :ok
     else
       render json: { error: 'Review update failed' }, status: :unprocessable_entity
