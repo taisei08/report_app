@@ -160,6 +160,31 @@ const PostPage = () => {
     setEditingReviewId(null)
   };
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleShowDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDeleteReview = (reviewId:number) => {
+    // 削除のロジック
+    client.delete(`/reviews/${reviewId}`, { headers: getAuthHeaders() })
+      .then(response => {
+        // 削除が成功した場合の処理
+        console.log('削除が成功しました', response);
+        handleCloseDeleteModal(); // モーダルを閉じる
+      })
+      .catch(error => {
+        // エラー処理
+        console.error('削除中にエラーが発生しました', error);
+        handleCloseDeleteModal(); // モーダルを閉じる
+      });
+  };
+
   if (postData.documentPath == undefined) {
     return null;
   }
@@ -262,16 +287,33 @@ const PostPage = () => {
 )
 }
 <div>
+
+      {/* メニュー内の削除ボタン */}
+      <button onClick={handleShowDeleteModal}>削除</button>
+      {/* 削除モーダル */}
+      <Modal
+        isOpen={showDeleteModal}
+        onRequestClose={handleCloseDeleteModal}
+        contentLabel="削除の確認"
+      >
+        <h2>削除の確認</h2>
+        <p>本当に削除してもよろしいですか？</p>
+        <div>
+        <button onClick={() => handleDeleteReview(review.reviewId)}>削除</button>
+        </div>
+        <div>
+        <button onClick={handleCloseDeleteModal}>中止</button>
+        </div>
+      </Modal>
+
+      {/* ... (既存のコード) */}
+    </div>
+<div>
 <Rating readonly initialRating={review.value} fractions={2} />
-<LikeButton
-      id = {review.reviewId}
-      type = "review"
-      />
 {review.review !== "" && (
-      <button onClick={() => toggleReplyForm(review.reviewId)}>
-        {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
-      </button>
-      
+    <button onClick={() => toggleReplyForm(review.reviewId)}>
+      {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
+    </button>
     )}
 </div>     
 
@@ -323,9 +365,15 @@ const PostPage = () => {
       
 
       {review.review !== "" && (
+      <>
       <button onClick={() => toggleReplyForm(review.reviewId)}>
         {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
       </button>
+      <LikeButton
+      id={review.reviewId}
+      type="review"
+      />
+      </>
       )}
 
       {review.review !== "" && review.replyLength > 0 && (

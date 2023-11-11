@@ -15,6 +15,8 @@ import { signOut } from "lib/api/auth"
 
 import { AuthContext } from "App"
 
+import NotificationButton from "components/utils/NotificationButton"
+
 const useStyles = makeStyles((theme: Theme) => ({
   iconButton: {
     marginRight: theme.spacing(2),
@@ -106,6 +108,7 @@ const Header: React.FC = () => {
           >
             Sample
           </Typography>
+          <NotificationButton />
           <AuthButtons />
         </Toolbar>
       </AppBar>

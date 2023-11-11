@@ -14,8 +14,10 @@ class Api::V1::LikesController < ApplicationController
 
   def create
     @like = current_api_v1_user.likes.new(like_params)
-    p @like
-    if @like.save
+    like = Like.find_by(like_include_user_params)
+    p "ウィj０frじげろい"
+    p like
+    if @like != like && @like.save && @like.create_notification_like!(current_api_v1_user, like_params.keys, like_params.values)
       render json: { status: 'success', message: 'Post created successfully' }
     else
       puts @like.errors.full_messages
@@ -42,4 +44,5 @@ class Api::V1::LikesController < ApplicationController
   def like_include_user_params
     params.permit(:user_id, :post_id, :review_id, :reply_id)
   end
+
 end

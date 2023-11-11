@@ -27,6 +27,7 @@ class Api::V1::ReviewsController < ApplicationController
 
   def create
     @review = current_api_v1_user.reviews.new(review_create_params)
+    @post = @review.post
 
     action_result = nil
 
@@ -44,6 +45,7 @@ class Api::V1::ReviewsController < ApplicationController
     @review.transaction do
       if user[0] != current_api_v1_user.id
         @review.save
+        @post.save_notification_review!(current_api_v1_user, @review.review_id)
         render json: { status: 'success', message: 'Review operation successful' }
       else
         render json: { status: 'error', message: 'Review operation failed' }
@@ -59,9 +61,20 @@ class Api::V1::ReviewsController < ApplicationController
 
 
     if @review.update(review: review_update_params[:review])
+      @review.create_notification_comment!(current_user, @comment.id)
       render json: { message: 'Review updated successfully' }, status: :ok
     else
       render json: { error: 'Review update failed' }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @review = current_api_v1_user.reviews
+    .find(review_destroy_params[:id])
+    if @review.destroy
+      render json: { message: 'Review Deleted' }, status: :ok
+    else
+      render json: { error: 'Review Delete Failed' }, status: :unprocessable_entity
     end
   end
 
@@ -77,6 +90,10 @@ class Api::V1::ReviewsController < ApplicationController
 
   def review_update_params
     params.permit(:id, :review)
+  end
+
+  def review_destroy_params
+    params.permit(:id)
   end
 
 end
