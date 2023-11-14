@@ -6,6 +6,8 @@ import AlertMessage from "components/utils/AlertMessage"
 import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
 import IconSettingPage from "components/utils/IconSettingPage"
 import ProfileSettingPage from "components/utils/ProfileSettingPage"
+import defaultIcon from "../../assets/images/default_icon.png";
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -37,13 +39,13 @@ const Initial: React.FC = () => {
   // ユーザー情報
   const [userData, setUserData] = useState<{
     accountName: string;
-    iconPath: File | null; // iconPathの型をFileまたはnullに変更
+    iconPath: string | File | null; // iconPathの型をFileまたはnullに変更
     school: string;
     facultyDepartment: string;
     profileStatement: string;
   }>({
     accountName: '',
-    iconPath: null,
+    iconPath: defaultIcon,
     school: '',
     facultyDepartment: '',
     profileStatement: '',
@@ -62,14 +64,16 @@ const Initial: React.FC = () => {
     <>
     <div>
       {step === 1 && <SignUpSuccessPage
+      onNext={handleNextStep}/>}
+      {step === 2 && <IconSettingPage
       userData={userData}
       setUserData={setUserData}
       onNext={handleNextStep}/>}
-      {step === 2 && <IconSettingPage onNext={handleNextStep} />}
       {step === 3 && (
         <ProfileSettingPage
-          onNext={handleNextStep}
-          onSignUp={handleSignUp}
+        userData={userData}
+        setUserData={setUserData}
+        onNext={handleNextStep}
         />
       )}
     </div>

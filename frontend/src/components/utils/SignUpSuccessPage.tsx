@@ -2,15 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 
-const SignUpSuccessPage = () => {
+const SignUpSuccessPage = (props) => {
   return (
     <div>
       <p>登録が成功しました！</p>
       <Button
         variant="outlined"
         color="primary"
-        component={Link}
-        to="/signup/icon"
+        onClick={props.onNext}
       >
         アイコンを設定する
       </Button>

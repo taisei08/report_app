@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import Button from "@material-ui/core/Button";
-import client from "lib/api/client";
-import { getAuthHeaders } from "lib/api/auth";
-import { Modal } from "@material-ui/core";
+import Modal from 'react-modal';
 import AvatarEditor from "react-avatar-editor";
+import defaultIcon from "../../assets/images/default_icon.png";
 
-const IconSettingPage = (props) => {
+
+interface UserDataType {
+  userId: number;
+  accountName: string;
+  iconPath: string | File | null;
+  school: string;
+  facultyDepartment: string;
+  profileStatement: string;
+}
+
+const IconSettingPage = (props: { userData: UserDataType, setUserData: (data: UserDataType) => void, onNext: (data: any) => void }) => {
   const { userData, setUserData, onNext } = props;
   const [image, setImage] = useState();
   const [editor, setEditor] = useState();
@@ -59,18 +67,30 @@ const IconSettingPage = (props) => {
       <h1>Edit Profile</h1>
       <form>
         {console.log(userData.iconPath)}
-      {userData.iconPath !== null && (
-        <img
-        src={Object.values(userData.iconPath)}
+        {userData.iconPath !== null ? (
+  typeof userData.iconPath === 'string' ? (
+    // iconPathがstringの場合
+    <img
+      src={userData.iconPath}
+      alt="アイコン"
+      style={{ width: '100px', height: '100px' }}
+    />
+    ) : (
+      // iconPathがFileの場合
+      <img
+        src={URL.createObjectURL(userData.iconPath)}
         alt="アイコン"
         style={{ width: '100px', height: '100px' }}
-        />
+      />
       )
-      }
+    ) : (
+      // iconPathがnullの場合
+      <p>アイコンがありません</p>
+    )}
 
       <input type="file" onChange={handleImageChange} />
       <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
-
+      <>
       <input
         type="range"
         min="0.1"
@@ -93,6 +113,7 @@ const IconSettingPage = (props) => {
           }
         </label>
         <button onClick={closeModal}>Close</button>
+        </>
       </Modal>
       </form>
       <p>アイコンを設定しましょう！</p>
@@ -100,8 +121,7 @@ const IconSettingPage = (props) => {
       <Button
         variant="outlined"
         color="primary"
-        component={Link}
-        to="/signup/profile"
+        onClick={onNext}
       >
         次へ
       </Button>
