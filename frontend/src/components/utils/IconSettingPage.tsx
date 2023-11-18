@@ -3,20 +3,13 @@ import Button from "@material-ui/core/Button";
 import Modal from 'react-modal';
 import AvatarEditor from "react-avatar-editor";
 import defaultIcon from "../../assets/images/default_icon.png";
+import client from "lib/api/client";
+import { getAuthHeaders } from "lib/api/auth";
 
 
-interface UserDataType {
-  userId: number;
-  accountName: string;
-  iconPath: string | File | null;
-  school: string;
-  facultyDepartment: string;
-  profileStatement: string;
-}
 
-const IconSettingPage = (props: { userData: UserDataType, setUserData: (data: UserDataType) => void, onNext: (data: any) => void }) => {
-  const { userData, setUserData, onNext } = props;
-  const [image, setImage] = useState();
+const IconSettingPage = (props) => {
+  const [image, setImage] = useState(defaultIcon);
   const [editor, setEditor] = useState();
   const [scale, setScale] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,19 +22,13 @@ const IconSettingPage = (props: { userData: UserDataType, setUserData: (data: Us
     setIsModalOpen(false);
     const canvas = editor.getImageScaledToCanvas();
     canvas.toBlob((blob) => {
-      // BlobをFileに変換
-      const fileName = "icon.png"; // ファイル名を設定
+      const fileName = "icon.png";
       const file = new File([blob], fileName, {
-        type: "image/png", // MIMEタイプを設定
+        type: "image/png",
         lastModified: new Date().getTime(),
       });
-      console.log(file); // ファイルオブジェクトが表示される
-      setUserData((prevUserData) => ({
-        ...prevUserData,
-        iconPath: file,
-      }));
+      setImage(file); // トリミング後の画像を設定
     }, "image/png");
-
   };
 
   const handleImageChange = (e) => {
@@ -54,31 +41,43 @@ const IconSettingPage = (props: { userData: UserDataType, setUserData: (data: Us
     const newScale = parseFloat(e.target.value);
     setScale(newScale);
   };
-  
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData((prevUserData) => ({
-      ...prevUserData,
-      [name]: value,
-    }));
+
+  const handleSave = async () => {
+    try {
+      // ユーザーデータを更新するAPIリクエスト
+      await client.put("/users/1", createFormData(image),
+      { headers: getAuthHeaders() });
+      console.log('User data updated successfully!');
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
   };
+
+  const createFormData = (imageData) => {
+    const formData = new FormData();
+    if (imageData) {
+      formData.append('iconPath', imageData);
+    }
+    return formData;
+  };
+  
   return (
     <div>
+          {console.log(1 + image)}
       <h1>Edit Profile</h1>
       <form>
-        {console.log(userData.iconPath)}
-        {userData.iconPath !== null ? (
-  typeof userData.iconPath === 'string' ? (
+        {image !== null ? (
+  typeof image === 'string' ? (
     // iconPathがstringの場合
     <img
-      src={userData.iconPath}
+      src={image}
       alt="アイコン"
       style={{ width: '100px', height: '100px' }}
     />
     ) : (
       // iconPathがFileの場合
       <img
-        src={URL.createObjectURL(userData.iconPath)}
+        src={URL.createObjectURL(image)}
         alt="アイコン"
         style={{ width: '100px', height: '100px' }}
       />
@@ -87,7 +86,6 @@ const IconSettingPage = (props: { userData: UserDataType, setUserData: (data: Us
       // iconPathがnullの場合
       <p>アイコンがありません</p>
     )}
-
       <input type="file" onChange={handleImageChange} />
       <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
       <>
@@ -121,7 +119,9 @@ const IconSettingPage = (props: { userData: UserDataType, setUserData: (data: Us
       <Button
         variant="outlined"
         color="primary"
-        onClick={onNext}
+        onClick={() => {
+          handleSave()
+          props.onNext()}}
       >
         次へ
       </Button>

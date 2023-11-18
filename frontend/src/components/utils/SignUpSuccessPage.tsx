@@ -1,5 +1,3 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 
 const SignUpSuccessPage = (props) => {
@@ -9,7 +7,7 @@ const SignUpSuccessPage = (props) => {
       <Button
         variant="outlined"
         color="primary"
-        onClick={props.onNext}
+        onClick={() => props.onNext()}
       >
         アイコンを設定する
       </Button>

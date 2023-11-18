@@ -37,23 +37,8 @@ const Initial: React.FC = () => {
   const [step, setStep] = useState<number>(1);
 
   // ユーザー情報
-  const [userData, setUserData] = useState<{
-    accountName: string;
-    iconPath: string | File | null; // iconPathの型をFileまたはnullに変更
-    school: string;
-    facultyDepartment: string;
-    profileStatement: string;
-  }>({
-    accountName: '',
-    iconPath: defaultIcon,
-    school: '',
-    facultyDepartment: '',
-    profileStatement: '',
-  });
 
   const handleNextStep = (data: any) => {
-    // ユーザー情報を更新
-    setUserData((prevData) => ({ ...prevData, ...data }));
     // ステップを進める
     setStep((prevStep) => prevStep + 1);
     console.log(data)
@@ -63,16 +48,13 @@ const Initial: React.FC = () => {
   return (
     <>
     <div>
+      {console.log(step)}
       {step === 1 && <SignUpSuccessPage
       onNext={handleNextStep}/>}
       {step === 2 && <IconSettingPage
-      userData={userData}
-      setUserData={setUserData}
       onNext={handleNextStep}/>}
       {step === 3 && (
         <ProfileSettingPage
-        userData={userData}
-        setUserData={setUserData}
         onNext={handleNextStep}
         />
       )}
