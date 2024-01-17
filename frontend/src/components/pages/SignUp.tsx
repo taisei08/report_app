@@ -14,6 +14,12 @@ import AlertMessage from "components/utils/AlertMessage"
 import { signUp } from "lib/api/auth"
 import { SignUpData } from "interfaces/index"
 
+import EmailInputPage from "components/utils/EmailInputPage"
+import UserInfoInputPage from "components/utils/UserInfoInputPage"
+import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
+import IconSettingPage from "components/utils/IconSettingPage"
+import ProfileSettingPage from "components/utils/ProfileSettingPage"
+
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
     paddingTop: theme.spacing(2),
@@ -79,73 +85,44 @@ const SignUp: React.FC = () => {
     }
   }
 
+  // ステップの管理
+  const [step, setStep] = useState<number>(1);
+
+  // ユーザー情報
+  const [userData, setUserData] = useState({
+    userName: "",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+  });
+
+  const handleNextStep = (data: any) => {
+    // ユーザー情報を更新
+    setUserData((prevData) => ({ ...prevData, ...data }));
+    // ステップを進める
+    setStep((prevStep) => prevStep + 1);
+    console.log(data)
+  };
+
+
   return (
-    <>
-      <form noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="サインアップ" />
-          <CardContent>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="ID"
-              value={userName}
-              margin="dense"
-              onChange={event => setUserName(event.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="メールアドレス"
-              value={email}
-              margin="dense"
-              onChange={event => setEmail(event.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="パスワード"
-              type="password"
-              value={password}
-              margin="dense"
-              autoComplete="current-password"
-              onChange={event => setPassword(event.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              label="パスワード（確認用）"
-              type="password"
-              value={passwordConfirmation}
-              margin="dense"
-              autoComplete="current-password"
-              onChange={event => setPasswordConfirmation(event.target.value)}
-            />
-            <div className={classes.submitBtn}>
-              <Button
-                type="submit"
-                variant="outlined"
-                color="primary"
-                disabled={!userName || !email || !password || !passwordConfirmation ? true : false}
-                onClick={handleSubmit}
-              >
-                送信
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </form>
+    <div>
+      {step === 1 && (
+        <EmailInputPage onNext={handleNextStep} />
+      )}
+      {step === 2 && (
+        <UserInfoInputPage
+        userData={userData}
+        setUserData={setUserData}
+        onNext={handleNextStep}/>
+      )}
       <AlertMessage // エラーが発生した場合はアラートを表示
         open={alertMessageOpen}
         setOpen={setAlertMessageOpen}
         severity="error"
         message="メールアドレスかパスワードが間違っています"
       />
-    </>
+    </div>
   )
 }
 
