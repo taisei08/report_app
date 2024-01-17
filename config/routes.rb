@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :post_counts, only: %i[index]
       resources :posts_edit, only: %i[index update]
       put '/posts_edit', to: 'posts_edit#update', as: 'update'
+      resources :posts_search, only: %i[index]
       resources :ratings, only: %i[index create]
       resources :reviews, only: %i[index create update destroy]
       resources :reviews_by_user, only: %i[index]
@@ -20,6 +21,7 @@ Rails.application.routes.draw do
       resources :replies, only: %i[index create update]
       resources :reply_counts, only: %i[index]
       resources :users, only: %i[index update]
+      resources :users_icon, only: %i[index]
       
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'

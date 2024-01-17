@@ -19,7 +19,6 @@ const Post4: React.FC = (props) => {
     document_type: 0,
     tag_name: '',
   });
-  const [tag, setTag] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {

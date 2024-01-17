@@ -44,9 +44,16 @@ const IconSettingPage = (props) => {
 
   const handleSave = async () => {
     try {
+      // image が defaultIcon であれば API リクエストを送信しない
+      if (image === defaultIcon) {
+        console.log('Default icon, skipping API request.');
+        return;
+      }
+  
       // ユーザーデータを更新するAPIリクエスト
-      await client.put("/users/1", createFormData(image),
-      { headers: getAuthHeaders() });
+      await client.put("/users/1", createFormData(image), {
+        headers: getAuthHeaders(),
+      });
       console.log('User data updated successfully!');
     } catch (error) {
       console.error('Error updating user data:', error);

@@ -12,6 +12,7 @@ import UserPage from "components/pages/UserPage"
 import UserProfileEditPage2 from "components/pages/UserPage2"
 import UserProfileEditPage3 from "components/pages/UserPage3"
 import Initial from "components/pages/Initial"
+import Search from "components/pages/Search"
 
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
@@ -94,6 +95,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/initial" element={<Initial />} />
                 <Route path="/post" element={<Post3 />} />
+                <Route path="/search/:query" element={<Search />} />
                 <Route path="/article/:postId" element={<PostPage />} />
                 <Route path="/article/:postId/edit" element={<Post4 />} />
                 <Route path="/userpage" element={<UserPage />} />

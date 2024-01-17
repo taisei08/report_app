@@ -35,11 +35,20 @@ const ProfileSettingPage = (props) => {
 
   const handleSave = async () => {
     try {
+
+      
       const userData = {
-        birthday: birthday,
-        facultyDepartment: facultyDepartment,
-        school: school,
+        ...(birthday && { birthday: birthday }),
+        ...(facultyDepartment && { facultyDepartment: facultyDepartment }),
+        ...(school && { school: school }),
       };
+      
+      if (school.trim() === '' && facultyDepartment.trim() === '' && birthday.trim() === '') {
+        // 必要な情報が入力されていない場合は処理を中止
+        return;
+      }
+
+      console.log(userData)
 
       // ユーザーデータを更新するAPIリクエスト
       await client.put("/users/1", createFormData(userData), {
