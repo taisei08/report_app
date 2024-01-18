@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       resources :test, only: %i[index]
       resources :fields, only: %i[index]
       resources :follows, only: %i[index create destroy]
+      resources :like_post_counts, only: %i[index]
+      resources :like_posts, only: %i[index]
       resources :likes, only: %i[index create destroy]
       resources :like_counts, only: %i[index]
       resources :notifications, only: %i[index]

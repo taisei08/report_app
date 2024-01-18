@@ -1,6 +1,6 @@
 class Api::V1::ReviewsController < ApplicationController
 
-  before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
+  before_action :authenticate_api_v1_user!, only: [:create, :update]
 
   def index
     @review = Review

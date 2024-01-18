@@ -167,7 +167,7 @@ const Header: React.FC = () => {
                 }>
                 マイページ
               </MenuItem>
-              <MenuItem onClick={() => handleMenuItemClick("/userpage2")}>
+              <MenuItem onClick={() => handleMenuItemClick("/settings/userpage2")}>
                 設定
               </MenuItem>
               <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>

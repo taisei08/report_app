@@ -5,26 +5,36 @@ import Avatar from 'react-avatar';
 import { PostIdContext } from 'App';
 import { Link } from 'react-router-dom';
 import Rating from 'react-rating';
+import ReactPaginate from 'react-paginate';
 
-
-
-const PostList = () => {
+const LikeList = (props) => {
   const [posts, setPosts] = useState<PostLists[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [allPosts, setAllPosts] = useState<PostLists[]>([]);
   const { sendPostId, setSendPostId } = useContext(PostIdContext);
+  const [totalPages, setTotalPages] = useState(0); // 総ページ数
+
 
   useEffect(() => {
     // データを取得するための関数
     const fetchData = async () => {
       try {
-        const response = await client.get(`/posts?page=${currentPage}`)
-        console.log("Response from server:", response.data);
+        const [response, response1] = await Promise.all([
+          client.get(`/like_posts?page=${currentPage}`, { params: {userId: props.id} }),
+          client.get('/like_post_counts', { params: {userId: props.id} }),
+        ]);
+        console.log("Response from server:", response1.data.length);
         const response2 = response.data
+        const response3 = response1.data
         const tempdata = response2.posts
         console.log(tempdata)
         setPosts(tempdata); // レスポンスのデータをstateにセット
-        setAllPosts(prevPosts => [...prevPosts, ...tempdata]); // すべてのポストを更新
+        setAllPosts(prevPosts => tempdata); // すべてのポストを更新
+        const totalItemCount = response3.length; // 総件数を取得
+        console.log(totalItemCount)
+        const pageSize = 10; // ページあたりのアイテム数
+        const pages = Math.ceil(totalItemCount / pageSize); // 総ページ数を計算
+        setTotalPages(pages);
 
         console.log("Posts after setPosts:", posts);
       } catch (error) {
@@ -37,14 +47,9 @@ const PostList = () => {
 
   }, [currentPage]); // useEffectがマウント時に一度だけ実行されるように空の依存リストを指定
 
-  const loadMore = () => {
-    setCurrentPage(currentPage + 1);
-  };
-
   const handleChildLinkClick = (e) => {
     e.stopPropagation(); // 親へのイベント伝播を停止
   };
-
 
   const handlePostClick = (postId) => {
     // クリックされた投稿のIDを取り出して何かしらの処理を行う
@@ -52,6 +57,10 @@ const PostList = () => {
     setSendPostId(postId)
     window.location.href = `/article/${postId}`;
     // ここでサーバーサイドにデータを取りに行くなどの処理を追加可能
+  };
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected + 1);
   };
 
   return (
@@ -77,7 +86,7 @@ const PostList = () => {
             onClick={handleChildLinkClick}
             >
               <Avatar
-              name={post.accountName}
+              name={post.userName}
               size="40"
               round={true}
               src={post.iconPath}
@@ -114,9 +123,18 @@ const PostList = () => {
       </li>
     ))}
   </ul>
-  <button onClick={loadMore}>Load More</button>
-</div>
+    <ReactPaginate
+      pageCount={totalPages} // 総ページ数を指定
+      marginPagesDisplayed={1} // 前後に表示するページ数
+      pageRangeDisplayed={2} // 一度に表示するページ数
+      onPageChange={handlePageChange}
+      containerClassName={"pagination"}
+      subContainerClassName={"pages pagination"}
+      activeClassName={"active"}
+      breakLabel='...' // ... のテキストをカスタマイズ
+    />
+  </div>
   );
 };
 
-export default PostList
+export default LikeList;

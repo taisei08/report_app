@@ -9,12 +9,7 @@ const Home: React.FC = () => {
   console.log(currentUser);
 
   return (
-    <>
-      {
-        isSignedIn && currentUser ? (
           <>
-            <h2>メールアドレス: {currentUser?.email}</h2>
-            <h2>名前: {currentUser?.userName}</h2>
             <div>
       <PostList/>
     </div>
@@ -27,12 +22,6 @@ const Home: React.FC = () => {
               <Link to="/userpage2">ユーザーページ2</Link>
 
           </>
-        ) : (
-          <></>
-          
-        )
-      }
-    </>
   )
 }
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
 import PostList2 from 'components/utils/PostList2';
 import ReviewList from 'components/utils/ReviewList';
+import LikeList from 'components/utils/LikeList';
 import { useParams } from 'react-router-dom';
 import { getAuthHeaders } from 'lib/api/auth';
 import FollowButton from 'components/utils/FollowButton';
@@ -83,7 +84,12 @@ const UserProfileEditPage3 = () => {
           resetParentState={resetParentState}
           />
           }
-        {contentType === 'like' && <p>ここにいいねが表示されます。</p>}
+        {contentType === 'like' &&
+          <LikeList
+          id= {Id.userId}
+          resetParentState={resetParentState}
+          />
+          }
     </div>
     </div>
   );

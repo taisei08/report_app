@@ -19,6 +19,7 @@ export interface SignUpData {
     provider: string
     email: string
     userName: string
+    accountName: string
     account_name?: string
     image_path?: string
     allowPasswordChange: boolean
@@ -40,6 +41,7 @@ export interface SignUpData {
     postId: number
     userId: number
     userName: string
+    accountName: string
     iconPath: string
     title: string
     description: string

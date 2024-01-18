@@ -71,7 +71,7 @@ const App: React.FC = () => {
       if (isSignedIn) {
         return children
       } else {
-        return <Navigate replace to="/signin" />
+        return <Navigate replace to="/" />
       }
     } else {
       return <></>
@@ -86,20 +86,20 @@ const App: React.FC = () => {
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/article/:postId" element={<PostPage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/*" element={
               <Private>
               <Routes>
                 <>
-                <Route path="/" element={<Home />} />
                 <Route path="/initial" element={<Initial />} />
                 <Route path="/post" element={<Post3 />} />
                 <Route path="/search/:query" element={<Search />} />
-                <Route path="/article/:postId" element={<PostPage />} />
                 <Route path="/article/:postId/edit" element={<Post4 />} />
-                <Route path="/userpage" element={<UserPage />} />
-                <Route path="/userpage2" element={<UserProfileEditPage2 />} />
+                <Route path="settings/userpage" element={<UserPage />} />
+                <Route path="settings/userpage2" element={<UserProfileEditPage2 />} />
                 <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
 
                 </>
