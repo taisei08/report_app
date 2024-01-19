@@ -14,7 +14,7 @@ class Api::V1::LikePostCountsController < ApplicationController
   private
 
   def post_params
-    params.permit(:user_id, :page)
+    params.permit(:user_id)
   end
 
 end

@@ -29,6 +29,8 @@ Rails.application.routes.draw do
         registrations: 'api/v1/auth/registrations'
       }
 
+      mount LetterOpenerWeb::Engine, at: "letter_opener" if Rails.env.development?
+
       namespace :auth do
         resources :sessions, only: %i[index]
       end

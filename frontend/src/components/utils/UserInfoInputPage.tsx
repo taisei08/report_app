@@ -16,6 +16,8 @@ const UserInfoInputPage = (props) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const confirmSuccessUrl = "http://localhost:3000";
+
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -25,7 +27,8 @@ const UserInfoInputPage = (props) => {
       userName: userName,
       email: userData.email,
       password: password,
-      passwordConfirmation: passwordConfirmation
+      passwordConfirmation: passwordConfirmation,
+      confirmSuccessUrl: confirmSuccessUrl,
     }
 
     try {
@@ -35,14 +38,10 @@ const UserInfoInputPage = (props) => {
       if (res.status === 200) {
         // アカウント作成と同時にサインインさせてしまう
         // 本来であればメール確認などを挟むべきだが、今回はサンプルなので
-        Cookies.set("_access_token", res.headers["access-token"])
-        Cookies.set("_client", res.headers["client"])
-        Cookies.set("_uid", res.headers["uid"])
-
-        setIsSignedIn(true)
-        setCurrentUser(res.data.data)
-
-        navigation("/initial")
+        // Cookies.set("_access_token", res.headers["access-token"])
+        // Cookies.set("_client", res.headers["client"])
+        // Cookies.set("_uid", res.headers["uid"])
+        onNext();
 
         console.log("Signed in successfully!")
       } else {

@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
+import Cookies from "js-cookie"
 import { makeStyles, Theme } from "@material-ui/core/styles"
 import AlertMessage from "components/utils/AlertMessage"
 import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
@@ -27,8 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 // サインアップ用ページ
 const Initial: React.FC = () => {
-
-  const navigation = useNavigate()
 
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
 

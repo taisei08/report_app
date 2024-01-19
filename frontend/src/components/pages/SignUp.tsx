@@ -16,9 +16,7 @@ import { SignUpData } from "interfaces/index"
 
 import EmailInputPage from "components/utils/EmailInputPage"
 import UserInfoInputPage from "components/utils/UserInfoInputPage"
-import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
-import IconSettingPage from "components/utils/IconSettingPage"
-import ProfileSettingPage from "components/utils/ProfileSettingPage"
+import CheckMail from "components/utils/CheckMail"
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -66,9 +64,9 @@ const SignUp: React.FC = () => {
       if (res.status === 200) {
         // アカウント作成と同時にサインインさせてしまう
         // 本来であればメール確認などを挟むべきだが、今回はサンプルなので
-        Cookies.set("_access_token", res.headers["access-token"])
-        Cookies.set("_client", res.headers["client"])
-        Cookies.set("_uid", res.headers["uid"])
+        // Cookies.set("_access_token", res.headers["access-token"])
+        //Cookies.set("_client", res.headers["client"])
+        //Cookies.set("_uid", res.headers["uid"])
 
         setIsSignedIn(true)
         setCurrentUser(res.data.data)
@@ -116,6 +114,9 @@ const SignUp: React.FC = () => {
         setUserData={setUserData}
         onNext={handleNextStep}/>
       )}
+      {step === 3 && (
+        <CheckMail/>
+      )}      
       <AlertMessage // エラーが発生した場合はアラートを表示
         open={alertMessageOpen}
         setOpen={setAlertMessageOpen}
