@@ -9,13 +9,15 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable, :confirmable
   include DeviseTokenAuth::Concerns::User
 
+  validates :user_name, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "は半角英数字と一部記号（_-）のみ使用できます" }
+  VALID_PASSWORD_REGEX = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/
+  #validates :password, format: { with: VALID_PASSWORD_REGEX }
+
   mount_uploader :icon_path, ImageUploader
 
-  has_many :ratings, class_name: "Rating", dependent: :destroy
   has_many :posts, class_name: "Post", dependent: :destroy
   has_many :replies, class_name: "Reply", dependent: :destroy
   has_many :reviews, class_name: "Review", dependent: :destroy
-  has_many :ratings, class_name: "Rating", dependent: :destroy
   has_many :likes, class_name: "Like", dependent: :destroy
   has_many :fields, through: :interests, class_name: "Field"
   has_many :interests, class_name: "Interest", dependent: :destroy

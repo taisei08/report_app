@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/SettingsMenu';
+import Cookies from 'js-cookie';
 
-const UserProfileEditPage4 = () => {
-  const [userData, setUserData] = useState()
+const UserProfileEditPage7 = () => {
   const [formData, setFormData] = useState<{
-    redirect_url: string;
+    confirmSuccessUrl: string;
     email: string;
   }>({
     
-    redirect_url: 'http://localhost:3000/settings/userpage4',
+    confirmSuccessUrl: "http://localhost:3000",
     email: '',
   });
 
@@ -24,7 +24,6 @@ const UserProfileEditPage4 = () => {
       // ユーザーデータをAPIから取得
       const response = await client.get('/users',
       { headers: getAuthHeaders() });
-      setUserData(response.data);
       console.log(response.data)
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -42,9 +41,11 @@ const UserProfileEditPage4 = () => {
   const handleSave = async () => {
     try {
       // ユーザーデータを更新するAPIリクエスト
-      await client.post(`/auth/password`, formData,
+      await client.delete(`/auth`,
       { headers: getAuthHeaders() });
-      console.log(formData)
+      Cookies.remove("_access_token")
+      Cookies.remove("_client")
+      Cookies.remove("_uid")
       console.log('User data updated successfully!');
     } catch (error) {
       console.error('Error updating user data:', error);
@@ -56,10 +57,10 @@ const UserProfileEditPage4 = () => {
     <SettingsMenu />
     
     <div>
-      <h1>パスワード変更</h1>
+      <h1>アカウントの消去</h1>
       <form>
         <label>
-          現在のメールアドレス
+          アカウントの消去
           <input
             type="text"
             name="email"
@@ -68,7 +69,7 @@ const UserProfileEditPage4 = () => {
           />
         </label>
         <button type="button" onClick={handleSave}>
-          Save Changes
+          消去
         </button>
       </form>
     </div>
@@ -77,5 +78,5 @@ const UserProfileEditPage4 = () => {
   );
 };
 
-export default UserProfileEditPage4;
+export default UserProfileEditPage7;
 

@@ -40,6 +40,8 @@ gem 'devise'
 
 gem 'devise_token_auth'
 
+gem 'devise-security'
+
 gem 'carrierwave'
 
 gem 'kaminari'

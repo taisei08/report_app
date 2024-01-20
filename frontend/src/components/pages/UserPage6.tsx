@@ -3,14 +3,14 @@ import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/SettingsMenu';
 
-const UserProfileEditPage4 = () => {
+const UserProfileEditPage6 = () => {
   const [userData, setUserData] = useState()
   const [formData, setFormData] = useState<{
-    redirect_url: string;
+    confirmSuccessUrl: string;
     email: string;
   }>({
     
-    redirect_url: 'http://localhost:3000/settings/userpage4',
+    confirmSuccessUrl: "http://localhost:3000",
     email: '',
   });
 
@@ -42,7 +42,7 @@ const UserProfileEditPage4 = () => {
   const handleSave = async () => {
     try {
       // ユーザーデータを更新するAPIリクエスト
-      await client.post(`/auth/password`, formData,
+      await client.put(`/auth`, formData,
       { headers: getAuthHeaders() });
       console.log(formData)
       console.log('User data updated successfully!');
@@ -56,10 +56,10 @@ const UserProfileEditPage4 = () => {
     <SettingsMenu />
     
     <div>
-      <h1>パスワード変更</h1>
+      <h1>メールアドレス変更</h1>
       <form>
         <label>
-          現在のメールアドレス
+          新しいメールアドレス
           <input
             type="text"
             name="email"
@@ -77,5 +77,5 @@ const UserProfileEditPage4 = () => {
   );
 };
 
-export default UserProfileEditPage4;
+export default UserProfileEditPage6;
 

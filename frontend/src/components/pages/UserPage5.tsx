@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
+import { useSearchParams } from 'react-router-dom'
 import { getAuthHeaders } from 'lib/api/auth';
-import SettingsMenu from 'components/utils/SettingsMenu';
 
-const UserProfileEditPage4 = () => {
+const UserProfileEditPage5 = () => {
   const [userData, setUserData] = useState()
+  const [searchParams] = useSearchParams();
+
   const [formData, setFormData] = useState<{
-    redirect_url: string;
-    email: string;
+    password: string;
+    passwordConfirmation: string;
+    resetPasswordToken: string|null;
   }>({
-    
-    redirect_url: 'http://localhost:3000/settings/userpage4',
-    email: '',
+    password: '',
+    passwordConfirmation: '',
+    resetPasswordToken: searchParams.get('access-token')
   });
 
   useEffect(() => {
@@ -33,8 +36,8 @@ const UserProfileEditPage4 = () => {
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setFormData((prevUserData) => ({
+      ...prevUserData,
       [name]: value,
     }));
   };
@@ -42,10 +45,11 @@ const UserProfileEditPage4 = () => {
   const handleSave = async () => {
     try {
       // ユーザーデータを更新するAPIリクエスト
-      await client.post(`/auth/password`, formData,
+      await client.put('auth/password', formData,
       { headers: getAuthHeaders() });
-      console.log(formData)
       console.log('User data updated successfully!');
+      console.log(formData);
+
     } catch (error) {
       console.error('Error updating user data:', error);
     }
@@ -53,17 +57,25 @@ const UserProfileEditPage4 = () => {
 
   return (
     <div className="settings-page">
-    <SettingsMenu />
     
     <div>
-      <h1>パスワード変更</h1>
+      <h1>Edit Profile</h1>
       <form>
         <label>
-          現在のメールアドレス
+          新しいパスワード
           <input
             type="text"
-            name="email"
-            value={formData.email}
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+          />
+        </label>
+        <label>
+          新しいパスワード(確認)
+          <input
+            type="text"
+            name="passwordConfirmation"
+            value={formData.passwordConfirmation}
             onChange={handleInputChange}
           />
         </label>
@@ -77,5 +89,5 @@ const UserProfileEditPage4 = () => {
   );
 };
 
-export default UserProfileEditPage4;
+export default UserProfileEditPage5;
 

@@ -91,6 +91,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-security (0.18.0)
+      devise (>= 4.3.0)
     devise_token_auth (1.2.2)
       bcrypt (~> 3.0)
       devise (> 3.5.2, < 5)
@@ -232,6 +234,7 @@ DEPENDENCIES
   carrierwave
   debug
   devise
+  devise-security
   devise_token_auth
   kaminari
   letter_opener_web

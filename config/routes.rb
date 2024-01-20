@@ -24,6 +24,8 @@ Rails.application.routes.draw do
       resources :reply_counts, only: %i[index]
       resources :users, only: %i[index update]
       resources :users_icon, only: %i[index]
+      resources :users_password_change, only: %i[update]
+
       
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
