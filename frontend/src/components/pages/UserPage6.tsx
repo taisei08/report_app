@@ -42,7 +42,7 @@ const UserProfileEditPage6 = () => {
   const handleSave = async () => {
     try {
       // ユーザーデータを更新するAPIリクエスト
-      await client.put(`/auth`, formData,
+      await client.put("/auth", formData,
       { headers: getAuthHeaders() });
       console.log(formData)
       console.log('User data updated successfully!');

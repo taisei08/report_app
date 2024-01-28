@@ -6,6 +6,7 @@ import LikeList from 'components/utils/LikeList';
 import { useParams } from 'react-router-dom';
 import { getAuthHeaders } from 'lib/api/auth';
 import FollowButton from 'components/utils/FollowButton';
+import UserCounts from 'components/utils/UserCounts';
 
 const UserProfileEditPage3 = () => {
   const Id = useParams()
@@ -30,8 +31,7 @@ const UserProfileEditPage3 = () => {
     facultyDepartment: '',
     profileStatement: '',
   });
-
-  const [Reviews, setReviews] = useState(); // デフォルトは投稿
+  const [counts, setCounts] = useState()
 
   useEffect(() => {
     // ページが読み込まれたときにユーザーデータを取得する
@@ -41,9 +41,16 @@ const UserProfileEditPage3 = () => {
   const fetchUserData = async () => {
     try {
       // ユーザーデータをAPIから取得
-      const response = await client.get('/users',
-      { headers: getAuthHeaders() });
-      setUserData(response.data);
+      const [response1, response2] = await Promise.all([
+        client.get('/users', { headers: getAuthHeaders() }),
+        client.get('/follow_and_post_counts', {
+          params: { userId: Id.userId },
+          headers: getAuthHeaders(),
+        })      
+      ]);
+      setUserData(response1.data);
+      console.log(response2.data);
+      setCounts(response2.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -53,10 +60,9 @@ const UserProfileEditPage3 = () => {
     setContentType(newContentType);
   };
 
-    const resetParentState = () => {
+  const resetParentState = () => {
     setContentType('post');
   };
-
 
   return (
     <div>
@@ -66,6 +72,17 @@ const UserProfileEditPage3 = () => {
     <p>School: {userData.school}</p>
     <p>Faculty Department: {userData.facultyDepartment}</p>
     <p>Profile Statement: {userData.profileStatement}</p>
+    {
+  counts && (
+    <UserCounts
+      id= {Id.userId}
+      postsCount={counts.posts}
+      followingsCount={counts.folloings}
+      followersCount={counts.followers}
+      resetParentState={resetParentState}
+    />
+  )
+    }
     <FollowButton id={Id.userId}/>
     <div>
         <button onClick={() => handleButtonClick('post')}>投稿を表示</button>

@@ -3,7 +3,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :test, only: %i[index]
       resources :fields, only: %i[index]
+      resources :following, only: %i[index]
       resources :follows, only: %i[index create destroy]
+      resources :follow_and_post_counts, only: %i[index]
       resources :like_post_counts, only: %i[index]
       resources :like_posts, only: %i[index]
       resources :likes, only: %i[index create destroy]
