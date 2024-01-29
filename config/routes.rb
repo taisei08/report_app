@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :test, only: %i[index]
       resources :fields, only: %i[index]
       resources :following, only: %i[index]
+      resources :followed, only: %i[index]
       resources :follows, only: %i[index create destroy]
       resources :follow_and_post_counts, only: %i[index]
       resources :like_post_counts, only: %i[index]
@@ -25,6 +26,7 @@ Rails.application.routes.draw do
       resources :replies, only: %i[index create update]
       resources :reply_counts, only: %i[index]
       resources :users, only: %i[index update]
+      resources :users_index_for_header, only: %i[index]
       resources :users_icon, only: %i[index]
       resources :users_password_change, only: %i[update]
 

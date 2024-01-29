@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 import { getAuthHeaders } from 'lib/api/auth';
 import FollowButton from 'components/utils/FollowButton';
 import UserCounts from 'components/utils/UserCounts';
+import FollowingList from 'components/utils/FollowingList';
+import FollowedList from 'components/utils/FollowedList';
 
 const UserProfileEditPage3 = () => {
   const Id = useParams()
@@ -36,20 +38,24 @@ const UserProfileEditPage3 = () => {
   useEffect(() => {
     // ページが読み込まれたときにユーザーデータを取得する
     fetchUserData();
-  }, []);
+    setContentType("post")
+    console.log("nioeoe")
+  }, [Id]);
 
   const fetchUserData = async () => {
     try {
       // ユーザーデータをAPIから取得
       const [response1, response2] = await Promise.all([
-        client.get('/users', { headers: getAuthHeaders() }),
+        client.get('/users', {
+          params: { userId: Id.userId },
+          headers: getAuthHeaders() }),
         client.get('/follow_and_post_counts', {
           params: { userId: Id.userId },
           headers: getAuthHeaders(),
         })      
       ]);
       setUserData(response1.data);
-      console.log(response2.data);
+      console.log(response1.data);
       setCounts(response2.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -66,6 +72,7 @@ const UserProfileEditPage3 = () => {
 
   return (
     <div>
+      {      console.log(userData)}
     <h1>User Profile</h1>
     <p>Account Name: {userData.accountName}</p>
     {/* iconPathの表示はフォームや画像タグを使用 */}
@@ -80,6 +87,7 @@ const UserProfileEditPage3 = () => {
       followingsCount={counts.folloings}
       followersCount={counts.followers}
       resetParentState={resetParentState}
+      setContentType={setContentType}
     />
   )
     }
@@ -94,19 +102,27 @@ const UserProfileEditPage3 = () => {
           <PostList2
           id= {Id.userId}
           />
-          }
+        }
         {contentType === 'review' && 
           <ReviewList
           id= {Id.userId}
-          resetParentState={resetParentState}
           />
-          }
+        }
         {contentType === 'like' &&
           <LikeList
           id= {Id.userId}
-          resetParentState={resetParentState}
           />
-          }
+        }
+        {contentType === 'following' &&
+          <FollowingList
+          id= {Id.userId}
+          />
+        }
+        {contentType === 'followed' &&
+          <FollowedList
+          id= {Id.userId}
+          />
+        }
     </div>
     </div>
   );

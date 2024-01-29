@@ -4,15 +4,14 @@ import { PostLists } from "interfaces/index"
 import Avatar from 'react-avatar';
 import { PostIdContext } from 'App';
 import { Link, useParams } from 'react-router-dom';
-import Rating from 'react-rating';
 import ReactPaginate from 'react-paginate';
 import { getAuthHeaders } from 'lib/api/auth';
 
-const UserList = (props) => {
+const FollowedList = (props) => {
   const Id = useParams()
-  const [posts, setPosts] = useState<PostLists[]>([]);
+  const [followed, setFollowed] = useState<PostLists[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [allPosts, setAllPosts] = useState<PostLists[]>([]);
+  const [allFollowed, setAllFollowed] = useState<PostLists[]>([]);
   const { sendPostId, setSendPostId } = useContext(PostIdContext);
   const [totalPages, setTotalPages] = useState(0); // 総ページ数
 
@@ -22,25 +21,22 @@ const UserList = (props) => {
     const fetchData = async () => {
       try {
         const [response, response1] = await Promise.all([
-          client.get('/following', { params: {followerId: Id.userId} }),
+          client.get('/followed', { params: {followingId: Id.userId} }),
           client.get('/follow_and_post_counts', {
             params: { userId: Id.userId },
             headers: getAuthHeaders(),
           })        ]);
         console.log("Response from server:", response1.data.length);
-        const response2 = response.data
-        const response3 = response1.data
-        const tempdata = response2.posts
         console.log(response)
-        setPosts(tempdata); // レスポンスのデータをstateにセット
-        setAllPosts(prevPosts => tempdata); // すべてのポストを更新
-        const totalItemCount = response3.length; // 総件数を取得
+        setFollowed(response.data.followings); // レスポンスのデータをstateにセット
+        setAllFollowed(prevPosts => response.data.followers); // すべてのポストを更新
+        const totalItemCount = response1.data.followers; // 総件数を取得
         console.log(totalItemCount)
         const pageSize = 10; // ページあたりのアイテム数
         const pages = Math.ceil(totalItemCount / pageSize); // 総ページ数を計算
         setTotalPages(pages);
 
-        console.log("Posts after setPosts:", posts);
+        console.log("Followed after setFollowed:", followed);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -71,15 +67,15 @@ const UserList = (props) => {
 <div>
   <h1>Post List</h1>
   <ul>
-    {allPosts.map(post => (
-      <li key={post.postId}>
+    {allFollowed.map(post => (
+      <li key={post.userId}>
         {/* アンカータグでリンクを作成 */}
         <Link
-          to={`/article/${post.postId}`}
+          to={`/article/${post.userId}`}
           style={{ textDecoration: 'none', color: 'inherit' }}
           onClick={(e) => {
             e.preventDefault(); // リンクのデフォルトの挙動をキャンセル
-            handlePostClick(post.postId);
+            handlePostClick(post.userId);
           
           }}
         >
@@ -93,35 +89,13 @@ const UserList = (props) => {
               name={post.userName}
               size="40"
               round={true}
-              src={post.iconPath}
+              src={post.iconPath.url}
               /> {/* Avatar コンポーネント */}
               <span style={{ marginLeft: '10px' }}>{post.userName}</span> {/* ユーザー名 */}
               </Link>
             </div>
-            <div>
-              <span>Last Updated: {post.createdAt}</span> {/* 最終更新日 */}
-            </div>
-            <div>
-              <h3>
-                {/* リンクの中にもLinkコンポーネントを使う */}
-                <Link
-                  to={`/article/${post.postId}`}
-                  onClick={(e) => {
-                    e.preventDefault(); // リンクのデフォルトの挙動をキャンセル
-                    handlePostClick(post.postId);
-                  }}
-                >
-                  {post.title}
-                </Link>
-              </h3>
-              <p>{post.description}</p>
-              <Rating readonly initialRating={post.averageRating} fractions={2} />
-
-            </div>
-            <div>
-              {console.log(post.postId)}
-              Tags: {post.tags.map(tag => <span key={Object.keys(tag)}>{Object.values(tag)}</span>)} {/* タグの表示 */}
-            </div>
+          <p>Account Name: {post.accountName}</p>
+          <p>Profile Statement: {post.profileStatement}</p>
           </div>
         </Link>
       </li>
@@ -141,4 +115,4 @@ const UserList = (props) => {
   );
 };
 
-export default UserList
+export default FollowedList;

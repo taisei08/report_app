@@ -2,7 +2,7 @@ class Api::V1::FollowingController < ApplicationController
 
   def index
 
-    user = User.find(params[:follower_id])
+    user = User.find(follow_params[:follower_id])
     @users = user.followings
     .page(params[:page])
     .per(10)

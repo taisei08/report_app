@@ -15,7 +15,7 @@ const FollowButton = (props: Props) => {
   useEffect(() => {
     // ページが読み込まれたときにユーザーのフォロー状態を取得
     fetchFollowStatus();
-  }, []);
+  }, [props.id]);
 
   const fetchFollowStatus = async () => {
     try {

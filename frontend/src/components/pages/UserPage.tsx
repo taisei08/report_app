@@ -34,7 +34,7 @@ const UserProfileEditPage = () => {
   const fetchUserData = async () => {
     try {
       // ユーザーデータをAPIから取得
-      const response = await client.get('/users',
+      const response = await client.get("/users_index_for_header",
       { headers: getAuthHeaders() });
       setUserData(response.data);
       console.log(response.data)
