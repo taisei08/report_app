@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:index, :update]
 
   def index
-    user_data = current_api_v1_user.slice(:user_id,:user_name,
+    user_data = User.find(index_params[:user_id]).slice(:user_id,:user_name,
     :account_name, :profile_statement, :icon_path, :school,
     :faculty_department, :birthday)
     render json: user_data
@@ -21,6 +21,10 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
+
+  def index_params
+    params.permit(:user_id)
+  end
 
   def user_params
     params.permit(:account_name, :profile_statement, :icon_path, :birthday,

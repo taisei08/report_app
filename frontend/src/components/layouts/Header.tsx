@@ -116,7 +116,7 @@ const Header: React.FC = () => {
   const fetchUserData = async () => {
     try {
       // ユーザーデータをAPIから取得
-      const response = await client.get("/users", {
+      const response = await client.get("/users_index_for_header", {
         headers: getAuthHeaders(),
       });
       setIcon(response.data.iconPath.url);

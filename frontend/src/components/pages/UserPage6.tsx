@@ -22,7 +22,7 @@ const UserProfileEditPage6 = () => {
   const fetchUserData = async () => {
     try {
       // ユーザーデータをAPIから取得
-      const response = await client.get('/users',
+      const response = await client.get("/users_index_for_header",
       { headers: getAuthHeaders() });
       setUserData(response.data);
       console.log(response.data)
@@ -42,7 +42,7 @@ const UserProfileEditPage6 = () => {
   const handleSave = async () => {
     try {
       // ユーザーデータを更新するAPIリクエスト
-      await client.put(`/auth`, formData,
+      await client.put("/auth", formData,
       { headers: getAuthHeaders() });
       console.log(formData)
       console.log('User data updated successfully!');

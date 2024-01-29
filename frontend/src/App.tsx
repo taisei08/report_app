@@ -17,8 +17,6 @@ import UserProfileEditPage4 from "components/pages/UserPage4"
 import UserProfileEditPage5 from "components/pages/UserPage5"
 import UserProfileEditPage6 from "components/pages/UserPage6"
 import UserProfileEditPage7 from "components/pages/UserPage7"
-
-
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
