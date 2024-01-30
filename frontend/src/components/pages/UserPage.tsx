@@ -3,6 +3,7 @@ import client from 'lib/api/client';
 import AvatarEditor from 'react-avatar-editor'
 import Modal from 'react-modal';
 import { getAuthHeaders } from 'lib/api/auth';
+import SettingsMenu from 'components/utils/SettingsMenu';
 
 const UserProfileEditPage = () => {
   const [image, setImage] = useState();
@@ -109,6 +110,7 @@ const UserProfileEditPage = () => {
 
   return (
     <div>
+          <SettingsMenu />
       <h1>Edit Profile</h1>
       <form>
         {console.log(userData.iconPath)}

@@ -17,9 +17,6 @@ const Home: React.FC = () => {
               <br>
               </br>
               <Link to="/post">投稿</Link>
-              <Link to="/userpage">ユーザーページ</Link>
-              <Link to="/userpage2">ユーザーページ2</Link>
-
           </>
   )
 }
