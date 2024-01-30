@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { Fragment, useState, useEffect, useContext, useRef } from 'react';
 import client from "lib/api/client"
 import { PostLists } from "interfaces/index"
 import Avatar from 'react-avatar';
@@ -136,8 +136,21 @@ const PostList3 = (props) => {
 
             </div>
             <div>
-              Tags: {post.tags.map(tag => <span key={Object.keys(tag)}>{Object.values(tag)}</span>)}
-            </div>
+            Tags: {post.tags.map(tag => (
+              <Fragment key={Object.keys(tag)}>
+                <div style={{ display: 'inline-block', border: '1px solid #ccc', padding: '4px', margin: '4px' }}>
+                  <Link
+                    to={`/search/${tag.tagName}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // ここにクリック時の処理を追加
+                    }}
+                  >
+                    {Object.values(tag.tagName)}
+                  </Link>
+                </div>
+              </Fragment>
+            ))}            </div>
           </div>
         </Link>
       </li>
