@@ -16,7 +16,6 @@ const Home: React.FC = () => {
               {/* Post コンポーネントへのリンクを追加 */}
               <br>
               </br>
-              <Link to="/post">投稿</Link>
           </>
   )
 }

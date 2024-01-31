@@ -147,6 +147,10 @@ const Header: React.FC = () => {
         return (
           <>
             <Form/>
+            <NotificationButton />
+            <Button component={Link} to="/post" variant="contained" color="primary">
+              投稿
+            </Button>
             <IconButton
               ref = {refObject}
               color="inherit"
@@ -210,7 +214,6 @@ const Header: React.FC = () => {
           >
             Sample
           </Typography>
-          <NotificationButton />
           <AuthButtons />
         </Toolbar>
       </AppBar>
