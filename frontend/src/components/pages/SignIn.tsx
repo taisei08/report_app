@@ -42,9 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SignIn: React.FC = () => {
   const classes = useStyles()
   const navigation = useNavigate()
-
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext)
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
@@ -57,28 +56,55 @@ const SignIn: React.FC = () => {
       password: password
     }
 
-    try {
-      const res = await signIn(data)
-      console.log(res)
+    console.log(isSubmitting)
 
-      if (res.status === 200) {
-        // 成功した場合はCookieに各値を格納
-        Cookies.set("_access_token", res.headers["access-token"], { expires: 1 })
-        Cookies.set("_client", res.headers["client"], { expires: 1 })
-        Cookies.set("_uid", res.headers["uid"], { expires: 1 })
+    if (!isSubmitting) {
+      try {
+        setIsSubmitting(true);      
+        const firstSessionCookie = Cookies.get("_first_session");
+        if (firstSessionCookie) {
+          // クッキーが残っている場合は削除
+          Cookies.remove("_first_session");
+        }
 
-        setIsSignedIn(true)
-        setCurrentUser(res.data.data)
+        const res = await signIn(data)
+        console.log(res)
 
-        navigation("/")
+        if (res.status === 200) {
+          // 成功した場合はCookieに各値を格納
+          console.log(res)
 
-        console.log("Signed in successfully!")
-      } else {
+
+          if (res.data["cookies"]) {
+            Cookies.set("_first_session", res.data["cookies"], { expires: 1 / 144 });
+          }        
+          Cookies.set("_access_token", res.headers["access-token"], { expires: 1 })
+          Cookies.set("_client", res.headers["client"], { expires: 1 })
+          Cookies.set("_uid", res.headers["uid"], { expires: 1 })
+
+
+          setIsSignedIn(true)
+          setCurrentUser(res.data.data)
+          if (res.data["cookies"]) {
+            navigation("/initial")
+          }
+          else{
+            navigation("/")
+          }
+
+          console.log("Signed in successfully!")
+          }
+        else {
+          setAlertMessageOpen(true)
+          }
+      }
+      catch (err) {
+        console.log(err)
         setAlertMessageOpen(true)
       }
-    } catch (err) {
-      console.log(err)
-      setAlertMessageOpen(true)
+      finally {
+        setIsSubmitting(false); // 処理が終わったらボタンを有効化
+      }
     }
   }
 
@@ -114,7 +140,7 @@ const SignIn: React.FC = () => {
                 type="submit"
                 variant="outlined"
                 color="primary"
-                disabled={!email || !password ? true : false}
+                disabled={!email || !password || isSubmitting}
                 onClick={handleSubmit}
               >
                 送信

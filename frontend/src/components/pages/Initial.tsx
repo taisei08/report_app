@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import Cookies from "js-cookie"
+import React, { useState } from "react"
 import { makeStyles, Theme } from "@material-ui/core/styles"
 import AlertMessage from "components/utils/AlertMessage"
 import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
 import IconSettingPage from "components/utils/IconSettingPage"
 import ProfileSettingPage from "components/utils/ProfileSettingPage"
 import ProfileSettingPage2 from "components/utils/ProfileSettingPage2"
-import ProfileSettingCompletePage from "./ProfileSettingCompletePage"
+import ProfileSettingCompletePage from "../utils/ProfileSettingCompletePage"
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {

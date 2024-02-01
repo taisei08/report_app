@@ -38,10 +38,6 @@ const SignUp: React.FC = () => {
 
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext)
 
-  const [userName, setUserName] = useState<string>("")
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("")
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
 
   // ステップの管理

@@ -72,7 +72,7 @@ const UserProfileEditPage3 = () => {
 
   return (
     <div>
-      {      console.log(userData)}
+      {console.log(userData)}
     <h1>User Profile</h1>
     <p>Account Name: {userData.accountName}</p>
     {/* iconPathの表示はフォームや画像タグを使用 */}

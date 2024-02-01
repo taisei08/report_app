@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+         :recoverable, :rememberable, :validatable, :confirmable,
+         :trackable
   include DeviseTokenAuth::Concerns::User
 
   validates :user_name, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "は半角英数字と一部記号（_-）のみ使用できます" }
