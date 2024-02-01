@@ -4,6 +4,7 @@ import AlertMessage from "components/utils/AlertMessage"
 import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
 import IconSettingPage from "components/utils/IconSettingPage"
 import ProfileSettingPage from "components/utils/ProfileSettingPage"
+import InterestForm from "components/utils/InterestForm"
 import ProfileSettingPage2 from "components/utils/ProfileSettingPage2"
 import ProfileSettingCompletePage from "../utils/ProfileSettingCompletePage"
 
@@ -50,9 +51,11 @@ const Initial: React.FC = () => {
       onNext={handleNextStep}/>}
       {step === 3 && <ProfileSettingPage
       onNext={handleNextStep}/>}
-      {step === 4 && <ProfileSettingPage2
+      {step === 4 && <InterestForm
       onNext={handleNextStep}/>}
-      {step === 5 && <ProfileSettingCompletePage/>}
+      {step === 5 && <ProfileSettingPage2
+      onNext={handleNextStep}/>}
+      {step === 6 && <ProfileSettingCompletePage/>}
     </div>
       <AlertMessage // エラーが発生した場合はアラートを表示
         open={alertMessageOpen}
