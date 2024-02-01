@@ -100,9 +100,10 @@ const Header: React.FC = () => {
         Cookies.remove("_access_token")
         Cookies.remove("_client")
         Cookies.remove("_uid")
+        Cookies.remove("_first_session")
 
         setIsSignedIn(false)
-        navigation("/signin");
+        navigation("/");
 
         console.log("Succeeded in sign out")
       } else {
@@ -180,6 +181,8 @@ const Header: React.FC = () => {
         );
       } else {
         return (
+          <>
+          <Form/>
           <Button
             component={Link}
             to="/signin"
@@ -188,6 +191,15 @@ const Header: React.FC = () => {
           >
             サインイン
           </Button>
+          <Button
+            component={Link}
+            to="/signup"
+            color="inherit"
+            className={classes.linkBtn}
+          >
+            新規登録
+          </Button>
+          </>
         )
       }
     } else {

@@ -11,6 +11,7 @@ const EmailInputPage = (props) => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const confirmSuccessUrl = "http://localhost:3000";
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
   const onNext = props.onNext;
 
@@ -24,27 +25,30 @@ const EmailInputPage = (props) => {
       passwordConfirmation: passwordConfirmation,
       confirmSuccessUrl: confirmSuccessUrl,
     }
+    console.log(isSubmitting)
 
-    try {
-      console.log(data)
-      const res = await signUp(data)
-      console.log(res)
+    if (!isSubmitting) {
 
-      if (res.status === 200) {
-        // アカウント作成と同時にサインインさせてしまう
-        // 本来であればメール確認などを挟むべきだが、今回はサンプルなので
-        // Cookies.set("_access_token", res.headers["access-token"])
-        // Cookies.set("_client", res.headers["client"])
-        // Cookies.set("_uid", res.headers["uid"])
-        onNext();
+      try {
+        setIsSubmitting(true)
+        const res = await signUp(data)
+        console.log(res)
 
-        console.log("Signed in successfully!")
-      } else {
+        if (res.status === 200) {
+          onNext();
+
+          console.log("Signed in successfully!")
+        }
+        else {
+          setAlertMessageOpen(true)
+        }}
+      catch (err) {
+        console.log(err)
         setAlertMessageOpen(true)
       }
-    } catch (err) {
-      console.log(err)
-      setAlertMessageOpen(true)
+      finally {
+        setIsSubmitting(false); // 処理が終わったらボタンを有効化
+      }
     }
   }
 
@@ -91,7 +95,7 @@ const EmailInputPage = (props) => {
       <Button
         variant="outlined"
         color="primary"
-        disabled={!email || !userName || !password || !passwordConfirmation}
+        disabled={!email || !userName || !password || !passwordConfirmation || isSubmitting}
         onClick={handleSubmit}
       >
         登録
