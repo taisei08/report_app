@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from "react"
 import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom"
 import Cookies from "js-cookie"
 import CommonLayout from "components/layouts/CommonLayout"
+import AccountDeleteComplete from "components/utils/AccountDeleteComplete"
 import Home from "components/pages/Home"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
@@ -91,6 +92,16 @@ const App: React.FC = () => {
     }
   }
 
+  const AccountDeleted = ({ children }: { children: React.ReactElement }) => {
+    console.log(Cookies.get("_account_deleted"))
+    if (Cookies.get("_account_deleted")) {
+      return children
+    } 
+    else {
+      return <Navigate replace to="/" />
+    }
+  }
+
   return (
 
     
@@ -105,6 +116,17 @@ const App: React.FC = () => {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
             <Route path="/search/:query" element={<Search />} />
+            <Route
+              path="/deleted"
+              element={
+                <AccountDeleted>
+                  <Routes>
+                  <Route index element={<AccountDeleteComplete />} />
+                  </Routes>
+                </AccountDeleted>
+              }
+            />       
+            
 
             <Route path="/*" element={
               <Private>

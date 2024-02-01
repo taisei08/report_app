@@ -44,7 +44,6 @@ const Initial: React.FC = () => {
   return (
     <>
     <div>
-      {console.log(step)}
       {step === 1 && <SignUpSuccessPage
       onNext={handleNextStep}/>}
       {step === 2 && <IconSettingPage
