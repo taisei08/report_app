@@ -18,6 +18,7 @@ import UserProfileEditPage4 from "components/pages/UserPage4"
 import UserProfileEditPage5 from "components/pages/UserPage5"
 import UserProfileEditPage6 from "components/pages/UserPage6"
 import UserProfileEditPage7 from "components/pages/UserPage7"
+import UserProfileEditPage8 from "components/pages/UserPage8"
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
@@ -140,6 +141,8 @@ const App: React.FC = () => {
                   <Route path="/settings/userpage4" element={<UserProfileEditPage5 />} />
                   <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />
                   <Route path="/settings/userpage6" element={<UserProfileEditPage7 />} />
+                  <Route path="/settings/userpage7" element={<UserProfileEditPage8 />} />
+
                   
                   <Route
                     path="/initial"

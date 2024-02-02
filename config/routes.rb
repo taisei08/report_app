@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :test, only: %i[index]
-      resources :fields, only: %i[index create update]
+      resources :fields, only: %i[index create]
+      put '/fields', to: 'fields#update'
       resources :following, only: %i[index]
       resources :followed, only: %i[index]
       resources :follows, only: %i[index create destroy]

@@ -53,8 +53,8 @@ export interface SignUpData {
   }
 
   export interface Fields {
-    fieldId: number;
-    fieldName: string;
+    id: number;
+    name: string;
   }
 
   export interface Tags {

@@ -9,6 +9,7 @@ const SettingsMenu = () => {
         <li><Link to="/settings/userpage3">パスワード</Link></li>
         <li><Link to="/settings/userpage5">メールアドレス</Link></li>
         <li><Link to="/settings/userpage">プロフィール</Link></li>
+        <li><Link to="/settings/userpage7">分野</Link></li>
         <li><Link to="/settings/userpage6">アカウントの消去</Link></li>
 
 

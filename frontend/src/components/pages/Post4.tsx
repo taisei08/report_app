@@ -4,6 +4,7 @@ import { Fields } from "interfaces/index"
 import { getAuthHeaders } from "lib/api/auth"
 import { WithContext as ReactTags } from 'react-tag-input';
 import { useParams } from 'react-router-dom';
+import { allFields } from 'interfaces/fields';
 
 
 const Post4: React.FC = (props) => {
@@ -30,7 +31,7 @@ const Post4: React.FC = (props) => {
         ]);
         console.log(response.data.posts)
         setPostData(response.data.posts[0]); // サーバーからの応答に.fieldsを追加することを確認
-        setFields(response1.data.fields);
+        setFields(allFields);
         setTags(response.data.posts[0].tags.map(tag =>({ id: tag.tagName, text: tag.tagName })))
       } catch (error) {
         console.error('Failed to fetch fields', error);
@@ -121,10 +122,6 @@ const Post4: React.FC = (props) => {
     return formData;
   };
   
-  if (fields.length === 0) {
-    return null;
-  }
-
   return (
     <div>
       <label>
@@ -139,10 +136,10 @@ const Post4: React.FC = (props) => {
       <br />
       <label>
         Field:
-        <select name="field_id" value={postData.field_id} onChange={handleChange}>
+        <select name="fieldId" value={postData.fieldId} onChange={handleChange}>
           <option value={0} disabled>Select a field</option>
           {fields.map(field => (
-            <option key={field.fieldId} value={field.fieldId}>{field.fieldName}</option>
+            <option key={field.id} value={field.id}>{field.name}</option>
           ))}
         </select>
       </label>
@@ -152,9 +149,9 @@ const Post4: React.FC = (props) => {
         <select name="subFieldId" value={Number(postData.subFieldId)} onChange={handleChange}>
           <option value={0} disabled>Select a subfield</option>
           {fields
-      .filter(field => field.fieldId !== Number(postData.field_id)) // 選択された field を除外
+      .filter(field => field.id !== Number(postData.fieldId)) // 選択された field を除外
       .map(field => (
-          <option key={field.fieldId} value={field.fieldId}>{field.fieldName}</option>
+          <option key={field.id} value={field.id}>{field.name}</option>
       ))}
         </select>
       </label>
