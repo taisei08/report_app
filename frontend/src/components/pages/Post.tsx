@@ -3,6 +3,7 @@ import client from "lib/api/client"
 import { Fields } from "interfaces/index"
 import { getAuthHeaders } from "lib/api/auth"
 import { WithContext as ReactTags } from 'react-tag-input';
+import { allFields } from 'interfaces/fields';
 
 const Post: React.FC = (props) => {
   const [fields, setFields] = useState<Fields[]>([]); 
@@ -19,16 +20,8 @@ const Post: React.FC = (props) => {
   const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await client.get('/fields');
-        setFields(response.data.fields); // サーバーからの応答に.fieldsを追加することを確認
-      } catch (error) {
-        console.error('Failed to fetch fields', error);
-      }
-    };
-  
-    fetchData(); // 即時実行
+    setFields(allFields); // サーバーからの応答に.fieldsを追加することを確認
+
   }, []);
 
   const handleChange = (e) => {
@@ -136,7 +129,7 @@ const Post: React.FC = (props) => {
         <select name="field_id" value={postData.field_id} onChange={handleChange}>
           <option value={0} disabled>Select a field</option>
           {fields.map(field => (
-            <option key={field.fieldId} value={field.fieldId}>{field.fieldName}</option>
+            <option key={field.id} value={field.id}>{field.name}</option>
           ))}
         </select>
       </label>
@@ -146,9 +139,9 @@ const Post: React.FC = (props) => {
         <select name="sub_field_id" value={Number(postData.sub_field_id)} onChange={handleChange}>
           <option value={0} disabled>Select a subfield</option>
           {fields
-      .filter(field => field.fieldId !== Number(postData.field_id)) // 選択された field を除外
+      .filter(field => field.id !== Number(postData.field_id)) // 選択された field を除外
       .map(field => (
-          <option key={field.fieldId} value={field.fieldId}>{field.fieldName}</option>
+          <option key={field.id} value={field.id}>{field.name}</option>
       ))}
         </select>
       </label>
