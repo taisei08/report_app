@@ -9,7 +9,7 @@ class Field < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["posts"]
+    ["posts", "sub_field_posts"]
   end
 
 end

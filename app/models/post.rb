@@ -32,7 +32,7 @@ class Post < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["tags", "field"]
+    ["tags", "field", "sub_field"]
   end
 
 end

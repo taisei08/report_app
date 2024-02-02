@@ -2,8 +2,7 @@ import React, { useContext } from "react"
 import PostList from "components/utils/PostList"
 import { Link } from "react-router-dom";
 import { AuthContext } from "App"
-import InterestForm from "components/utils/InterestForm";
-
+import NewsSection from "components/utils/NewsSection";
 // とりあえず認証済みユーザーの名前やメールアドレスを表示
 const Home: React.FC = () => {
   const { isSignedIn, currentUser } = useContext(AuthContext)
@@ -12,6 +11,7 @@ const Home: React.FC = () => {
   return (
           <>
             <div>
+      <NewsSection/>
       <PostList/>
     </div>
               {/* Post コンポーネントへのリンクを追加 */}
