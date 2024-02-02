@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :notifications, only: %i[index]
       resources :posts, only: %i[index create destroy]
       resources :post_detail, only: %i[index]
+      resources :posts_of_field, only: %i[index]
       resources :posts_by_user, only: %i[index]
       resources :post_counts, only: %i[index]
       resources :posts_edit, only: %i[index update]

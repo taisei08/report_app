@@ -32,20 +32,25 @@ class Api::V1::FieldsController < ApplicationController
     .where(user_id: current_api_v1_user.user_id)
     ActiveRecord::Base.transaction do
       p @before
-      if @before
+      if @before.present?
         @before.destroy_all
       end
     
-      interests_data = params.require(:form_data)
-      interests_data_objects = interests_data.map { |interest_data| interest_data.permit(:field_id) }
-    
-      @fields = current_api_v1_user.interests.new(interests_data_objects)
-    
-      if @fields.all?(&:save)
-        render json: { message: "Interests saved successfully" }, status: :ok
+      interests_data = params[:form_data]
+
+      if interests_data.present?
+        interests_data_objects = interests_data.map { |interest_data| interest_data.permit(:field_id) }
+  
+        @fields = current_api_v1_user.interests.new(interests_data_objects)
+  
+        if @fields.all?(&:save)
+          render json: { message: "Interests saved successfully" }, status: :ok
+        else
+          render json: { error: "Failed to save interests" }, status: :unprocessable_entity
+          raise ActiveRecord::Rollback  # ロールバックを行います
+        end
       else
-        render json: { error: "Failed to save interests" }, status: :unprocessable_entity
-        raise ActiveRecord::Rollback  # ロールバックを行います
+        render json: { message: "No interests data provided" }, status: :ok
       end
     end
   end

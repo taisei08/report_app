@@ -21,7 +21,9 @@ const UserProfileEditPage8 = () => {
       console.log(response.data)
       setSelectedFields(prevSelectedFields => [
         ...prevSelectedFields,
-        ...response.data.fields.map(field => field.fieldId)
+        ...response.data.fields
+          .map(field => field.fieldId)
+          .filter(newFieldId => !prevSelectedFields.includes(newFieldId))
       ]);
         
     } catch (error) {
