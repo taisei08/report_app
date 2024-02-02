@@ -153,6 +153,11 @@ const SignIn: React.FC = () => {
                   こちら
                 </Link>
                  から作成してください。
+                 <br/><br/>
+                  パスワードを忘れた方は
+                <Link to="/reset-password" className={classes.link}>
+                  こちら
+                </Link>
               </Typography>
             </Box>
           </CardContent>

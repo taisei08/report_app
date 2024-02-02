@@ -10,12 +10,30 @@ const UserProfileEditPage5 = () => {
   const [formData, setFormData] = useState<{
     password: string;
     passwordConfirmation: string;
-    resetPasswordToken: string|null;
   }>({
     password: '',
     passwordConfirmation: '',
-    resetPasswordToken: searchParams.get('access-token')
+
   });
+  const accessToken = searchParams.get('access-token');
+  const clientId = searchParams.get('client_id');
+  const config = searchParams.get('config');
+  const expiry = searchParams.get('expiry');
+  const resetPassword = searchParams.get('reset_password');
+  const token = searchParams.get('token');
+  const uid = searchParams.get('uid');
+
+  // ヘッダーに含めて送信するロジックをここに実装
+  const headers = {
+    'access-token': accessToken,
+    'client': searchParams.get('client'),
+    'client-id': clientId,
+    'config': config,
+    'expiry': expiry,
+    'reset-password': resetPassword,
+    'token': token,
+    'uid': uid,
+  };
 
   useEffect(() => {
     // ページが読み込まれたときにユーザーデータを取得する
@@ -44,9 +62,10 @@ const UserProfileEditPage5 = () => {
 
   const handleSave = async () => {
     try {
+      console.log(searchParams.get('access-token'))
       // ユーザーデータを更新するAPIリクエスト
       await client.put('auth/password', formData,
-      { headers: getAuthHeaders() });
+      { headers: headers });
       console.log('User data updated successfully!');
       console.log(formData);
 

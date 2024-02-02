@@ -1,27 +1,21 @@
 class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
 
-  before_action :authenticate_api_v1_user!, only: [:destroy]
+  before_action :authenticate_api_v1_user!, only: [:update, :destroy]
 
   def update
-    if @resource
-      if @resource.send(resource_update_method, account_update_params)
-        @redirect_url = params.fetch(
-          :confirm_success_url,
-          DeviseTokenAuth.default_confirm_success_url
-        )
-        p @redirect_url
-        @resource.send_confirmation_instructions({
-          client_config: params[:config_name],
-          redirect_url: @redirect_url
-        })
-        yield @resource if block_given?
-        
-        render_update_success
-      else
-        render_update_error
-      end
+    @redirect_url = params.fetch(
+      :confirm_success_url,
+      DeviseTokenAuth.default_confirm_success_url
+    )
+
+    if current_api_v1_user.update(unconfirmed_email: params[:email])
+      current_api_v1_user.send_confirmation_instructions({
+        client_config: params[:config_name],
+        redirect_url: @redirect_url
+      })
+      render json: { message: "Confirmation email sent to #{params[:email]}" }, status: :ok
     else
-      render_update_error_user_not_found
+      render json: { error: current_api_v1_user.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
