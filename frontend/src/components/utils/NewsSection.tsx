@@ -37,7 +37,7 @@ const NewsSection = () => {
 
   return (
     <div>
-      <h2>{`フォローしている分野の新着記事`}</h2>
+      <h2>{`${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}分野の新着記事`}</h2>
       <FieldArticles fieldId={selectedField} />
       <div style={{ display: "flex" }}>
       {selectedFields && selectedFields.length > 0 && (

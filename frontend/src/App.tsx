@@ -13,6 +13,7 @@ import UserPage from "components/pages/UserPage"
 import UserProfileEditPage2 from "components/pages/UserPage2"
 import UserProfileEditPage3 from "components/pages/UserPage3"
 import Initial from "components/pages/Initial"
+import ResetPassword from "components/pages/ResetPassword"
 import Search from "components/pages/Search"
 import UserProfileEditPage4 from "components/pages/UserPage4"
 import UserProfileEditPage5 from "components/pages/UserPage5"
@@ -117,6 +118,8 @@ const App: React.FC = () => {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
             <Route path="/search/:query" element={<Search />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/settings/userpage4" element={<UserProfileEditPage5 />} />
             <Route
               path="/deleted"
               element={
@@ -138,7 +141,6 @@ const App: React.FC = () => {
                   <Route path="/settings/userpage" element={<UserPage />} />
                   <Route path="/settings/userpage2" element={<UserProfileEditPage2 />} />
                   <Route path="/settings/userpage3" element={<UserProfileEditPage4 />} />
-                  <Route path="/settings/userpage4" element={<UserProfileEditPage5 />} />
                   <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />
                   <Route path="/settings/userpage6" element={<UserProfileEditPage7 />} />
                   <Route path="/settings/userpage7" element={<UserProfileEditPage8 />} />

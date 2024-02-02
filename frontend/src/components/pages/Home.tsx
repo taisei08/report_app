@@ -11,7 +11,8 @@ const Home: React.FC = () => {
   return (
           <>
             <div>
-      <NewsSection/>
+      {isSignedIn&&
+      <NewsSection/>}
       <PostList/>
     </div>
               {/* Post コンポーネントへのリンクを追加 */}
