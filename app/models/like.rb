@@ -5,7 +5,7 @@ class Like < ApplicationRecord
   belongs_to :reply, class_name: "Reply", optional: true
   has_one :notification, class_name: "Notification"
 
-  mount_uploader :icon_path, ImageUploader
+    mount_uploader :icon_path, ImageUploader
 
 
   def create_notification_like!(current_api_v1_user, key, value)
@@ -40,7 +40,6 @@ class Like < ApplicationRecord
       notification = current_api_v1_user.active_notifications.new(
         key[0].to_sym => value[0],
         passive_user_id: passive_user[0].user_id,
-        post_id: key[0] == 'review_id' || key[0] == 'reply_id' ? passive_user[0].post.post_id : value[0],
         action: 'like'
       )
       # 自分の投稿に対するいいねの場合は、通知済みとする

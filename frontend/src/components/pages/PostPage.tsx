@@ -6,14 +6,18 @@ import { useParams } from 'react-router-dom';
 import PdfViewer from 'components/utils/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
 import { ReplyForm, ReplyList } from 'components/utils/Reply';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import FollowButton from 'components/utils/FollowButton';
 import LikeButton from 'components/utils/LikeButton';
 
 const PostPage = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const paramValue = queryParams.get("type");
   const [postData, setPostData] = useState({});
+  const [paramReview, setParamReview] = useState();
   const [reviews, setReviews] = useState([]);
   const [reviewComment, setReviewComment] = useState('');
   const [rating, setRating] = useState(0);
@@ -32,6 +36,29 @@ const PostPage = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      if (paramValue) {
+        // paramが存在する場合の処理
+  
+        try {
+          const response = await client.get('/review_or_reply_spotted', {
+            params: { [paramValue]: queryParams.get("id") } // キーと値をセットで指定
+          });
+  
+          // レスポンスからデータを取り出す
+          console.log(response.data.resource)
+          setParamReview(response.data.resource);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+  
+    fetchData(); // useEffect内で関数を呼ぶ
+  }, []);
   
 
   useEffect(() => {
@@ -239,7 +266,7 @@ const PostPage = () => {
       />
       {((reviews.length === 0 || !reviews.some(review => review.userId === userId)) &&
       postData.userId !== userId) && (
-        <div id="user_review">
+        <div>
           <textarea
             value={reviewComment}
             onChange={e => setReviewComment(e.target.value)}
@@ -248,6 +275,104 @@ const PostPage = () => {
         </div>
       )}
   
+
+  <div>
+  {paramReview && paramReview.length > 0 &&
+    paramReview.map((review) => (
+      // 条件に基づいてレビューを表示
+        <div key={review.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
+          <Avatar
+            size="30"
+            name={review.userName}
+            round={true}
+            src={review.iconPath}
+          />
+          <span>
+            {review.userName} {review.createdAt}
+          </span>
+          {editingReviewId === review.reviewId ? (
+            // Edit mode
+            <div>
+              <textarea
+                value={editedReviewText}
+                onChange={(e) => setEditedReviewText(e.target.value)}
+              />
+              <button
+                onClick={() => {
+                  handleSaveReview(review.reviewId);
+                  review.review = editedReviewText;
+                }}
+              >
+                保存
+              </button>
+              <button onClick={handleCancelEdit}>キャンセル</button>
+            </div>
+          ) : (
+            <div>
+              <p>{review.review}</p>
+              <button onClick={() => handleEditReview(review.reviewId, review.review)}>
+                編集
+              </button>
+            </div>
+          )}
+          <div>
+            {/* メニュー内の削除ボタン */}
+            <button onClick={handleShowDeleteModal}>削除</button>
+            {/* 削除モーダル */}
+            <Modal
+              isOpen={showDeleteModal}
+              onRequestClose={handleCloseDeleteModal}
+              contentLabel="削除の確認"
+            >
+              <h2>削除の確認</h2>
+              <p>本当に削除してもよろしいですか？</p>
+              <div>
+                <button onClick={() => handleDeleteReview(review.reviewId)}>削除</button>
+              </div>
+              <div>
+                <button onClick={handleCloseDeleteModal}>中止</button>
+              </div>
+            </Modal>
+          </div>
+          <div>
+            <Rating readonly initialRating={review.value} fractions={2} />
+            {review.review !== "" && (
+              <button onClick={() => toggleReplyForm(review.reviewId)}>
+                {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
+              </button>
+            )}
+          </div>
+
+          {review.review !== "" && review.replyLength > 0 && (
+            <button onClick={() => toggleReplies(review.reviewId)}>
+              {replyData[review.reviewId] ? '隠す' : `${review.replyLength}件のリプライ`}
+            </button>
+          )}
+
+          {replyFormVisible[review.reviewId] && (
+            // 返信フォームを表示
+            <ReplyForm id={review.reviewId} />
+          )}
+
+          {replyData[review.reviewId] && (
+            // リプライを表示
+            <>
+              <ReplyList id={review.reviewId} />
+              <ReplyForm id={review.reviewId} />
+            </>
+          )}
+          <p>注目のレビュー</p>
+        </div>
+      
+    ))
+  }
+</div>
+
+
+
+
+
+
       <div>
         {reviews.map(review => (
           // 条件に基づいてレビューを表示

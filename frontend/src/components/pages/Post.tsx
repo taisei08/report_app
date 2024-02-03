@@ -6,6 +6,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import { allFields } from 'interfaces/fields';
 
 const Post: React.FC = (props) => {
+  
   const [fields, setFields] = useState<Fields[]>([]); 
   const [postData, setPostData] = useState({
     title: '',

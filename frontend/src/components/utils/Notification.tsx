@@ -37,7 +37,12 @@ const Notifications: React.FC = () => {
             <Link to={`/article/${notification.postId}`}>
               {`${notification.title}`}
             </Link>
-            にレビューしました
+            に
+            <Link to={{ pathname: `/article/${notification.postId}`,
+            search: `?id=${notification.reviewId}&type=reviewId` }}>
+            レビュー
+            </Link>
+            しました
           </>
         );
       case 'follow':
@@ -64,14 +69,15 @@ const Notifications: React.FC = () => {
               をいいねしました
             </>
           );
-        } else if (notification.reviewId) {
+        } else if (notification.reviewId && !notification.replyId) {
           return (
             <>
               <Link to={`/userpage/${notification.activeUserId}`}>
                 {`${notification.accountName}(${notification.userName})さん`}
               </Link>
                 があなたの
-              <Link to={`/article/${notification.postId}`}>
+            <Link to={{ pathname: `/article/${notification.postId}`,
+              search: `?id=${notification.reviewId}&type=reviewId` }}>  
                 レビュー
               </Link>
                 にいいねしました
@@ -83,7 +89,12 @@ const Notifications: React.FC = () => {
               <Link to={`/userpage/${notification.activeUserId}`}>
                 {`${notification.accountName}(${notification.userName})さん`}
               </Link>
-              があなたのリプライにいいねしました
+              があなたの
+              <Link to={{ pathname: `/article/${notification.postId}`,
+              search: `?id=${notification.reviewId}&type=reviewId` }}>  
+              リプライ
+              </Link>              
+              にいいねしました
             </>
           );
         }      
