@@ -204,6 +204,10 @@ const PostPage = () => {
       type = "post"
       />
       <div>
+      <Link to={`/article/${Id.postId}/likes`}>
+      いいねしたユーザー
+      </Link>
+
       <button onClick={toggleMenu}>メニューを表示</button>
       {menuVisible && (
         <div className="menu">

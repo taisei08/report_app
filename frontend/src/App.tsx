@@ -4,6 +4,7 @@ import Cookies from "js-cookie"
 import CommonLayout from "components/layouts/CommonLayout"
 import AccountDeleteComplete from "components/utils/AccountDeleteComplete"
 import Home from "components/pages/Home"
+import LikedUser from "components/pages/LikedUser"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
 import Post3 from "components/pages/Post3"
@@ -114,6 +115,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/article/:postId" element={<PostPage />} />
+            <Route path="/article/:postId/likes" element={<LikedUser />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
