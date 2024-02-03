@@ -37,6 +37,7 @@ class Like < ApplicationRecord
       notification = current_api_v1_user.active_notifications.new(
         key[0].to_sym => value[0],
         passive_user_id: passive_user[0].user_id,
+        post_id: key[0] == 'review_id' || key[0] == 'reply_id' ? passive_user[0].post.post_id : value[0],
         action: 'like'
       )
       # 自分の投稿に対するいいねの場合は、通知済みとする

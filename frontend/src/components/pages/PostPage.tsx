@@ -235,7 +235,7 @@ const PostPage = () => {
       />
       {((reviews.length === 0 || !reviews.some(review => review.userId === userId)) &&
       postData.userId !== userId) && (
-        <div>
+        <div id="user_review">
           <textarea
             value={reviewComment}
             onChange={e => setReviewComment(e.target.value)}
