@@ -36,22 +36,24 @@ const NewsSection = () => {
   };
 
   return (
-    <div>
-      <h2>{`${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}分野の新着記事`}</h2>
-      <FieldArticles fieldId={selectedField} />
-      <div style={{ display: "flex" }}>
+    <>
       {selectedFields && selectedFields.length > 0 && (
-  selectedFields.map((fieldId) => (
-    <button key={fieldId} onClick={() => handleFieldChange(fieldId)}>
-    {`${fields.find((field) => field.id === fieldId)?.name || 'Unknown'}`}
-  </button>
-  ))
-  )}
-    <Link to={`/search/${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}`}>もっと見る</Link>
-
-      </div>
-    </div>
+        <div>
+          <h2>{`${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}分野の新着記事`}</h2>
+          <FieldArticles fieldId={selectedField} />
+          <div style={{ display: "flex" }}>
+            {selectedFields.map((fieldId) => (
+              <button key={fieldId} onClick={() => handleFieldChange(fieldId)}>
+                {`${fields.find((field) => field.id === fieldId)?.name || 'Unknown'}`}
+              </button>
+            ))}
+            <Link to={`/search/${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}`}>もっと見る</Link>
+          </div>
+        </div>
+      )}
+    </>
   );
+  
 };
 
 export default NewsSection;

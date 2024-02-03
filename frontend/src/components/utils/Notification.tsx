@@ -1,7 +1,8 @@
 // Notifications.tsx
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import client from "lib/api/client";
+import { Link } from "react-router-dom";
 import { getAuthHeaders } from "lib/api/auth";
 import Avatar from "react-avatar";
 
@@ -27,18 +28,66 @@ const Notifications: React.FC = () => {
   const getNotificationMessage = (notification) => {
     switch (notification.action) {
       case 'review':
-        return `${notification.accountName} さんがあなたの投稿: ${notification.title} にレビューしました`;
+        return (
+          <>
+            <Link to={`/userpage/${notification.activeUserId}`}>
+              {`${notification.accountName}(${notification.userName})さん`}
+            </Link>
+            があなたの投稿:
+            <Link to={`/article/${notification.postId}`}>
+              {`${notification.title}`}
+            </Link>
+            にレビューしました
+          </>
+        );
       case 'follow':
-        return `${notification.accountName} さんがあなたをフォローしました`;
+        return (
+          <>
+            <Link to={`/userpage/${notification.activeUserId}`}>
+              {`${notification.accountName}(${notification.userName})さん`}
+            </Link>
+            があなたをフォローしました
+          </>
+        );
       case 'like':
         // action が like の場合、追加の判定を行いメッセージを生成
         if (notification.postId && !notification.reviewId && !notification.replyId) {
-          return `${notification.accountName} さんがあなたの投稿: ${notification.title} をいいねしました`;
+          return (
+            <>
+              <Link to={`/userpage/${notification.activeUserId}`}>
+                {`${notification.accountName}(${notification.userName})さん`}
+              </Link>
+              があなたの投稿:
+              <Link to={`/article/${notification.postId}`}>
+                {`${notification.title}`}
+              </Link>
+              をいいねしました
+            </>
+          );
         } else if (notification.reviewId) {
-          return `${notification.accountName} さんがあなたのレビューにいいねしました`;
+          return (
+            <>
+              <Link to={`/userpage/${notification.activeUserId}`}>
+                {`${notification.accountName}(${notification.userName})さん`}
+              </Link>
+                があなたの
+              <Link to={`/article/${notification.postId}`}>
+                レビュー
+              </Link>
+                にいいねしました
+            </>
+          );
         } else if (notification.replyId) {
-          return `${notification.accountName} さんがあなたのリプライにいいねしました`;
-        } else {
+          return (
+            <>
+              <Link to={`/userpage/${notification.activeUserId}`}>
+                {`${notification.accountName}(${notification.userName})さん`}
+              </Link>
+              があなたのリプライにいいねしました
+            </>
+          );
+        }      
+      else {
           return '不明なアクション';
         }
       default:
@@ -65,16 +114,20 @@ const Notifications: React.FC = () => {
 }}>
   <h3 style={{ marginBottom: "15px" }}>通知</h3>
   {notifications.map((notification, index) => (
-    <div key={index} style={{ marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", display: "flex", alignItems: "center" }}>
-      <Avatar
-        name={notification.accountName}
-        size="40"
-        round={true}
-        src={notification.iconPath}
-        style={{ marginRight: "10px" }}
-      />
-      {getNotificationMessage(notification)}
-    </div>
+
+    <div key={index} style={{ marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", display: "flex", alignItems: "center"}}>
+      <Link to={`/userpage/${notification.activeUserId}`}>
+    <Avatar
+      name={notification.accountName}
+      size="40"
+      round={true}
+      src={notification.iconPath}
+      style={{ marginRight: "10px" }}
+    />
+    </Link>
+
+  {getNotificationMessage(notification)}
+</div>
   ))}
 </div>
 

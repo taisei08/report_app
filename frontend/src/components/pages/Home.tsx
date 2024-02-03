@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
 import PostList from "components/utils/PostList"
-import { Link } from "react-router-dom";
 import { AuthContext } from "App"
 import NewsSection from "components/utils/NewsSection";
 // とりあえず認証済みユーザーの名前やメールアドレスを表示

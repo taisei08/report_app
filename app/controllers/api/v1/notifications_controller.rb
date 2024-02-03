@@ -4,7 +4,7 @@ class Api::V1::NotificationsController < ApplicationController
   def index
     @notifications = current_api_v1_user.passive_notifications
     .left_outer_joins(:post, :active_user)
-    .select("users.account_name", "users.icon_path", "posts.title", "notifications.*")
+    .select("users.user_name", "users.account_name", "users.icon_path", "posts.title", "notifications.*")
     #.order("created_at DESC")
     #.page(params[:page])
     #.per(20)

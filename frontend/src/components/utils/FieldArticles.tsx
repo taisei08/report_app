@@ -39,53 +39,54 @@ const FieldArticles = ( props ) => {
 
   return (
     <div style={{ width: "700px", height: "250px", overflowX: "auto", whiteSpace: "nowrap" }}>
-      {articles && articles.length > 0 && articles.map((article) => (
-        <div key={article.id} style={{ width: "200px", height: "200px", margin: "8px", backgroundColor: "#e0e0e0", display: "inline-block" }}>
-        <Link
-          to={`/article/${article.postId}`}
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          onClick={(e) => {
-            e.preventDefault(); // リンクのデフォルトの挙動をキャンセル
-            handlePostClick(article.postId);
-          
-          }}
-        >          
-
-            <div>
+      {articles && articles.length > 0 ? (
+        articles.map((article) => (
+          <div key={article.id} style={{ width: "200px", height: "200px", margin: "8px", backgroundColor: "#e0e0e0", display: "inline-block" }}>
             <Link
-            to={`/userpage/${article.userId}`}
-            onClick={handleChildLinkClick}
-            >
-              <Avatar
-              name={article.accountName}
-              size="40"
-              round={true}
-              src={article.iconPath}
-              /> {/* Avatar コンポーネント */}
-              <span style={{ marginLeft: '10px' }}>{article.userName}</span> {/* ユーザー名 */}
-              </Link>
-            </div>
-            <div>
-              <h3>
-                {/* リンクの中にもLinkコンポーネントを使う */}
+              to={`/article/${article.postId}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              onClick={(e) => {
+                e.preventDefault();
+                handlePostClick(article.postId);
+              }}
+            >          
+              <div>
                 <Link
-                  to={`/article/${article.postId}`}
-                  onClick={(e) => {
-                    e.preventDefault(); // リンクのデフォルトの挙動をキャンセル
-                    handlePostClick(article.postId);
-                  }}
+                  to={`/userpage/${article.userId}`}
+                  onClick={handleChildLinkClick}
                 >
-                  {article.title}
+                  <Avatar
+                    name={article.accountName}
+                    size="40"
+                    round={true}
+                    src={article.iconPath}
+                  />
+                  <span style={{ marginLeft: '10px' }}>{article.userName}</span>
                 </Link>
-              </h3>
-              <p>{article.description}</p>
-            </div>
-          </Link>
-
-        </div>
-      ))}
+              </div>
+              <div>
+                <h3>
+                  <Link
+                    to={`/article/${article.postId}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePostClick(article.postId);
+                    }}
+                  >
+                    {article.title}
+                  </Link>
+                </h3>
+                <p>{article.description}</p>
+              </div>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <p>まだ投稿されていません。</p>
+      )}
     </div>
   );
+  
 };
 
 export default FieldArticles;

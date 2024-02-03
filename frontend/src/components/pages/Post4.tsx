@@ -25,10 +25,8 @@ const Post4: React.FC = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [response, response1] = await Promise.all([
-          client.get('/posts_edit', { params: {postId: Id.postId} }),
-          client.get('/fields'),
-        ]);
+        const response = await client.get
+        ('/posts_edit', { params: {postId: Id.postId} });
         console.log(response.data.posts)
         setPostData(response.data.posts[0]); // サーバーからの応答に.fieldsを追加することを確認
         setFields(allFields);
