@@ -5,6 +5,9 @@ class Like < ApplicationRecord
   belongs_to :reply, class_name: "Reply", optional: true
   has_one :notification, class_name: "Notification"
 
+  mount_uploader :icon_path, ImageUploader
+
+
   def create_notification_like!(current_api_v1_user, key, value)
 
     passive_user = nil

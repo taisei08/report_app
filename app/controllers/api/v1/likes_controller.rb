@@ -7,7 +7,7 @@ class Api::V1::LikesController < ApplicationController
     .where(like_params)
     .order("created_at DESC")
     .page(params[:page])
-    .per(20)
+    .per(10)
 
     render json: { status: 200, likes: @like_users}
   end
