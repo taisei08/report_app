@@ -85,6 +85,19 @@ const App: React.FC = () => {
     }
   }
 
+  const NotSignin = ({ children }: { children: React.ReactElement }) => {
+    console.log("joi")
+    if (!loading) {
+      if (!isSignedIn) {
+        return children
+      } else {
+        return <Navigate replace to="/" />
+      }
+    } else {
+      return <></>
+    }
+  }
+
   const FirstSession = ({ children }: { children: React.ReactElement }) => {
     console.log(Cookies.get("_first_session"))
     if (Cookies.get("_first_session")) {
@@ -115,13 +128,12 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/article/:postId" element={<PostPage />} />
-            <Route path="/article/:postId/likes" element={<LikedUser />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/article/:postId/likes" element={<LikedUser />} /> 
             <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings/userpage4" element={<UserProfileEditPage5 />} />
+            
             <Route
               path="/deleted"
               element={
@@ -133,35 +145,34 @@ const App: React.FC = () => {
               }
             />       
             
-
             <Route path="/*" element={
-              <Private>
-              <Routes>
-                <>
-                  <Route path="/post" element={<Post3 />} />
-                  <Route path="/article/:postId/edit" element={<Post4 />} />
-                  <Route path="/settings/userpage" element={<UserPage />} />
-                  <Route path="/settings/userpage2" element={<UserProfileEditPage2 />} />
-                  <Route path="/settings/userpage3" element={<UserProfileEditPage4 />} />
-                  <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />
-                  <Route path="/settings/userpage6" element={<UserProfileEditPage7 />} />
-                  <Route path="/settings/userpage7" element={<UserProfileEditPage8 />} />
+              <>
+  {isSignedIn ? (
+    <Private>
+      <Routes>
+        <Route path="/post" element={<Post3 />} />
+        <Route path="/article/:postId/edit" element={<Post4 />} />
+        <Route path="/settings/userpage" element={<UserPage />} />
+        <Route path="/settings/userpage2" element={<UserProfileEditPage2 />} />
+        <Route path="/settings/userpage3" element={<UserProfileEditPage4 />} />
+        <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />
+        <Route path="/settings/userpage6" element={<UserProfileEditPage7 />} />
+        <Route path="/settings/userpage7" element={<UserProfileEditPage8 />} />
+        <Route path="/initial" element={<FirstSession><Route index element={<Initial />} /></FirstSession>} />
+        {/* 他のPrivate内のルートを追加 */}
+      </Routes>
+    </Private>
+  ) : (
+    <NotSignin>
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        {/* 他のNotSignin内のルートを追加 */}
+      </Routes>
+    </NotSignin>
+  )}
+</>
 
-                  
-                  <Route
-                    path="/initial"
-                    element={
-                      <FirstSession>
-                        <Routes>
-                        <Route index element={<Initial />} />
-                        </Routes>
-                      </FirstSession>
-                    }
-                  />       
-
-                </>
-              </Routes>
-              </Private>
             }
             />        
           </Routes>
