@@ -70,7 +70,8 @@ const SignIn: React.FC = () => {
 
     if (res.data["cookies"]) {
       navigate("/initial");
-    } else {
+    }
+    else {
       navigate("/");
     }
 
@@ -106,7 +107,8 @@ const SignIn: React.FC = () => {
 
         if (res.status === 200) {
           handleSuccessLogin(res);
-        } else {
+        } 
+        else {
           handleLoginError();
         }
       } catch (err) {
@@ -121,8 +123,13 @@ const SignIn: React.FC = () => {
   return (
     <>
       <form noValidate autoComplete="off">
-        <Card className={classes.card}>
-          <CardHeader className={classes.header} title="サインイン" />
+        <Card
+        style={{ width: '100%', maxWidth: 512}}
+        >
+        <CardHeader
+          title="サインイン"
+          style={{ textAlign: "center" }}
+        />
           <CardContent>
             <TextField
               variant="outlined"
@@ -145,29 +152,36 @@ const SignIn: React.FC = () => {
               autoComplete="current-password"
               onChange={event => setPassword(event.target.value)}
             />
-            <Box className={classes.submitBtn} style={{ marginTop: '1rem' }}>
-              <Button
-                type="submit"
-                variant="outlined"
-                color="inherit"
-                disabled={!email || !password || isSubmitting}
-                onClick={handleClickSubmit}
-                fullWidth
+            <Button
+              type="submit"
+              variant="outlined"
+              color="primary" // 青色を適用
+              disabled={!email || !password || isSubmitting}
+              onClick={handleClickSubmit}
+              fullWidth
+            >
+              ログイン
+            </Button>
+            <Box style={{ marginTop: '1rem' }}>
+              <Typography align="center">
+              <Link
+                to="/reset-password"
+                className={classes.resetPasswordLink}
+                style={{
+                  color: 'blue',
+                  textDecoration: 'none',
+                  cursor: 'pointer', 
+                  borderBottom: '1px solid transparent', 
+                  transition: 'border-color 0.3s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
               >
-                送信
-              </Button>
+                パスワードを忘れた場合
+              </Link>
+              </Typography>
             </Box>
-            <Box textAlign="center" className={classes.box} style={{ marginTop: '1rem' }}>
-              <div style={{ display: 'inline-block' }}>
-                <Link to="/reset-password" className={classes.resetPasswordLink}>
-                  パスワードを忘れた場合
-                </Link>
-              </div>
-            </Box>
-            <Box textAlign="center" className={classes.box } style={{ marginTop: '1rem' }}>
-              <Divider />
-            </Box>
-            <Box textAlign="center" className={classes.box}>
+              <Divider style={{ marginTop: '1rem' }}/>
               <Button
                 variant="contained"
                 color="primary"
@@ -178,7 +192,6 @@ const SignIn: React.FC = () => {
               >
                 新規登録
               </Button>
-            </Box>
           </CardContent>
         </Card>
       </form>

@@ -12,7 +12,7 @@ import Button from "@material-ui/core/Button"
 import { AuthContext } from "App"
 import AlertMessage from "components/utils/AlertMessage"
 
-import EmailInputPage from "components/utils/EmailInputPage"
+import InputPage from "components/utils/signup/InputPage"
 import CheckMail from "components/utils/CheckMail"
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,7 +53,7 @@ const SignUp: React.FC = () => {
   return (
     <div>
       {step === 1 && (
-        <EmailInputPage onNext={handleNextStep} />
+        <InputPage onNext={handleNextStep} />
       )}
       {step === 2 && (
         <CheckMail/>
