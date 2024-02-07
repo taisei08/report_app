@@ -158,7 +158,8 @@ const App: React.FC = () => {
         <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />
         <Route path="/settings/userpage6" element={<UserProfileEditPage7 />} />
         <Route path="/settings/userpage7" element={<UserProfileEditPage8 />} />
-        <Route path="/initial" element={<FirstSession><Route index element={<Initial />} /></FirstSession>} />
+        <Route path="/initial" 
+          element={<FirstSession><Routes><Route index element={<Initial />} /></Routes></FirstSession>} />
         {/* 他のPrivate内のルートを追加 */}
       </Routes>
     </Private>
