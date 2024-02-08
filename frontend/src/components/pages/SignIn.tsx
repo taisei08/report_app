@@ -122,7 +122,7 @@ const SignIn: React.FC = () => {
 
   return (
     <>
-      <form noValidate autoComplete="off">
+      <form>
         <Card
         style={{ width: '100%', maxWidth: 512}}
         >
@@ -138,6 +138,7 @@ const SignIn: React.FC = () => {
               label="メールアドレス"
               value={email}
               margin="dense"
+              autoComplete="email"
               onChange={event => setEmail(event.target.value)}
             />
             <TextField

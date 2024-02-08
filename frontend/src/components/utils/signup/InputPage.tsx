@@ -77,8 +77,9 @@ const InputPage: React.FC<InputPageProps> = ({ onNext }) => {
   };
 
   const checkEmail = () => {
-    const emailRegex: RegExp = /^[^\s@^\x01-\x7E]+@[^\s@^\x01-\x7E]+\.[^\s@^\x01-\x7E]+$/;
+    const emailRegex: RegExp = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
+      console.log(!emailRegex.test(formData.email))
       setEmailError(true);
       return true
     } 
@@ -135,70 +136,76 @@ const InputPage: React.FC<InputPageProps> = ({ onNext }) => {
     <Card style={{ width: '100%', maxWidth: 512 }}>
       <CardHeader title="新規登録" style={{ textAlign: "center" }} />
       <CardContent>
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          label="メールアドレス"
-          name="email"
-          value={formData.email}
-          margin="dense"
-          onChange={handleChange}
-        />
-        {emailError && <ErrorMessage message='正しいメールアドレスを入力してください' />}
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          label="ユーザー名"
-          name="userName"
-          value={formData.userName}
-          margin="dense"
-          onChange={handleChange}
-        />
-        {userNameFormatError && <ErrorMessage message='半角英数字と特殊文字は-と_のみが使用できます' />}
-        {userNameLengthError && <ErrorMessage message='32文字以内で入力してください' />}
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          label="パスワード"
-          type="password"
-          name="password"
-          value={formData.password}
-          margin="dense"
-          onChange={handleChange}
-          onFocus={() => setPasswordError(false)}
-        />
-        {passwordError && <ErrorMessage message='パスワードは8文字以上で、大文字・小文字・数字・特殊文字を含み半角文字のみで構成される必要があります' />}
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          label="パスワード確認"
-          type="password"
-          name="passwordConfirmation"
-          value={formData.passwordConfirmation}
-          margin="dense"
-          onChange={handleChange}
-        />
-        {passwordConfirmationError && <ErrorMessage message='パスワードが一致しません' />}
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!formData.email || !formData.userName || !formData.password || !formData.passwordConfirmation || isSubmitting}
-          onClick={handleSubmit}
-          fullWidth
-          style={{ marginTop: '1rem' }}
-        >
-          登録
-        </Button>
-        <AlertMessage
-          open={alertMessageOpen}
-          setOpen={setAlertMessageOpen}
-          severity="error"
-          message={`${errorMessage}`}
-        />
+        <form>
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="メールアドレス"
+            name="email"
+            value={formData.email}
+            margin="dense"
+            autoComplete="email"
+            onChange={handleChange}
+          />
+          {emailError && <ErrorMessage message='正しいメールアドレスを入力してください' />}
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="ユーザー名"
+            name="userName"
+            value={formData.userName}
+            margin="dense"
+            autoComplete="username"
+            onChange={handleChange}
+          />
+          {userNameFormatError && <ErrorMessage message='半角英数字と特殊文字は-と_のみが使用できます' />}
+          {userNameLengthError && <ErrorMessage message='32文字以内で入力してください' />}
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="パスワード"
+            type="password"
+            name="password"
+            value={formData.password}
+            margin="dense"
+            onChange={handleChange}
+            autoComplete="current-password"
+            onFocus={() => setPasswordError(false)}
+          />
+          {passwordError && <ErrorMessage message='パスワードは8文字以上で、大文字・小文字・数字・特殊文字を含み半角文字のみで構成される必要があります' />}
+          <TextField
+            variant="outlined"
+            required
+            fullWidth
+            label="パスワード確認"
+            type="password"
+            name="passwordConfirmation"
+            value={formData.passwordConfirmation}
+            margin="dense"
+            autoComplete="current-password"
+            onChange={handleChange}
+          />
+          {passwordConfirmationError && <ErrorMessage message='パスワードが一致しません' />}
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!formData.email || !formData.userName || !formData.password || !formData.passwordConfirmation || isSubmitting}
+            onClick={handleSubmit}
+            fullWidth
+            style={{ marginTop: '1rem' }}
+          >
+            登録
+          </Button>
+          <AlertMessage
+            open={alertMessageOpen}
+            setOpen={setAlertMessageOpen}
+            severity="error"
+            message={`${errorMessage}`}
+          />
+        </form>
       </CardContent>
     </Card>
   );

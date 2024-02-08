@@ -1,92 +1,101 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Grid, Card, CardContent, Typography } from "@material-ui/core";
 import client from "lib/api/client";
 import { getAuthHeaders } from "lib/api/auth";
-import { Link } from "react-router-dom";
-import Avatar from "react-avatar";
+import UserInfo from "./posts/post_item/UserInfo";
+import { Styles } from "lib/styles";
+import { trimText } from "lib/function";
+import { PostLists } from "interfaces";
 
+interface FieldArticlesProps {
+  fieldId: number;
+}
 
-const FieldArticles = ( props ) => {
-  const [articles, setArticles] = useState([]);
-  useEffect(() => {
-    // ページが読み込まれたときにユーザーデータを取得する
-    fetchUserData();
-  }, [props.fieldId]);
-
-  const handlePostClick = (postId) => {
-    // クリックされた投稿のIDを取り出して何かしらの処理を行う
-    console.log('Clicked Post ID:', postId);
-    window.location.href = `/article/${postId}`;
-    // ここでサーバーサイドにデータを取りに行くなどの処理を追加可能
-  };
+const FieldArticles: React.FC<FieldArticlesProps> = ({ fieldId }) => {
+  const importClasses = Styles();
+  const [articles, setArticles] = useState<PostLists[]>([]);
+  const navigate = useNavigate()
   
-  const handleChildLinkClick = (e) => {
-    e.stopPropagation(); // 親へのイベント伝播を停止
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fieldId]);
+
+  const handlePostClick = (postId: number) => {
+    console.log('Clicked Post ID:', postId);
+    navigate(`/article/${postId}`)
   };
 
   const fetchUserData = async () => {
     try {
-      // ユーザーデータをAPIから取得
       const response = await client.get("/posts_of_field", {
-        params: { fieldId: props.fieldId},
+        params: { fieldId: fieldId },
         headers: getAuthHeaders(),
       });
       setArticles(response.data.posts);
-      console.log(response.data)
+      console.log(response.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
   return (
-    <div style={{ width: "700px", height: "250px", overflowX: "auto", whiteSpace: "nowrap" }}>
+    <Grid container spacing={2} wrap='nowrap' style={{width: '90vw', overflowX: 'scroll'}}>
       {articles && articles.length > 0 ? (
         articles.map((article) => (
-          <div key={article.id} style={{ width: "200px", height: "200px", margin: "8px", backgroundColor: "#e0e0e0", display: "inline-block" }}>
-            <Link
-              to={`/article/${article.postId}`}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-              onClick={(e) => {
-                e.preventDefault();
-                handlePostClick(article.postId);
-              }}
-            >          
-              <div>
+          <Grid item key={article.postId} style={{ display: "inline-block" }}>
+            <Card style={{ width: 275 , height: 275}}>
+              <CardContent>
                 <Link
-                  to={`/userpage/${article.userId}`}
-                  onClick={handleChildLinkClick}
+                  to={`/article/${article.postId}`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePostClick(article.postId);
+                  }}
                 >
-                  <Avatar
-                    name={article.accountName}
-                    size="40"
-                    round={true}
-                    src={article.iconPath}
-                  />
-                  <span style={{ marginLeft: '10px' }}>{article.userName}</span>
-                </Link>
-              </div>
-              <div>
-                <h3>
-                  <Link
-                    to={`/article/${article.postId}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePostClick(article.postId);
-                    }}
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <UserInfo
+                        userId={article.userId}
+                        userName={article.userName}
+                        iconPath={article.iconPath}
+                        createdAt={article.createdAt}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Typography
+                    variant="h6"
+                    style={{ fontWeight: "bold", fontSize: "1.4rem" }}
                   >
-                    {article.title}
-                  </Link>
-                </h3>
-                <p>{article.description}</p>
-              </div>
-            </Link>
-          </div>
+                    <Link
+                      to={`/article/${article.postId}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePostClick(article.postId);
+                      }}
+                      className={importClasses.link} // ここでスタイルを適用
+                    >
+                      {trimText(article.title, 20)}
+                    </Link>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ color: "rgba(0, 0, 0, 0.6)" }}
+                  >
+                    {trimText(article.description, 40)}
+                  </Typography>
+                </Link>
+              </CardContent>
+            </Card>
+          </Grid>
         ))
       ) : (
-        <p>まだ投稿されていません。</p>
+        <Typography variant="body1">まだ投稿されていません。</Typography>
       )}
-    </div>
+    </Grid>
   );
-  
 };
 
 export default FieldArticles;

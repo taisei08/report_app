@@ -42,13 +42,13 @@ export interface SignUpData {
     postId: number
     userId: number
     userName: string
-    accountName: string
     iconPath: string
     title: string
     description: string
     documentPath: string
     createdAt: string
-    tags: string[]
+    updatedAt: string
+    tags: { tagId: number; tagName: string }[];
     averageRating: number
   }
 
