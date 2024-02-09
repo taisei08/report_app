@@ -16,6 +16,7 @@ const PostList = () => {
     const fetchData = async () => {
       try {
         const response = await client.get(`/posts?page=${currentPage}`);
+        console.log(response.data.posts)
         setAllPosts(prevPosts => [...prevPosts, ...response.data.posts]);
       } catch (error) {
         console.error('Error fetching data:', error);

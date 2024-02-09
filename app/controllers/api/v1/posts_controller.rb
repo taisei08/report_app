@@ -8,7 +8,7 @@ class Api::V1::PostsController < ApplicationController
       .select("users.user_name", "users.icon_path", "posts.*")
       .order("created_at DESC")
       .page(params[:page])
-      .per(1)
+      .per(10)
 
       @posts.each do |post|
         post.icon_path = post.user.icon_path.url

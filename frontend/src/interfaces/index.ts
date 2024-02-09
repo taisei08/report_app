@@ -14,16 +14,15 @@ export interface SignUpData {
   }
   
   // ユーザー
-  export interface User {
-    id: number
-    uid: string
-    provider: string
-    email: string
-    userName: string
-    accountName: string
-    account_name?: string
-    image_path?: string
-    allowPasswordChange: boolean
+  export interface User {  
+    userId: number;
+    userName: string;
+    accountName: string;
+    iconPath: { url: string }; // ファイルパスの型を仮定
+    birthday: string;
+    school: string;
+    facultyDepartment: string;
+    profileStatement: string;
   }
 
   // 投稿
@@ -45,6 +44,8 @@ export interface SignUpData {
     iconPath: string
     title: string
     description: string
+    fieldId: number
+    subFieldId: number
     documentPath: string
     createdAt: string
     updatedAt: string
@@ -61,7 +62,7 @@ export interface SignUpData {
     tag_name: string;
   }
 
-  export interface ReviewLists {
+  export interface UserReviewss {
     postId: number
     userId: number
     userName: string

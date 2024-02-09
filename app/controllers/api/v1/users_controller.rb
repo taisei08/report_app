@@ -3,10 +3,12 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:index, :update]
 
   def index
-    user_data = User.find(index_params[:user_id]).slice(:user_id,:user_name,
-    :account_name, :profile_statement, :icon_path, :school,
-    :faculty_department, :birthday)
-    render json: user_data
+    @user = User
+    .find(index_params[:user_id])
+    field_ids = User.find(index_params[:user_id])
+    .interests.pluck(:field_id)
+    p @user
+    render json: { user: @user, field_ids: field_ids }
   end
 
   def update

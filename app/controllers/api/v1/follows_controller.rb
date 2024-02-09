@@ -7,7 +7,11 @@ class Api::V1::FollowsController < ApplicationController
     puts params
     user = User.find(follow_params[:user_id])
 
-    render json: { status: 200, is_following: current_api_v1_user.following?(user)}
+    render json: {
+      status: 200,
+      is_following: current_api_v1_user.following?(user),
+      user_id: current_api_v1_user.user_id
+    }
   end
 
   # フォローを作成

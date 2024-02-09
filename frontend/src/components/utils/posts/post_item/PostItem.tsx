@@ -10,6 +10,7 @@ import { PostLists } from "interfaces";
 import { trimText } from "lib/function";
 import UserInfo from "./UserInfo";
 import { Styles } from "lib/styles";
+import Category from "./Category";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -109,6 +110,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, handlePostClick }) => {
               emptyIcon={<StarBorderIcon style={{ color: blue[500], fontSize: 16 }} />}
               icon={<StarIcon style={{ color: blue[500], fontSize: 16 }} />}
             />
+            <Category fieldId={post.fieldId} subfieldId={post.subFieldId} />
             <Box className={classes.tagsContainer}>
               {post.tags.map((tag, index) => (
                 <Tag key={index} tagName={tag.tagName} tagId={tag.tagId} />
