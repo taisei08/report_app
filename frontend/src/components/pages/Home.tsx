@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
-import PostList from "components/utils/PostList"
+import { Grid } from "@material-ui/core";
+import PostList from "components/utils/posts/PostList"
 import { AuthContext } from "App"
 import NewsSection from "components/utils/NewsSection";
 // とりあえず認証済みユーザーの名前やメールアドレスを表示
@@ -8,16 +9,14 @@ const Home: React.FC = () => {
   console.log(currentUser);
 
   return (
-          <>
-            <div>
-      {isSignedIn&&
-      <NewsSection/>}
-      <PostList/>
-    </div>
-              {/* Post コンポーネントへのリンクを追加 */}
-              <br>
-              </br>
-          </>
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          {isSignedIn && <NewsSection />}
+          <PostList />
+        </Grid>
+      </Grid>
+    </>
   )
 }
 

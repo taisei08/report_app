@@ -1,59 +1,64 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Box, Button, Typography } from "@material-ui/core";
 import client from "lib/api/client";
 import { fields } from "interfaces/fields";
 import { getAuthHeaders } from "lib/api/auth";
 import FieldArticles from "./FieldArticles";
-import { Link } from "react-router-dom";
 
 const NewsSection = () => {
-  const [selectedFields, setSelectedFields] = useState([]); // 初期値は分野1
-  const [selectedField, setSelectedField] = useState();
-  
+  const [selectedFields, setSelectedFields] = useState<number[] | undefined>([]); // 初期値は分野1
+  const [selectedField, setSelectedField] = useState<number | undefined>(undefined);
+
   useEffect(() => {
-    // ページが読み込まれたときにユーザーデータを取得する
     fetchUserData();
   }, []);
 
+  interface Field {
+    fieldId: number;
+  }  
+
   const fetchUserData = async () => {
     try {
-      // ユーザーデータをAPIから取得
-      const response = await client.get("/fields",
-      { headers: getAuthHeaders() });
-      console.log(response.data)
-      setSelectedField(response.data.fields[0].fieldId)
+      const response = await client.get("/fields", { headers: getAuthHeaders() });
+      const { fields: fetchedFields } = response.data;
+      setSelectedField(fetchedFields[0]?.fieldId);
       setSelectedFields(prevSelectedFields => [
-        ...prevSelectedFields,
-        ...response.data.fields.map(field => field.fieldId)
+        ...(prevSelectedFields || []),
+        ...fetchedFields.map((field: Field) => field.fieldId)
       ]);
-        
+      
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  const handleFieldChange = (fieldId) => {
+  const handleFieldChange = (fieldId: number) => {
     setSelectedField(fieldId);
   };
 
   return (
     <>
       {selectedFields && selectedFields.length > 0 && (
-        <div>
-          <h2>{`${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}分野の新着記事`}</h2>
+        <Box>
+          <Typography variant="h2">
+            {fields.find(field => field.id === selectedField)?.name || 'Unknown'}分野の新着記事
+          </Typography>
           <FieldArticles fieldId={selectedField} />
-          <div style={{ display: "flex" }}>
-            {selectedFields.map((fieldId) => (
-              <button key={fieldId} onClick={() => handleFieldChange(fieldId)}>
-                {`${fields.find((field) => field.id === fieldId)?.name || 'Unknown'}`}
-              </button>
+          <Box display="flex">
+            {selectedFields.map(fieldId => (
+              <Button key={fieldId} onClick={() => handleFieldChange(fieldId)}>
+                {fields.find(field => field.id === fieldId)?.name || 'Unknown'}
+              </Button>
             ))}
-            <Link to={`/search/${fields.find((field) => field.id === selectedField)?.name || 'Unknown'}`}>もっと見る</Link>
-          </div>
-        </div>
+            <Link to={`/search/${fields.find(field => field.id === selectedField)?.name || 'Unknown'}`}>
+              この分野の記事をもっと見る
+            </Link>
+          </Box>
+        </Box>
       )}
     </>
   );
-  
 };
 
 export default NewsSection;

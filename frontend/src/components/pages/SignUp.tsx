@@ -13,7 +13,7 @@ import { AuthContext } from "App"
 import AlertMessage from "components/utils/AlertMessage"
 
 import InputPage from "components/utils/signup/InputPage"
-import CheckMail from "components/utils/CheckMail"
+import CheckMail from "components/utils/signup/CheckMail"
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitBtn: {
@@ -57,13 +57,7 @@ const SignUp: React.FC = () => {
       )}
       {step === 2 && (
         <CheckMail/>
-      )}      
-      <AlertMessage // エラーが発生した場合はアラートを表示
-        open={alertMessageOpen}
-        setOpen={setAlertMessageOpen}
-        severity="error"
-        message="メールアドレスかパスワードが間違っています"
-      />
+      )}
     </div>
   )
 }

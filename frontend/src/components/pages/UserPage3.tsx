@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import client from 'lib/api/client';
-import PostList2 from 'components/utils/PostList2';
+import PostList2 from 'components/utils/posts/PostList2';
 import ReviewList from 'components/utils/ReviewList';
 import LikeList from 'components/utils/LikeList';
 import { useParams } from 'react-router-dom';

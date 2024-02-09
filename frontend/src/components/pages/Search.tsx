@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import PostList3 from "components/utils/PostList3";
+import PostList3 from "components/utils/posts/PostList3";
 import { Link } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 import { AuthContext } from "App"
