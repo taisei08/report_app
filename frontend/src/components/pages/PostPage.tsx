@@ -9,7 +9,7 @@ import { ReplyForm, ReplyList } from 'components/utils/Reply';
 import { Link, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import FollowButton from 'components/utils/FollowButton';
+import FollowButton from 'components/utils/userpage/FollowButton';
 import LikeButton from 'components/utils/LikeButton';
 
 const PostPage = () => {

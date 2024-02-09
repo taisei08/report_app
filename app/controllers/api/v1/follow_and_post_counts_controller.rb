@@ -2,14 +2,13 @@ class Api::V1::FollowAndPostCountsController < ApplicationController
 
   def index
 
-    p "フィオ"
     p follow_params[:user_id]
 
     posts = Post.joins(:user)      
     .where('users.user_id' => follow_params[:user_id])
     .count
 
-    folloings = User.find(follow_params[:user_id]).followings      
+    followings = User.find(follow_params[:user_id]).followings      
     .count
 
     followers = User.find(follow_params[:user_id]).followers
@@ -17,7 +16,7 @@ class Api::V1::FollowAndPostCountsController < ApplicationController
 
     render json: { status: 200,
     posts: posts,
-    folloings: folloings,
+    followings: followings,
     followers: followers }
 
   end

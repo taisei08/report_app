@@ -1,6 +1,7 @@
 class Api::V1::LikePostsController < ApplicationController
 
   def index
+    
     @posts = Post.joins(:user, :likes)      
     .select("likes.user_id", "users.user_name", "users.icon_path", "posts.*")
     .where('likes.user_id' => post_params[:user_id])
@@ -8,7 +9,7 @@ class Api::V1::LikePostsController < ApplicationController
     .page(params[:page])
     .per(10)
 
-    p @posts
+    p post_params[:user_id]
 
 
     @posts.each do |post|

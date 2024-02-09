@@ -10,9 +10,9 @@ import SignIn from "components/pages/SignIn"
 import Post3 from "components/pages/Post3"
 import Post4 from "components/pages/Post4"
 import PostPage from "components/pages/PostPage"
-import UserPage from "components/pages/UserPage"
+import UserProfileEditPage from "components/pages/UserPage1"
 import UserProfileEditPage2 from "components/pages/UserPage2"
-import UserProfileEditPage3 from "components/pages/UserPage3"
+import UserPage from "components/pages/UserPage"
 import Initial from "components/pages/Initial"
 import ResetPassword from "components/pages/ResetPassword"
 import Search from "components/pages/Search"
@@ -129,7 +129,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/article/:postId" element={<PostPage />} />
             <Route path="/article/:postId/likes" element={<LikedUser />} /> 
-            <Route path="/userpage/:userId" element={<UserProfileEditPage3 />} />
+            <Route path="/userpage/:userId" element={<UserPage />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings/userpage4" element={<UserProfileEditPage5 />} />
@@ -152,7 +152,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/post" element={<Post3 />} />
         <Route path="/article/:postId/edit" element={<Post4 />} />
-        <Route path="/settings/userpage" element={<UserPage />} />
+        <Route path="/settings/userpage" element={<UserProfileEditPage />} />
         <Route path="/settings/userpage2" element={<UserProfileEditPage2 />} />
         <Route path="/settings/userpage3" element={<UserProfileEditPage4 />} />
         <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />

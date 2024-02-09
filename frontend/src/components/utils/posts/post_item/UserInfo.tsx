@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Box, Typography } from "@material-ui/core";
 import Avatar from "react-avatar";
 import { makeStyles } from "@material-ui/core/styles";
+import { formatDate } from "lib/function";
 
 const useStyles = makeStyles((theme) => ({
   avatarContainer: {
@@ -29,16 +30,8 @@ interface UserInfoProps {
   userId: number;
   userName: string;
   iconPath: string;
-  createdAt: string;
+  createdAt?: string;
 }
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  const day = ("0" + date.getDate()).slice(-2);
-  return `${year}年${month}月${day}日`;
-};
 
 const UserInfo: React.FC<UserInfoProps> = ({
   userId,
@@ -84,9 +77,11 @@ const UserInfo: React.FC<UserInfoProps> = ({
             @{userName}
           </Link>
         </Typography>
-        <Typography variant="body2" color="textSecondary">
-          投稿日: {formatDate(createdAt)}
-        </Typography>
+        {createdAt && (
+          <Typography variant="body2" color="textSecondary">
+            投稿日: {formatDate(createdAt)}
+          </Typography>
+        )}
       </Box>
     </Box>
   );

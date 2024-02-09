@@ -5,8 +5,10 @@ import client from "lib/api/client";
 import { fields } from "interfaces/fields";
 import { getAuthHeaders } from "lib/api/auth";
 import FieldArticles from "./FieldArticles";
+import { Styles } from "lib/styles";
 
 const NewsSection = () => {
+  const importClasses = Styles();
   const [selectedFields, setSelectedFields] = useState<number[] | undefined>([]); // 初期値は分野1
   const [selectedField, setSelectedField] = useState<number | undefined>(undefined);
 
@@ -16,16 +18,17 @@ const NewsSection = () => {
 
   interface Field {
     fieldId: number;
+    fieldName: string;
   }  
 
   const fetchUserData = async () => {
     try {
       const response = await client.get("/fields", { headers: getAuthHeaders() });
-      const { fields: fetchedFields } = response.data;
+      const fetchedFields: Field[] = response.data.fields;
       setSelectedField(fetchedFields[0]?.fieldId);
       setSelectedFields(prevSelectedFields => [
         ...(prevSelectedFields || []),
-        ...fetchedFields.map((field: Field) => field.fieldId)
+        ...fetchedFields.map((field) => field.fieldId)
       ]);
       
     } catch (error) {
@@ -41,18 +44,27 @@ const NewsSection = () => {
     <>
       {selectedFields && selectedFields.length > 0 && (
         <Box>
-          <Typography variant="h2">
-            {fields.find(field => field.id === selectedField)?.name || 'Unknown'}分野の新着記事
+          <Typography variant="h2" gutterBottom style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
+            カテゴリ:{fields.find(field => field.id === selectedField)?.name || 'Unknown'}の新着記事
           </Typography>
-          <FieldArticles fieldId={selectedField} />
+          {selectedField !== undefined && <FieldArticles fieldId={selectedField} />}
           <Box display="flex">
-            {selectedFields.map(fieldId => (
-              <Button key={fieldId} onClick={() => handleFieldChange(fieldId)}>
-                {fields.find(field => field.id === fieldId)?.name || 'Unknown'}
-              </Button>
-            ))}
-            <Link to={`/search/${fields.find(field => field.id === selectedField)?.name || 'Unknown'}`}>
-              この分野の記事をもっと見る
+          {selectedFields.map((fieldId) => (
+            <Button
+              key={fieldId}
+              onClick={() => handleFieldChange(fieldId)}
+              className={importClasses.button} // カスタムスタイルを適用
+            >
+              {fields.find((field) => field.id === fieldId)?.name || 'Unknown'}
+            </Button>
+          ))}
+          </Box>
+          <Box>
+            <Link 
+              to={`/search/${fields.find(field => field.id === selectedField)?.name || 'Unknown'}`}
+              className={importClasses.linkStyle}
+            >
+              この分野の記事をもっと見る▶︎
             </Link>
           </Box>
         </Box>
