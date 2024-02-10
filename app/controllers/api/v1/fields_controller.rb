@@ -36,8 +36,7 @@ class Api::V1::FieldsController < ApplicationController
         @before.destroy_all
       end
     
-      interests_data = params[:form_data]
-
+      interests_data = params.require(:field_id)
       if interests_data.present?
         interests_data_objects = interests_data.map { |interest_data| interest_data.permit(:field_id) }
   

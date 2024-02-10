@@ -172,7 +172,7 @@ const Header: React.FC = () => {
                 }>
                 マイページ
               </MenuItem>
-              <MenuItem onClick={() => handleMenuItemClick("/settings/userpage2")}>
+              <MenuItem onClick={() => handleMenuItemClick("settings/edit_user_name")}>
                 設定
               </MenuItem>
               <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
@@ -216,7 +216,6 @@ const Header: React.FC = () => {
             className={classes.iconButton}
             color="inherit"
           >
-            <MenuIcon />
           </IconButton>
           <Typography
             component={Link}

@@ -7,20 +7,20 @@ import Home from "components/pages/Home"
 import LikedUser from "components/pages/LikedUser"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/SignIn"
-import Post3 from "components/pages/Post3"
+import Post3 from "components/pages/Upload"
 import Post4 from "components/pages/Post4"
 import PostPage from "components/pages/PostPage"
-import UserProfileEditPage from "components/pages/UserPage1"
-import UserProfileEditPage2 from "components/pages/UserPage2"
+import EditProfilePage from "components/pages/EditProfilePage"
+import EditUserNamePage from "components/pages/EditUserNamePage"
 import UserPage from "components/pages/UserPage"
 import Initial from "components/pages/Initial"
 import ResetPassword from "components/pages/ResetPassword"
 import Search from "components/pages/Search"
-import UserProfileEditPage4 from "components/pages/UserPage4"
-import UserProfileEditPage5 from "components/pages/UserPage5"
-import UserProfileEditPage6 from "components/pages/UserPage6"
-import UserProfileEditPage7 from "components/pages/UserPage7"
-import UserProfileEditPage8 from "components/pages/UserPage8"
+import EditPasswordPagePhase1 from "components/pages/EditPasswordPagePhase1"
+import EditProfilePage5 from "components/pages/UserPage5"
+import EditMailAddressPage from "components/pages/EditMailAddressPage"
+import DeleteAccountPage from "components/pages/DeleteAccountPage"
+import EditInterests from "components/pages/EditInterests"
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
@@ -34,17 +34,11 @@ export const AuthContext = createContext({} as {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>
 })
 
-export const PostIdContext = React.createContext({} as {
-  sendPostId: number
-  setSendPostId: React.Dispatch<React.SetStateAction<number>>
-})
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
-  const [isFirstsession, setIsFirstsession] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | undefined>()
-  const [sendPostId, setSendPostId] = useState(0)
 
   // 認証済みのユーザーがいるかどうかチェック
   // 確認できた場合はそのユーザーの情報を取得
@@ -122,7 +116,6 @@ const App: React.FC = () => {
 
     
     <Router>
-      <PostIdContext.Provider value={{ sendPostId, setSendPostId }}>
       <AuthContext.Provider value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser}}>
         <CommonLayout>
           <Routes>
@@ -132,7 +125,7 @@ const App: React.FC = () => {
             <Route path="/userpage/:userId" element={<UserPage />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/settings/userpage4" element={<UserProfileEditPage5 />} />
+            <Route path="/settings/edit_profile4" element={<EditProfilePage5 />} />
             
             <Route
               path="/deleted"
@@ -152,12 +145,12 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/post" element={<Post3 />} />
         <Route path="/article/:postId/edit" element={<Post4 />} />
-        <Route path="/settings/userpage" element={<UserProfileEditPage />} />
-        <Route path="/settings/userpage2" element={<UserProfileEditPage2 />} />
-        <Route path="/settings/userpage3" element={<UserProfileEditPage4 />} />
-        <Route path="/settings/userpage5" element={<UserProfileEditPage6 />} />
-        <Route path="/settings/userpage6" element={<UserProfileEditPage7 />} />
-        <Route path="/settings/userpage7" element={<UserProfileEditPage8 />} />
+        <Route path="/settings/edit_profile" element={<EditProfilePage />} />
+        <Route path="/settings/edit_user_name" element={<EditUserNamePage />} />
+        <Route path="/settings/edit_password" element={<EditPasswordPagePhase1 />} />
+        <Route path="/settings/edit_email" element={<EditMailAddressPage />} />
+        <Route path="/settings/delete_account" element={<DeleteAccountPage />} />
+        <Route path="/settings/edit_interests" element={<EditInterests />} />
         <Route path="/initial" 
           element={<FirstSession><Routes><Route index element={<Initial />} /></Routes></FirstSession>} />
         {/* 他のPrivate内のルートを追加 */}
@@ -179,7 +172,6 @@ const App: React.FC = () => {
           </Routes>
         </CommonLayout>
       </AuthContext.Provider>
-      </PostIdContext.Provider>
 
     </Router>
   )

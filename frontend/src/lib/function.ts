@@ -9,3 +9,28 @@ export const formatDate = (dateString: string): string => {
   const day = ("0" + date.getDate()).slice(-2);
   return `${year}年${month}月${day}日`;
 };
+
+export const checkUserNameFormat = (userName: string) => {
+  const userNameRegex: RegExp = /^[a-zA-Z0-9_-]*$/;
+  if (!userNameRegex.test(userName)) {
+    return true;
+  }
+  return false;
+};
+
+export const checkUserNameLength = (userName: string) => {
+  if (!(userName.length > 0 && userName.length <= 32)) {
+    return true;
+  }
+  return false;
+};
+
+export const checkEmail = (email: string) => {
+  const emailRegex: RegExp = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    return true
+  } 
+  else {
+    return false
+  }
+};

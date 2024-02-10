@@ -1,8 +1,7 @@
-import { Fragment, useState, useEffect, useContext, useRef } from 'react';
+import { Fragment, useState, useEffect, useRef } from 'react';
 import client from "lib/api/client"
 import { PostLists } from "interfaces/index"
 import Avatar from 'react-avatar';
-import { PostIdContext } from 'App';
 import { Link } from 'react-router-dom';
 import Rating from 'react-rating';
 
@@ -12,7 +11,6 @@ const PostList3 = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [tempPosts, setTempPosts] = useState<PostLists[]>([]);
   const [allPosts, setAllPosts] = useState<PostLists[]>([]);
-  const { sendPostId, setSendPostId } = useContext(PostIdContext);
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -79,7 +77,6 @@ const PostList3 = (props) => {
   const handlePostClick = (postId) => {
     // クリックされた投稿のIDを取り出して何かしらの処理を行う
     console.log('Clicked Post ID:', postId);
-    setSendPostId(postId)
     window.location.href = `/article/${postId}`;
     // ここでサーバーサイドにデータを取りに行くなどの処理を追加可能
   };

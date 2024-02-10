@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import client from "lib/api/client"
 import { PostLists } from "interfaces/index"
 import Avatar from 'react-avatar';
-import { PostIdContext } from 'App';
 import { Link, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import { getAuthHeaders } from 'lib/api/auth';
@@ -13,7 +12,6 @@ const LikedUser = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [counts, setCounts] = useState();
   const [allLiked, setAllLiked] = useState<PostLists[]>([]);
-  const { sendPostId, setSendPostId } = useContext(PostIdContext);
   const [totalPages, setTotalPages] = useState(0); // 総ページ数
   console.log(Id)
 
@@ -56,7 +54,6 @@ const LikedUser = (props) => {
   const handlePostClick = (postId) => {
     // クリックされた投稿のIDを取り出して何かしらの処理を行う
     console.log('Clicked Post ID:', postId);
-    setSendPostId(postId)
     window.location.href = `/article/${postId}`;
     // ここでサーバーサイドにデータを取りに行くなどの処理を追加可能
   };

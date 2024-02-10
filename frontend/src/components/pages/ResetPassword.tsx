@@ -8,7 +8,7 @@ const ResetPassword = () => {
     email: string;
   }>({
     
-    redirect_url: 'http://localhost:3000/settings/userpage4',
+    redirect_url: 'http://localhost:3000/settings/edit_profile4',
     email: '',
   });
 

@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import { signUp } from "lib/api/auth";
 import AlertMessage from "../AlertMessage";
 import { SignUpData } from "interfaces";
+import ErrorMessage from "../ErrorMessage";
 
 interface InputPageProps {
   onNext: () => void;
@@ -88,17 +89,6 @@ const InputPage: React.FC<InputPageProps> = ({ onNext }) => {
       return false
     }
   };
-
-  interface Props {
-    message: string;
-  }  
-
-  const ErrorMessage: React.FC<Props> = ({ message }) => {
-    return (
-      <p style={{ color: "red", fontSize: "0.8em", margin: "0.2em 0" }}>{message}</p>
-    );
-  }
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

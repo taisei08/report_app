@@ -8,7 +8,6 @@ import { Box, Button, Typography, Container } from '@material-ui/core';
 
 const PostList = () => {
   const [allPosts, setAllPosts] = useState<PostLists[]>([]);
-  const { setSendPostId } = useContext(PostIdContext);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const navigate = useNavigate();
 
@@ -31,7 +30,6 @@ const PostList = () => {
   };
 
   const handlePostClick = (postId: number) => {
-    setSendPostId(postId);
     navigate(`/article/${postId}`);
   };
 
