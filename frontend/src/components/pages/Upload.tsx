@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Post2 from './Post2';
-import Post from './Post';
+import Post2 from '../utils/upload/Post2';
+import Post from './5';
 
 const Post3 = () => {
   const [filePath, setFilePath] = useState();

@@ -8,6 +8,13 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
       DeviseTokenAuth.default_confirm_success_url
     )
 
+    user = User.find_by(email: params[:email])
+
+    if user && user != current_api_v1_user
+      render json: { error: "The email address is already registered by another user." }, status: :unprocessable_entity
+      return
+    end
+
     if current_api_v1_user.update(unconfirmed_email: params[:email])
       current_api_v1_user.send_confirmation_instructions({
         client_config: params[:config_name],

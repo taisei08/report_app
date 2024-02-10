@@ -3,7 +3,7 @@ import client from 'lib/api/client';
 import { useSearchParams } from 'react-router-dom'
 import { getAuthHeaders } from 'lib/api/auth';
 
-const UserProfileEditPage5 = () => {
+const EditProfilePage5 = () => {
   const [userData, setUserData] = useState()
   const [searchParams] = useSearchParams();
 
@@ -108,5 +108,5 @@ const UserProfileEditPage5 = () => {
   );
 };
 
-export default UserProfileEditPage5;
+export default EditProfilePage5;
 

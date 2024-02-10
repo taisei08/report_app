@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Grid } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import UserLikePosts from 'components/utils/userpage/UserPosts';
