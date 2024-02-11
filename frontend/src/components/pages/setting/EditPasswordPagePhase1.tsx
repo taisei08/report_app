@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Typography, makeStyles, Theme, Card, CardContent, TextField, Button, Box } from '@material-ui/core';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/setting/SettingsMenu';
-import AlertMessage from 'components/utils/AlertMessage';
-import ErrorMessage from 'components/utils/ErrorMessage';
-import { useFormState } from './useFormState';
-import { checkEmail } from 'lib/function';
+import AlertMessage from 'components/utils/error/AlertMessage';
+import { useFormState } from "../../utils/error/useFormState";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -25,18 +23,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const EditMailAddressPage = () => {
+const EditPasswordPagePhase1 = () => {
   const classes = useStyles();
   const [formData, setFormData] = useState({
-    confirmSuccessUrl: 'http://localhost:3000',
+    redirect_url: 'http://localhost:3000/settings/edit_new_password',
     email: '',
   });
   const [formState, setFormState] = useFormState();
-  const [emailError, setEmailError] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
@@ -44,19 +41,17 @@ const EditMailAddressPage = () => {
   };
 
   const handleSave = async () => {
-    setEmailError(checkEmail(formData.email));
-
-    if (emailError) {
-      return;
-    }
-
     try {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
-      await client.put('/auth', formData, { headers: getAuthHeaders() });
-      setFormState({ alertSeverity: 'info', alertMessage: '新しいアドレスに確認メールを送信しました。添付のリンクをクリックし確認を完了させてください' });
+      await client.post(`/auth/password`, formData, { headers: getAuthHeaders() });
+      setFormState({
+        alertSeverity: 'info',
+        alertMessage: 'パスワード変更用のメールを送信しました。ご登録のメールアドレスをご確認ください'
+      });
+      console.log(formData);
       console.log('User data updated successfully!');
     } catch (error) {
-      setFormState({ alertSeverity: 'error', alertMessage: '正しい形式で入力してください' });
+      setFormState({ alertSeverity: 'error', alertMessage: 'メールアドレスが間違っています' });
       console.error('Error updating user data:', error);
     } finally {
       setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
@@ -68,14 +63,14 @@ const EditMailAddressPage = () => {
       <SettingsMenu />
       <Card>
         <CardContent>
-          <h1>メールアドレス変更</h1>
+          <h1>パスワード変更</h1>
           <Typography variant="body2" style={{ marginTop: '10px' }}>
-            新しいメールアドレスを入力してください。データを送った後確認メールが送信されます
+            ご登録のメールアドレスにパスワード変更用のリンクを記載したメールを送付します
           </Typography>
           <form>
             <Box className={classes.form}>
               <TextField
-                label="新しいメールアドレス"
+                label="現在のメールアドレス"
                 variant="outlined"
                 name="email"
                 value={formData.email}
@@ -85,15 +80,13 @@ const EditMailAddressPage = () => {
                 margin="dense"
                 autoComplete="email"
               />
-              {emailError && <ErrorMessage message='メールアドレスの形式が間違っています' />}
               <Button
                 variant="contained"
-                color="inherit"
                 className={classes.button}
                 onClick={handleSave}
                 disabled={!formData.email || formState.isSubmitting || !formState.isChanged}
               >
-                更新する
+                送信
               </Button>
             </Box>
           </form>
@@ -111,4 +104,4 @@ const EditMailAddressPage = () => {
   );
 };
 
-export default EditMailAddressPage;
+export default EditPasswordPagePhase1;

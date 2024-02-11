@@ -3,8 +3,8 @@ import { makeStyles, Card, CardContent, Box, Typography, Checkbox, FormControlLa
 import { fields } from "interfaces/fields";
 import { getAuthHeaders } from "lib/api/auth";
 import client from "lib/api/client";
-import { useFormState } from './useFormState';
-import AlertMessage from 'components/utils/AlertMessage';
+import { useFormState } from "../../utils/error/useFormState";
+import AlertMessage from 'components/utils/error/AlertMessage';
 import SettingsMenu from "components/utils/setting/SettingsMenu";
 
 interface Field {

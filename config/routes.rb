@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :posts_edit, only: %i[index update]
       put '/posts_edit', to: 'posts_edit#update', as: 'update'
       resources :posts_search, only: %i[index]
+      resources :posts_search_counts, only: %i[index]
       resources :ratings, only: %i[index create]
       resources :review_or_reply_spotted, only: %i[index]
       resources :reviews, only: %i[index create update destroy]

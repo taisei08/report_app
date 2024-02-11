@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 
 import { AuthContext } from "App";
-import AlertMessage from "components/utils/AlertMessage";
+import AlertMessage from "components/utils/error/AlertMessage";
 import { signIn } from "lib/api/auth";
 import { SignInData } from "interfaces/index";
 

@@ -34,16 +34,15 @@ class Api::V1::PostsController < ApplicationController
   
     def create
         @post = current_api_v1_user.posts.new(post_params)
-        @post.document_type = assign_document_type(params[:document_path].content_type)
 
-        tag_names = JSON.parse(params[:tag_name])
-
+        tag_names = JSON.parse(params[:tags])
+        p tag_names
 
         @post.transaction do
             if @post.save
               tag_names.each do |tag|
-                puts tag_name: tag["tag_name"]
-                existing_tag = Tag.find_by(tag_name: tag["tag_name"])
+                puts tag_name: tag
+                existing_tag = Tag.find_by(tag_name: tag)
                 puts "見てみて！"
                 p existing_tag
                 if existing_tag
@@ -52,7 +51,7 @@ class Api::V1::PostsController < ApplicationController
                   @post.set_tags.create(tag:tag_to_use)
                 else
                   # 存在しない場合は新しく作成
-                  tag_to_use = @post.tags.create(tag_name: tag["tag_name"])
+                  tag_to_use = @post.tags.create(tag_name: tag)
                 end
           
               end
