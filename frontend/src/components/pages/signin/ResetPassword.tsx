@@ -1,9 +1,9 @@
-import React, { useState } from "react"
-import InputPage from "components/utils/signup/InputPage"
+import { useState } from "react"
+import EmailInput from "components/utils/signin/resetpassword/EmailInput";
 import Finish from "components/utils/Finish";
 
-// サインアップ用ページ
-const SignUp: React.FC = () => {
+
+const ResetPassword: React.FC = () => {
   // ステップの管理
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
@@ -15,11 +15,11 @@ const SignUp: React.FC = () => {
   return (
     <>
       {!isSuccessful && (
-        <InputPage handleIsSuccessful={handleIsSuccessful} />
+        <EmailInput handleIsSuccessful={handleIsSuccessful} />
       )}
       {isSuccessful && (
         <Finish
-        mainText='認証メールを送信しました'
+        mainText='パスワード変更用のメールを送信しました'
         subText='ご登録のメールアドレスをご確認ください'
         />
       )}
@@ -27,4 +27,4 @@ const SignUp: React.FC = () => {
   )
 }
 
-export default SignUp
+export default ResetPassword;

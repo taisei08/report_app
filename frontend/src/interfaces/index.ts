@@ -25,16 +25,13 @@ export interface SignUpData {
     profileStatement: string;
   }
 
-  // 投稿
   export interface Posts {
-    post_id: number
-    user_id: number
     title: string
     description: string
     field_id: number
     sub_field_id: number
-    document_type: string
-    document_path: string
+    document_path: File
+    tags: string[]
   }
 
   export interface PostLists {

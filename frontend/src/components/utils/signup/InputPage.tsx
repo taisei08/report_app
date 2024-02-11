@@ -5,15 +5,15 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
 import { signUp } from "lib/api/auth";
-import AlertMessage from "../AlertMessage";
+import AlertMessage from "../error/AlertMessage";
 import { SignUpData } from "interfaces";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "../error/ErrorMessage";
 
-interface InputPageProps {
-  onNext: () => void;
+interface Props {
+  handleIsSuccessful: () => void;
 }
 
-const InputPage: React.FC<InputPageProps> = ({ onNext }) => {
+const InputPage: React.FC<Props> = ({ handleIsSuccessful }) => {
   const confirmSuccessUrl: string = "http://localhost:3000";
   const [formData, setFormData] = useState<SignUpData>({
     email: "",
@@ -108,7 +108,7 @@ const InputPage: React.FC<InputPageProps> = ({ onNext }) => {
           setIsSubmitting(true);
           const res = await signUp(formData);
           if (res.status === 200) {
-            onNext();
+            handleIsSuccessful();
           } else {
             setAlertMessageOpen(true);
           }

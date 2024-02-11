@@ -34,3 +34,26 @@ export const checkEmail = (email: string) => {
     return false
   }
 };
+
+export const checkPassword = (password: string) => {
+  const passwordRegex: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*[^\x01-\x7E]).{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return true
+  }
+  else {
+    return false
+  }
+};
+
+export const checkPasswordConfirmation: (password: string, passwordConfirmation: string) => boolean = (
+  password,
+  passwordConfirmation
+) => {
+  if (password === passwordConfirmation) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+

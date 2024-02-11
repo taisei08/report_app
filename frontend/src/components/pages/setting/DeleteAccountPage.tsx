@@ -3,17 +3,14 @@ import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/setting/SettingsMenu';
 import Cookies from 'js-cookie';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
 import { makeStyles, Theme, Typography, Box, Card, CardContent } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import AlertMessage from 'components/utils/AlertMessage';
+import AlertMessage from 'components/utils/error/AlertMessage';
 import { AuthContext } from 'App';
-import { useFormState } from './useFormState';
+import { useFormState } from '../../utils/error/useFormState';
 import { useNavigate } from 'react-router-dom';
+import ConfirmationDialog from '../../utils/ConfirmationDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
@@ -26,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
+
 
 const DeleteAccountPage: React.FC = () => {
   const classes = useStyles();
@@ -60,11 +58,11 @@ const DeleteAccountPage: React.FC = () => {
       Cookies.remove("_client");
       Cookies.remove("_uid");
       setIsSignedIn(false);
-      setFormState({ alertSeverity: undefined });
       Cookies.set("_account_deleted", "true");
+      setFormState({ alertSeverity: undefined });
+      navigate('/deleted')
       console.log('User data updated successfully!');
       handleClose();
-      navigate("/deleted");
     } catch (error) {
       handleClose();
       console.error('Error updating user data:', error);
@@ -110,20 +108,15 @@ const DeleteAccountPage: React.FC = () => {
           </Box>
         </CardContent>
       </Card>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>アカウントの削除</DialogTitle>
-        <DialogContent>
-          本当にアカウントを削除しますか？
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            戻る
-          </Button>
-          <Button onClick={handleDelete} color="secondary">
-            消去
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmationDialog
+        open={open}
+        onClose={handleClose}
+        onConfirm={handleDelete}
+        title="アカウントの削除"
+        content="本当にアカウントを削除しますか？"
+        cancelText="戻る"
+        confirmText="消去"
+      />
       {formState.alertSeverity && (
         <AlertMessage
           open={formState.alertMessageOpen}

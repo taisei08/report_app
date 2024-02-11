@@ -2,25 +2,25 @@ import React, { useState, useEffect, createContext } from "react"
 import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom"
 import Cookies from "js-cookie"
 import CommonLayout from "components/layouts/CommonLayout"
-import AccountDeleteComplete from "components/utils/AccountDeleteComplete"
+import DeleteComplete from "components/pages/setting/DeleteComplete"
 import Home from "components/pages/Home"
 import LikedUser from "components/pages/LikedUser"
 import SignUp from "components/pages/SignUp"
-import SignIn from "components/pages/SignIn"
-import Post3 from "components/pages/Upload"
+import SignIn from "components/pages/signin/SignIn"
+import UploadPage from "components/pages/UploadPage"
 import Post4 from "components/pages/Post4"
 import PostPage from "components/pages/PostPage"
-import EditProfilePage from "components/pages/EditProfilePage"
-import EditUserNamePage from "components/pages/EditUserNamePage"
+import EditProfilePage from "components/pages/setting/EditProfilePage"
+import EditUserNamePage from "components/pages/setting/EditUserNamePage"
 import UserPage from "components/pages/UserPage"
 import Initial from "components/pages/Initial"
-import ResetPassword from "components/pages/ResetPassword"
+import ResetPassword from "components/pages/signin/ResetPassword"
 import Search from "components/pages/Search"
-import EditPasswordPagePhase1 from "components/pages/EditPasswordPagePhase1"
-import EditProfilePage5 from "components/pages/UserPage5"
-import EditMailAddressPage from "components/pages/EditMailAddressPage"
-import DeleteAccountPage from "components/pages/DeleteAccountPage"
-import EditInterests from "components/pages/EditInterests"
+import EditPasswordPagePhase1 from "components/pages/setting/EditPasswordPagePhase1"
+import EditPasswordPagePhase2 from "components/pages/setting/EditPasswordPagePhase2"
+import EditMailAddressPage from "components/pages/setting/EditMailAddressPage"
+import DeleteAccountPage from "components/pages/setting/DeleteAccountPage"
+import EditInterests from "components/pages/setting/EditInterests"
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
@@ -125,14 +125,14 @@ const App: React.FC = () => {
             <Route path="/userpage/:userId" element={<UserPage />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/settings/edit_profile4" element={<EditProfilePage5 />} />
+            <Route path="/settings/edit_new_password" element={<EditPasswordPagePhase2 />} />
             
             <Route
               path="/deleted"
               element={
                 <AccountDeleted>
                   <Routes>
-                  <Route index element={<AccountDeleteComplete />} />
+                  <Route index element={<DeleteComplete />} />
                   </Routes>
                 </AccountDeleted>
               }
@@ -143,7 +143,7 @@ const App: React.FC = () => {
   {isSignedIn ? (
     <Private>
       <Routes>
-        <Route path="/post" element={<Post3 />} />
+        <Route path="/post" element={<UploadPage />} />
         <Route path="/article/:postId/edit" element={<Post4 />} />
         <Route path="/settings/edit_profile" element={<EditProfilePage />} />
         <Route path="/settings/edit_user_name" element={<EditUserNamePage />} />

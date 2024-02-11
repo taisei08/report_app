@@ -4,9 +4,9 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/setting/SettingsMenu';
-import ErrorMessage from 'components/utils/ErrorMessage';
-import AlertMessage from 'components/utils/AlertMessage';
-import { useFormState } from './useFormState';
+import ErrorMessage from 'components/utils/error/ErrorMessage';
+import AlertMessage from 'components/utils/error/AlertMessage';
+import { useFormState } from "../../utils/error/useFormState";
 import { checkUserNameFormat, checkUserNameLength } from 'lib/function';
 
 const useStyles = makeStyles((theme: Theme) => ({
