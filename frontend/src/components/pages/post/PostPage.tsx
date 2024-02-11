@@ -3,14 +3,14 @@ import client from 'lib/api/client';
 import Avatar from 'react-avatar';
 import Rating from 'react-rating';
 import { useParams } from 'react-router-dom';
-import PdfViewer from 'components/utils/PdfViewer';
+import PdfViewer from 'components/utils/postpage/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
-import { ReplyForm, ReplyList } from 'components/utils/Reply';
+import { ReplyForm, ReplyList } from 'components/utils/postpage/Reply';
 import { Link, useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import FollowButton from 'components/utils/userpage/FollowButton';
-import LikeButton from 'components/utils/LikeButton';
+import LikeButton from 'components/utils/postpage/LikeButton';
 
 const PostPage = () => {
   const location = useLocation();

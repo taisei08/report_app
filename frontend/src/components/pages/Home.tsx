@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import { useContext } from "react"
 import { Grid, Box } from "@material-ui/core";
 import PostList from "components/utils/posts/PostList"
 import { AuthContext } from "App"

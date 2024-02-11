@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Typography, makeStyles, Theme, Card, CardContent, TextField, Button, Box } from '@material-ui/core';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
     marginTop: theme.spacing(2),
-    width: '70vw'
   },
   form: {
     display: 'flex',
@@ -68,8 +67,10 @@ const EditMailAddressPage = () => {
       <SettingsMenu />
       <Card>
         <CardContent>
-          <h1>メールアドレス変更</h1>
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
+          <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            メールアドレスの変更
+          </Typography> 
+          <Typography variant="body2" style={{ paddingInline: 60, marginTop: '10px' }}>
             新しいメールアドレスを入力してください。データを送った後確認メールが送信されます
           </Typography>
           <form>

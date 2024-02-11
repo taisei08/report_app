@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { makeStyles, Theme } from "@material-ui/core/styles"
 import AlertMessage from "components/utils/error/AlertMessage"
 import SignUpSuccessPage from "components/utils/SignUpSuccessPage"

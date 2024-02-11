@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
     marginTop: theme.spacing(2),
-    width: '70vw'
   },
   form: {
     display: 'flex',
@@ -63,8 +62,10 @@ const EditPasswordPagePhase1 = () => {
       <SettingsMenu />
       <Card>
         <CardContent>
-          <h1>パスワード変更</h1>
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
+          <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            パスワードの変更
+          </Typography>            
+          <Typography variant="body2" style={{ paddingInline: 60, marginTop: '10px' }}>
             ご登録のメールアドレスにパスワード変更用のリンクを記載したメールを送付します
           </Typography>
           <form>

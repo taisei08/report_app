@@ -11,7 +11,6 @@ import { checkUserNameFormat, checkUserNameLength } from 'lib/function';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '60vw',
     alignItems: 'center',
     marginTop: theme.spacing(2),
   },
@@ -79,8 +78,10 @@ const EditUserNamePage: React.FC = () => {
       <SettingsMenu />
       <Card>
         <CardContent>
-          <h1>アカウント</h1>
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
+         <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            ユーザー名の変更
+          </Typography>   
+          <Typography variant="body2" style={{ paddingInline: 120, marginTop: '10px' }}>
             新しいユーザー名を入力してください
           </Typography>
           <Box className={classes.form}>

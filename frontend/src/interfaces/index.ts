@@ -28,9 +28,9 @@ export interface SignUpData {
   export interface Posts {
     title: string
     description: string
-    field_id: number
-    sub_field_id: number
-    document_path: File
+    fieldId: number
+    subFieldId: number
+    documentPath?: File
     tags: string[]
   }
 

@@ -1,6 +1,4 @@
-// NotificationButton.tsx
-
-import React, { useState } from "react";
+import { useState } from "react";
 import Notifications from "./Notification";
 
 const NotificationButton: React.FC = () => {

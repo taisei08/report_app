@@ -1,15 +1,14 @@
-import SearchList from 'components/utils/search/SearchList';
 import { useParams } from 'react-router-dom';
+import SearchList from 'components/utils/search/SearchList';
 
-// とりあえず認証済みユーザーの名前やメールアドレスを表示
 const Search: React.FC = () => {
-  const Query = useParams()
+  const Query = useParams();
+  const searchQuery = Query.query || ''; // undefined が渡された場合に空文字列になるようにデフォルト値を設定
   return (
     <>
-      <SearchList searchQuery={Query.query}/>
+      <SearchList searchQuery={searchQuery} />
     </>
-
-  )
+  );
 }
 
 export default Search;

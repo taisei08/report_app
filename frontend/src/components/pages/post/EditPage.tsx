@@ -1,9 +1,9 @@
 import { useState } from "react"
-import InputPage from "components/utils/signup/InputPage"
+import EditInput from "components/utils/edit/EditInput";
 import Finish from "components/utils/Finish";
 
-// サインアップ用ページ
-const SignUp: React.FC = () => {
+
+const EditPage: React.FC = () => {
   // ステップの管理
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
@@ -15,16 +15,18 @@ const SignUp: React.FC = () => {
   return (
     <>
       {!isSuccessful && (
-        <InputPage handleIsSuccessful={handleIsSuccessful} />
+        <EditInput handleIsSuccessful={handleIsSuccessful} />
       )}
       {isSuccessful && (
         <Finish
-        mainText='認証メールを送信しました'
-        subText='ご登録のメールアドレスをご確認ください'
+        mainText='更新が完了しました'
+        subText='ボタンを押して投稿ページを確認しましょう'
+        buttonText='投稿ページへ'
+        buttonUrl={-1}
         />
       )}
     </>
   )
 }
 
-export default SignUp
+export default EditPage;

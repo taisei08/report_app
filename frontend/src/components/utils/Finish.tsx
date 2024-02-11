@@ -6,7 +6,7 @@ interface FinishProps {
   mainText: string;
   subText: string;
   buttonText?: string;
-  buttonUrl?: string;
+  buttonUrl?: -1 | string;
 }
 
 const useStyles = makeStyles((theme) => ({

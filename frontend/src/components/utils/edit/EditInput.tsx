@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { makeStyles, Chip, Card, CardHeader, CardContent, TextField, Button, MenuItem } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import client from "lib/api/client";
@@ -6,8 +7,8 @@ import { getAuthHeaders } from "lib/api/auth";
 import { Fields } from "interfaces/index";
 import { allFields } from 'interfaces/fields';
 import { Posts } from 'interfaces/index';
-import { useFormState } from '../error/useFormState';
-import AlertMessage from '../error/AlertMessage';
+import { useFormState } from 'components/utils/error/useFormState';
+import AlertMessage from 'components/utils/error/AlertMessage';
 import ConfirmationDialog from 'components/utils/ConfirmationDialog';
 
 const useStyles = makeStyles(() => ({
@@ -24,10 +25,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  submitFile: File; // 仮の型
+  handleIsSuccessful: () => void;
 }
 
-const PostDetail: React.FC<Props> = ({ submitFile }) => {
+const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
+  const Id = useParams()
   const [formState, setFormState] = useFormState();
   const classes = useStyles();
   const [fields, setFields] = useState<Fields[]>([]);
@@ -36,14 +38,32 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
     description: '',
     fieldId: 0,
     subFieldId: 0,
-    documentPath: submitFile,
     tags: []
   });
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   useEffect(() => {
     setFields(allFields);
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await client.get
+      ('/posts_edit', { params: {postId: Id.postId} });
+      console.log(response.data.post)
+      setPostData(response.data.post);
+      const tags: string[]= []
+      response.data.post.tags.map((tag: any) => tags.push(tag.tagName));
+      setPostData((prevData) => ({
+        ...prevData,
+        tags: tags
+      }));
+            setFields(allFields);
+    } catch (error) {
+      console.error('Failed to fetch fields', error);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -89,22 +109,14 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
       handleCloseDialog();
       return;
     }
-
-    const formData = new FormData();
-    formData.append('title', postData.title);
-    formData.append('description', postData.description);
-    formData.append('field_id', String(postData.fieldId));
-    formData.append('sub_field_id', String(postData.subFieldId));
-    if(postData.documentPath)
-      {formData.append('document_path', postData.documentPath)};
-    formData.append('tags', JSON.stringify(postData.tags));
-
+    
     try {
-      const response = await client.post('/posts', formData, {
+      const response = await client.put('/posts_edit', postData, {
         headers: getAuthHeaders()
       });
       setFormState({ alertSeverity: undefined });
-      console.log('Post created successfully', response.data);
+      handleIsSuccessful();
+      console.log('Post updated successfully', response.data);
     } catch (error) {
       setFormState({ 
         alertSeverity: 'error', 
@@ -255,4 +267,4 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
   );
 };
 
-export default PostDetail;
+export default EditInput;

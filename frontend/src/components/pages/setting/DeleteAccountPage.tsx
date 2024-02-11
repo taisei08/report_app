@@ -73,12 +73,14 @@ const DeleteAccountPage: React.FC = () => {
   };
 
   return (
-    <Box style={{width: '60vw'}}>
+    <Box>
       <SettingsMenu />
       <Card>
         <CardContent>
-          <h1>アカウントの消去</h1>
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
+          <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            アカウントの消去
+          </Typography>          
+          <Typography variant="body2" style={{ paddingInline: 120, marginTop: '10px' }}>
             パスワードを入力してください
           </Typography>
           <Box className={classes.form}>

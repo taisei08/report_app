@@ -1,15 +1,15 @@
-import React, { useState, useEffect, createContext } from "react"
+import { useState, useEffect, createContext } from "react"
 import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom"
 import Cookies from "js-cookie"
 import CommonLayout from "components/layouts/CommonLayout"
 import DeleteComplete from "components/pages/setting/DeleteComplete"
 import Home from "components/pages/Home"
-import LikedUser from "components/pages/LikedUser"
+import LikedUser from "components/pages/post/LikedUser"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/signin/SignIn"
 import UploadPage from "components/pages/UploadPage"
-import Post4 from "components/pages/Post4"
-import PostPage from "components/pages/PostPage"
+import EditPage from "components/pages/post/EditPage"
+import PostPage from "components/pages/post/PostPage"
 import EditProfilePage from "components/pages/setting/EditProfilePage"
 import EditUserNamePage from "components/pages/setting/EditUserNamePage"
 import UserPage from "components/pages/UserPage"
@@ -144,7 +144,7 @@ const App: React.FC = () => {
     <Private>
       <Routes>
         <Route path="/post" element={<UploadPage />} />
-        <Route path="/article/:postId/edit" element={<Post4 />} />
+        <Route path="/article/:postId/edit" element={<EditPage />} />
         <Route path="/settings/edit_profile" element={<EditProfilePage />} />
         <Route path="/settings/edit_user_name" element={<EditUserNamePage />} />
         <Route path="/settings/edit_password" element={<EditPasswordPagePhase1 />} />
