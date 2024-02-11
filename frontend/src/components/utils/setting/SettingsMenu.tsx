@@ -87,7 +87,7 @@ const SettingsMenu = () => {
             { text: "パスワード", to: "/settings/edit_password" },
             { text: "メールアドレス", to: "/settings/edit_email" },
             { text: "プロフィール", to: "/settings/edit_profile" },
-            { text: "分野", to: "/settings/edit_interests" },
+            { text: "学問分野", to: "/settings/edit_interests" },
             { text: "アカウントの消去", to: "/settings/delete_account" },
           ].map((item) => (
             <ListItem

@@ -6,8 +6,11 @@ import PostItem from '../posts/post_item/PostItem';
 import CustomPagination from '../posts/CustomPagination';
 import { PostLists } from "interfaces/index";
 
+interface Props {
+  searchQuery: string;
+}
 
-const SearchList = ({ searchQuery }) => {
+const SearchList: React.FC<Props> = ({ searchQuery }) => {
   const [allPosts, setAllPosts] = useState<PostLists[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);

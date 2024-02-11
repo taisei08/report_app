@@ -34,5 +34,11 @@ export const Styles = makeStyles((theme) => ({
     '&:hover': {
       textDecoration: 'underline',
     },
-  }  
+  },  
+  customBox: {
+    width: '60vw',
+    [theme.breakpoints.down('sm')]: {
+      width: '90vw',
+    },
+  },
 }));

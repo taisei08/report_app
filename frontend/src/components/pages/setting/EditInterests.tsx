@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles, Card, CardContent, Box, Typography, Checkbox, FormControlLabel, Button, Grid } from "@material-ui/core";
 import { fields } from "interfaces/fields";
 import { getAuthHeaders } from "lib/api/auth";
@@ -90,7 +90,9 @@ const EditInterests: React.FC = () => {
       <SettingsMenu />
       <Card>
         <CardContent className={classes.cardContent}>
-          <h1>分野</h1>
+          <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            学問分野
+          </Typography>           
           <Typography variant="body2" style={{ marginBottom: '10px' }}>
             興味のある分野を選択してください。分野は3つまで指定できます
           </Typography>

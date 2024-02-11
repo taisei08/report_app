@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     alignItems: 'center',
     marginTop: theme.spacing(2),
-    width: '70vw'
   },
   form: {
     display: 'flex',
@@ -84,8 +83,10 @@ const InputNewPassword: React.FC<Props> = ({ handleIsSuccessful }) => {
     <Box className={classes.root}>
       <Card>
         <CardContent>
-          <Typography variant='h4' style={{textAlign: 'center', fontWeight: 'bold'}}>パスワード変更</Typography>
-          <Typography variant="body2" style={{ marginTop: '10px' }}>
+          <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            パスワードの変更
+          </Typography> 
+          <Typography variant="body2" style={{ paddingInline: 120, marginTop: '10px' }}>
             新しいパスワードを入力してください。
           </Typography>
           <form className={classes.form}>

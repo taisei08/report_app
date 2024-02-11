@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { allFields } from 'interfaces/fields';
 import { Box, Typography, makeStyles } from '@material-ui/core';

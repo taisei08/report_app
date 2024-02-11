@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import client from "lib/api/client";
 import { PostLists } from "interfaces/index";
-import { PostIdContext } from 'App';
 import PostItem from './post_item/PostItem';
 import { Box, Button, Typography, Container } from '@material-ui/core';
 

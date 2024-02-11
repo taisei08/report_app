@@ -1,56 +1,59 @@
 class Api::V1::PostsEditController < ApplicationController
 
   def index
-    @posts = Post      
-    .select("posts.*")
-    .where(post_id: post_params[:post_id])
+    @post = Post      
+    .find(post_params[:post_id])
     p "フェイオッjフィオ絵wじょいfw"
     p params
 
-    @posts.each do |post|
-      tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
-      # タグ名をTagモデルのインスタンスに変換してtags属性に代入
-      post[:tags] = tag_names
-    end
     
-    render json: { status: 200, posts: @posts}
+      tag_names = SetTag.joins(:tag).where(post_id: @post.post_id).pluck("tags.tag_name")
+      # タグ名をTagモデルのインスタンスに変換してtags属性に代入
+      @post[:tags] = tag_names
+    
+    render json: { status: 200, post: @post}
   end
 
   def update
     @post = Post.find(post_params[:post_id])
 
-    tag_names = JSON.parse(post_params[:tag_name])
-    p tag_names
+    tag_names = post_params[:tags]
+    p params
+    p post_params[:tags]
 
-    if @post.update(update_params) # post_paramsは許可されたパラメータを取得するメソッド
-      existing_tags = tag_names.map do |tag_info|
-        existing_tag = Tag.find_by(tag_info)
-        existing_tag ||= @post.tags.create(tag_info)
-        existing_tag
-      end
-
-      param_tag_names = tag_names.map { |tag_info| tag_info["tag_name"] }
+    ActiveRecord::Base.transaction do
+      if @post.update(update_params)
+        existing_tag_names = @post.tags.pluck(:tag_name)
+        
+        existing_tags = tag_names.map do |tag_info|
+          existing_tag = Tag.find_by(tag_name: tag_info)
+          existing_tag ||= @post.tags.create(tag_name: tag_info)
+          existing_tag
+        end
     
-      # 既存のset_tagを取得
-      existing_set_tags = @post.set_tags.to_a
-  
-      # 不要なset_tagを特定して削除
-      (existing_set_tags.reject { |set_tag| param_tag_names.include?(set_tag.tag.tag_name) }).each(&:destroy)
-
-      Tag.where.not(tag_id: SetTag.select(:tag_id).distinct).destroy_all
-
-      render json: { message: 'Post updated successfully' }, status: :ok
-    else
-      render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
-    end
+        (existing_tag_names - tag_names).each do |tag_name|
+          tag = Tag.find_by(tag_name: tag_name)
+          if tag
+            set_tag = @post.set_tags.find_by(tag_id: tag.tag_id)
+            set_tag.destroy if set_tag
+          end
+        end
+    
+        Tag.where.not(tag_id: SetTag.select(:tag_id).distinct).destroy_all
+    
+        render json: { message: 'Post updated successfully' }, status: :ok
+      else
+        render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback # トランザクションをロールバックする
+      end
+    end    
   end
 
   private
   
   def post_params
-      params.permit(:post_id, :title, :description,
-      :field_id, :sub_field_id, :tag_name)
-  end
+    params.permit(:post_id, :title, :description, :field_id, :sub_field_id, tags: [])
+  end  
 
   def update_params
     params.permit(:title, :description, :field_id, :sub_field_id)

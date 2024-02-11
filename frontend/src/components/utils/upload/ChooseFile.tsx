@@ -51,7 +51,6 @@ const ChooseFile: React.FC<Props> = ({ handleFileData }) => {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        width: '90vw',
         height: '20rem',
         border: `2px dashed ${isDragging ? blue[500] : grey[500]}`,
         borderRadius: 10,
@@ -62,7 +61,7 @@ const ChooseFile: React.FC<Props> = ({ handleFileData }) => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
     >
-      <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+      <Typography variant="h5" style={{ padding: 90,fontWeight: 'bold' }}>
         ファイルをドラッグ＆ドロップ
       </Typography>
       <Typography variant="body2" color="textSecondary" style={{ marginTop: '1rem' }}>

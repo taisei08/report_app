@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useEffect, useState } from "react"
+import { useRef, useContext, useEffect, useState } from "react"
 import { useNavigate, Link, Navigate } from "react-router-dom"
 import Avatar from "react-avatar"
 import Cookies from "js-cookie"
