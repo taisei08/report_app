@@ -1,24 +1,25 @@
 class Api::V1::PostDetailController < ApplicationController
 
   def index
-
-    @posts = Post.joins(:user)
-      .select("users.user_id", "users.user_name", "posts.*")
-      .where(post_id: post_detail_params[:post_id])
-
-    p "見てみて"
-    p post_detail_params[:post_id]
-    @posts.each do |post|
-      tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
-      # タグ名をTagモデルのインスタンスに変換してtags属性に代入
-      post[:tags] = tag_names
+    user_id = current_api_v1_user&.id
+    post_id = post_detail_params[:post_id]
+  
+    @post = Post.joins(:user)
+            .select("users.user_id", "users.user_name", "users.icon_path", "posts.*")
+            .find(post_id)
+  
+    if @post.nil?
+      render json: { status: 404, message: "Post not found" }
+      return
     end
-
-    render json: { status: 200, posts: @posts}
-
-
-
-  end
+  
+    @post.icon_path = @post.user.icon_path.url
+    tag_names = SetTag.joins(:tag).where(post_id: @post.post_id).pluck("tags.tag_name")
+    @post[:tags] = tag_names
+    is_owner = @post.user_id == user_id ? true : false
+  
+    render json: { status: 200, post: @post, is_owner: is_owner }
+  end  
 
   private
 

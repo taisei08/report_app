@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  submitFile: File; // 仮の型
+  submitFile: File;
 }
 
 const PostDetail: React.FC<Props> = ({ submitFile }) => {

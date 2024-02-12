@@ -3,26 +3,31 @@ class Api::V1::ReviewsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:create, :update]
 
   def index
-    @review = Review
-    .joins(:user)
-    .select("users.user_name", "users.icon_path", "reviews.*")
-    .where(post_id: review_index_params[:post_id])
-    .order(created_at: :desc)
-    
+    post_id = review_index_params[:post_id]
     user_id = current_api_v1_user&.id
-
-    @review.each do |review|
+  
+    @reviews = Review
+      .joins(:user)
+      .select("users.user_name", "users.icon_path", "reviews.*")
+      .where(post_id: post_id)
+      .order(created_at: :desc)
+      
+    @reviews.each do |review|
       review.icon_path = review.user.icon_path.url
-    end
-
-    @review.each do |review|
       reply_length = Reply.joins(:review)      
-      .where('reviews.review_id' => review.review_id)
-      .count
+                            .where(reviews: {review_id: review.review_id})
+                            .count
       review[:reply_length] = reply_length
     end
-
-    render json: { status: 'success', current_user_id: user_id, reviews: @review }
+  
+    user_review = @reviews.find { |review| review.user_id == user_id }
+  
+    if user_review
+      @reviews = @reviews.reject { |review| review.user_id == user_id }
+      render json: { status: 'success', reviews: @reviews, own_review: user_review }
+    else
+      render json: { status: 'success', reviews: @reviews, own_review: false }
+    end
   end
 
   def create

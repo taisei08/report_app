@@ -1,55 +1,93 @@
-import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import Modal from 'react-modal';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Typography, Menu, MenuItem, IconButton } from '@material-ui/core';
+import { MoreVert as MoreVertIcon } from '@material-ui/icons';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
+import ConfirmationDialog from 'components/utils/ConfirmationDialog';
+import AlertMessage from 'components/utils/error/AlertMessage';
+import { useFormState } from 'components/utils/error/useFormState';
 
-const HamburgerMenu = () => {
-  const Id = useParams()
-  const postId = {
-    postId: Id.postId,
-  };
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [show, setShow] = useState(false);
+const HamburgerMenu: React.FC<{ isYourPost: boolean }> = ({ isYourPost }) => {
+  const { postId } = useParams<{ postId?: string }>();
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [formState, setFormState] = useFormState();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
+  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMenuAnchorEl(event.currentTarget);
   };
 
-  const handleDelete = () => {
-    client.delete(`/posts/${postId}`, { headers: getAuthHeaders() })
-      .then(response => {
-        console.log('削除が成功しました', response);
-        handleClose();
-        navigate('/');
-      })
-      .catch(error => {
-        console.error('削除中にエラーが発生しました', error);
-        handleClose();
-      });
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
   };
+
+  const handleDeleteConfirmation = () => {
+    handleMenuClose();
+    setShowConfirmation(true);
+  };
+
+  const handleDelete = async () => {
+    setFormState({ alertMessageOpen: false });
+  
+    try {
+      await client.delete(`/posts/${postId}`, { headers: getAuthHeaders() });
+      console.log('削除が成功しました');
+      setShowConfirmation(false);
+      setFormState({ alertSeverity: 'success', alertMessage: '投稿の削除に成功しました' });
+      setFormState({ alertMessageOpen: true });
+      navigate('/');
+    } catch (error) {
+      console.error('削除中にエラーが発生しました', error);
+      setShowConfirmation(false);
+      setFormState({ alertSeverity: 'error', alertMessage: '投稿の削除に失敗しました' });
+    } finally {
+      setFormState({ alertMessageOpen: true });
+    }
+  };
+  
 
   return (
-    <div>
-      <Link to={`/article/${postId}/likes`}>いいねしたユーザー</Link>
-      <button onClick={toggleMenu}>メニューを表示</button>
-      {menuVisible && (
-        <div className="menu">
-          <Link to={`/article/${postId}/edit`}><button>編集</button></Link>
-          <button onClick={handleShow}>削除</button>
-          <Modal isOpen={show} onRequestClose={handleClose} contentLabel="削除の確認">
-            <h2>削除の確認</h2>
-            <p>本当に削除してもよろしいですか？</p>
-            <button onClick={handleDelete}>削除</button>
-            <button onClick={handleClose}>中止</button>
-          </Modal>
-        </div>
+    <>
+      <IconButton onClick={handleMenuOpen}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        onClose={handleMenuClose}
+      >
+        {isYourPost && [
+          <MenuItem key="edit" onClick={() => navigate(`/article/${postId}/edit`)}>
+            <Typography variant="body2">編集</Typography>
+          </MenuItem>,
+          <MenuItem key="delete" onClick={handleDeleteConfirmation}>
+            <Typography variant="body2">削除</Typography>
+          </MenuItem>
+        ]}
+        <MenuItem onClick={() =>{navigate(`/article/${postId}/likes`)}}>
+          <Typography variant="body2">いいねしたユーザーを表示</Typography>
+        </MenuItem>
+      </Menu>
+      <ConfirmationDialog
+        open={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={handleDelete}
+        title="投稿の削除"
+        content="本当に投稿を削除しますか？"
+        cancelText="戻る"
+        confirmText="削除"
+      />
+      {formState.alertSeverity && (
+        <AlertMessage
+          open={formState.alertMessageOpen}
+          setOpen={(isOpen: boolean) => setFormState({ alertMessageOpen: isOpen })}
+          severity={formState.alertSeverity}
+          message={formState.alertMessage}
+        />
       )}
-    </div>
+    </>
   );
 };
 
