@@ -59,7 +59,8 @@ export interface SignUpData {
     tag_name: string;
   }
 
-  export interface UserReviewss {
+  export interface UserReviews {
+    reviewId: number
     postId: number
     userId: number
     userName: string
@@ -69,4 +70,5 @@ export interface SignUpData {
     documentPath: string
     createdAt: string
     value: number
+    replyLength: number
   }

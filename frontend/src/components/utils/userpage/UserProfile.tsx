@@ -1,7 +1,6 @@
 import { Avatar, Typography, makeStyles, Box, IconButton } from '@material-ui/core';
-import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
-import { useState } from 'react';
-import { User } from 'interfaces'; // User型は適切に定義してください
+import ExpandText from './ExpandText';
+import { User } from 'interfaces';
 
 interface UserProfileProps {
   userData: User;
@@ -38,19 +37,6 @@ const useStyles = makeStyles((theme) => ({
 
 const UserProfile: React.FC<UserProfileProps> = ({ userData }) => {
   const classes = useStyles();
-  const [showFullProfile, setShowFullProfile] = useState<boolean>(false);
-
-  const toggleShowFullProfile = () => {
-    setShowFullProfile(!showFullProfile);
-  };
-
-  const renderProfileStatement = () => {
-    if (showFullProfile || userData.profileStatement.length <= 50) {
-      return userData.profileStatement;
-    } else {
-      return `${userData.profileStatement.slice(0, 50)}...`;
-    }
-  };
 
   return (
     <Box className={classes.root}>
@@ -77,17 +63,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ userData }) => {
           専攻: {userData.facultyDepartment}
         </Typography>
       )}
-      <Typography variant="body1" className={`${classes.userInfo} ${classes.profileStatement}`}>
-        {renderProfileStatement()}
-        {userData.profileStatement.length > 50 && !showFullProfile && (
-          <IconButton size="small" onClick={toggleShowFullProfile}>
-            <ExpandMoreIcon />
-          </IconButton>
-        )}
-      </Typography>
+      <ExpandText statement={userData.profileStatement} />
     </Box>
   );
 };
 
 export default UserProfile;
-

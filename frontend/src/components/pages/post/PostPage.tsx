@@ -1,43 +1,40 @@
 import { useState, useEffect } from 'react';
+import { Grid, Box, Typography } from '@material-ui/core';
 import client from 'lib/api/client';
 import Avatar from 'react-avatar';
+import CustomRating from './CustomRating';
 import Rating from 'react-rating';
 import { useParams } from 'react-router-dom';
 import PdfViewer from 'components/utils/postpage/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
 import { ReplyForm, ReplyList } from 'components/utils/postpage/Reply';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
 import FollowButton from 'components/utils/userpage/FollowButton';
 import LikeButton from 'components/utils/postpage/LikeButton';
-
+import HamburgerMenu from './HamburgerMenu';
+import PostInfo from './PostInfo';
+import { UserReviewss } from 'interfaces';
+import ReviewForm from './ReviewForm';
+import ReviewList from './ReviewList';
 const PostPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const paramValue = queryParams.get("type");
+  const [isYourPost, setIsYourPost] = useState<boolean>(false);
   const [postData, setPostData] = useState({});
   const [paramReview, setParamReview] = useState();
+  const [currentUserReview, setCurrentUserReview] = useState<UserReviewss | false>();
   const [reviews, setReviews] = useState([]);
   const [reviewComment, setReviewComment] = useState('');
-  const [rating, setRating] = useState(0);
   const [userId, setUserId] = useState('')
   const [replyFormVisible, setReplyFormVisible] = useState({}); // レビューIDをキーとした返信フォームの表示ステート
   const [replyData, setReplyData] = useState({}); // レビューIDをキーとしたリプライデータ
-  const [menuVisible, setMenuVisible] = useState(false);
   const Id = useParams()
   const postId = {
     postId: Id.postId,
   };
 
-  const [show, setShow] = useState(false);
-  const navigate = useNavigate();
-
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  
   useEffect(() => {
     const fetchData = async () => {
       if (paramValue) {
@@ -60,87 +57,50 @@ const PostPage = () => {
     fetchData(); // useEffect内で関数を呼ぶ
   }, []);
   
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPostData = async () => {
       try {
-        const [response1, response2] = await Promise.all([
-          client.get('/post_detail', { params: postId }),
-          client.get('/reviews', { params: postId, headers: getAuthHeaders() } ),
-        ]);
-    
-        // レスポンスからデータを取り出す
-        setPostData(response1.data.posts[0]);
-        setReviews(response2.data.reviews);
-        setUserId(response2.data.currentUserId);
-        console.log(response2.data.reviews)
-
-        const currentUserId = response2.data.currentUserId;
-        console.log(currentUserId)
-        const matchingReview = response2.data.reviews
-        .find(review => review.userId === currentUserId);
-
-        if (matchingReview) {
-          setRating(matchingReview.value);
-        }
-        
-        console.log(response2.data.reviews)
-
+        const response = await client.get('/post_detail', { params: postId });
+        console.log(response.data)
+        setPostData(response.data.post);
+        setIsYourPost(response.data.isOwner)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching post data:', error);
       }
-    
-    
     };
-
-    fetchData();
+  
+    fetchPostData();
   }, [postId.postId]);
+  
+  useEffect(() => {
+    fetchReviews();
+  }, [postId.postId]);  
 
-  const handleRatingChange = rate => {
-    setRating(rate);
-    console.log(rate)
+  const fetchReviews = async () => {
+    try {
+      const response = await client.get('/reviews', { params: postId, headers: getAuthHeaders() });
+      setReviews(response.data.reviews);
+      setUserId(response.data.currentUserId);
+      console.log(response.data.ownReview)
+      if (response.data.ownReview) {
+        setCurrentUserReview(response.data.ownReview)
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
 
-    client.post('/ratings', { postId: Id.postId, value: rate },
-    { headers: getAuthHeaders() })
-    .then(response => {
-      console.log('Rating data sent successfully:', response.data);
-    })
-    .catch(error => {
+  const handleReviewSubmit = async () => {
+    try {
+      const response = await client.post('/reviews', { postId: Id.postId, review: reviewComment }, { headers: getAuthHeaders() });
+      console.log('Review data sent successfully:', response.data);
+      await fetchReviews();
+    } catch (error) {
       console.error('Error sending rating data:', error);
-    });
+    }
   };
+  
 
-  const handleReviewSubmit = () => {
-    client.post('/reviews', { postId: Id.postId, review: reviewComment },
-    { headers: getAuthHeaders() })
-    .then(response => {
-      console.log('Rating data sent successfully:', response.data);
-    })
-    .catch(error => {
-      console.error('Error sending rating data:', error);
-    });
-  };
-
-  const handleDelete = () => {
-    // 削除のロジック
-    client.delete(`/posts/${Id.postId}`, { headers: getAuthHeaders() })
-      .then(response => {
-        // 削除が成功した場合の処理
-        console.log('削除が成功しました', response);
-        handleClose(); // モーダルを閉じる
-        navigate('/');
-      })
-      .catch(error => {
-        // エラー処理
-        console.error('削除中にエラーが発生しました', error);
-        handleClose(); // モーダルを閉じる
-      });
-  };
-
-  // メニューの表示/非表示を切り替える関数
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
-  };
 
   const toggleReplyForm = (reviewId) => {
     // 返信フォームの表示を切り替える
@@ -197,20 +157,18 @@ const PostPage = () => {
     setShowDeleteModal(false);
   };
 
-  const handleDeleteReview = (reviewId:number) => {
-    // 削除のロジック
-    client.delete(`/reviews/${reviewId}`, { headers: getAuthHeaders() })
-      .then(response => {
-        // 削除が成功した場合の処理
-        console.log('削除が成功しました', response);
-        handleCloseDeleteModal(); // モーダルを閉じる
-      })
-      .catch(error => {
-        // エラー処理
-        console.error('削除中にエラーが発生しました', error);
-        handleCloseDeleteModal(); // モーダルを閉じる
-      });
-  };
+  const handleDeleteReview = async (reviewId: number) => {
+    try {
+      const response = await client.delete(`/reviews/${reviewId}`, { headers: getAuthHeaders() });
+      console.log('削除が成功しました', response);
+      setCurrentUserReview(false)
+      handleCloseDeleteModal();
+      setReviewComment('')
+    } catch (error) {
+      console.error('削除中にエラーが発生しました', error);
+      handleCloseDeleteModal();
+    }
+  };  
 
   if (postData.documentPath == undefined) {
     return null;
@@ -218,61 +176,28 @@ const PostPage = () => {
 
   return (
     <div>
-      <div>
-        <Avatar size="50" name={postData.userName} />
-        <span>{postData.uid}</span>
-      </div>
-      <h2>{postData.title}</h2>
-      <p>Created at: {postData.createdAt}</p>
-      <p>Last Updated: {postData.updatedAt}</p>
+      <PostInfo postData={postData} />
       <PdfViewer fileData={postData.documentPath.url} />
       <LikeButton
       id = {postData.postId}
       type = "post"
       />
-      <div>
-      <Link to={`/article/${Id.postId}/likes`}>
-      いいねしたユーザー
-      </Link>
-
-      <button onClick={toggleMenu}>メニューを表示</button>
-      {menuVisible && (
-        <div className="menu">
-          <Link to={`/article/${Id.postId}/edit`}>
-            <button>編集</button>
-          </Link>
-          <button onClick={handleShow}>削除</button>
-
-          <Modal
-        isOpen={show}
-        onRequestClose={handleClose}
-        contentLabel="削除の確認"
-      >
-        <h2>削除の確認</h2>
-        <p>本当に削除してもよろしいですか？</p>
-        <button onClick={handleDelete}>削除</button> 
-        <button onClick={handleClose}>中止</button>
-      </Modal>
-        </div>
-      )}
-      </div>
-      <Rating initialRating={rating} onChange={handleRatingChange} />
-      <p>{postData.description}</p>
-      {console.log(postData.userId)}
-      {console.log(userId)}
-      <FollowButton
-      id = {postData.userId}
-      selfId = {userId}
-      />
-      {((reviews.length === 0 || !reviews.some(review => review.userId === userId)) &&
-      postData.userId !== userId) && (
-        <div>
-          <textarea
-            value={reviewComment}
-            onChange={e => setReviewComment(e.target.value)}
-          />
-          <button onClick={handleReviewSubmit}>Submit Review</button>
-        </div>
+      <Grid container xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'center' }}>
+        <Grid item>
+          <HamburgerMenu isYourPost={isYourPost} />
+        </Grid>
+        <Grid item>
+          <Typography variant="body1">評価</Typography>
+          <CustomRating postId={postData.postId} initialRating={currentUserReview ? currentUserReview.value : 0} />
+        </Grid>
+      </Grid>
+      {!isYourPost && <FollowButton id={postData.userId} />}
+      {!isYourPost && (!currentUserReview || !currentUserReview.review) && (
+        <ReviewForm
+          reviewComment = {reviewComment}
+          setReviewComment = {setReviewComment}
+          handleReviewSubmit = {handleReviewSubmit}
+        />
       )}
   
 
@@ -372,22 +297,20 @@ const PostPage = () => {
 
 
 
-
+{console.log(currentUserReview)}
       <div>
-        {reviews.map(review => (
-          // 条件に基づいてレビューを表示
-          review.userId === userId && (
-            <div key={review.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
+        {currentUserReview && (
+            <div key={currentUserReview.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
                   <Avatar
       size="30"
-      name={review.userName}
+      name={currentUserReview.userName}
       round={true}
-      src={review.iconPath}
+      src={currentUserReview.iconPath}
     />
     <span>
-      {review.userName} {review.createdAt}
+      {currentUserReview.userName} {currentUserReview.createdAt}
     </span>
-{editingReviewId === review.reviewId ? (
+{editingReviewId === currentUserReview.reviewId ? (
   // Edit mode
   <div>
     <textarea
@@ -395,8 +318,8 @@ const PostPage = () => {
       onChange={e => setEditedReviewText(e.target.value)}
     />
     <button onClick={() =>{
-      handleSaveReview(review.reviewId)
-      review.review = editedReviewText;
+      handleSaveReview(currentUserReview.reviewId)
+      currentUserReview.review = editedReviewText;
       }
     }>
       保存
@@ -407,9 +330,9 @@ const PostPage = () => {
   </div>
 ) : (
   <div>
-    <p>{review.review}</p>
+    <p>{currentUserReview.review}</p>
     <button onClick={() =>
-      handleEditReview(review.reviewId, review.review)}>
+      handleEditReview(currentUserReview.reviewId, currentUserReview.review)}>
       編集
     </button>
   </div>
@@ -428,7 +351,7 @@ const PostPage = () => {
         <h2>削除の確認</h2>
         <p>本当に削除してもよろしいですか？</p>
         <div>
-        <button onClick={() => handleDeleteReview(review.reviewId)}>削除</button>
+        <button onClick={() => handleDeleteReview(currentUserReview.reviewId)}>削除</button>
         </div>
         <div>
         <button onClick={handleCloseDeleteModal}>中止</button>
@@ -438,101 +361,48 @@ const PostPage = () => {
       {/* ... (既存のコード) */}
     </div>
 <div>
-<Rating readonly initialRating={review.value} fractions={2} />
-{review.review !== "" && (
-    <button onClick={() => toggleReplyForm(review.reviewId)}>
-      {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
+<Rating readonly initialRating={currentUserReview.value} fractions={2} />
+{currentUserReview.review !== "" && (
+    <button onClick={() => toggleReplyForm(currentUserReview.reviewId)}>
+      {replyFormVisible[currentUserReview.reviewId] ? '閉じる' : '返信'}
     </button>
     )}
 </div>     
 
-      {review.review !== "" && review.replyLength > 0 && (
+      {currentUserReview.review !== "" && currentUserReview.replyLength > 0 && (
       <button onClick={() => toggleReplies(review.reviewId)}>
-        {replyData[review.reviewId] ? '隠す' : `${review.replyLength}件のリプライ`}
+        {replyData[currentUserReview.reviewId] ? '隠す' : `${currentUserReview.replyLength}件のリプライ`}
       </button>
       )}
 
-      {replyFormVisible[review.reviewId] && (
+      {replyFormVisible[currentUserReview.reviewId] && (
         // 返信フォームを表示
         <ReplyForm
-        id = {review.reviewId}
+        id = {currentUserReview.reviewId}
         />
       )}
 
-      {replyData[review.reviewId] && (
+      {replyData[currentUserReview.reviewId] && (
         // リプライを表示
         <>
         <ReplyList
-        id = {review.reviewId}
+        id = {currentUserReview.reviewId}
         />
         <ReplyForm
-        id = {review.reviewId}
+        id = {currentUserReview.reviewId}
         />
         </>
       )}
             </div>
           )
-        ))}
+        }
       </div>
-      <div>
-      {reviews.map(review => (
-  userId !== review.userId && (
-    <div key={review.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
-      <Avatar
-      size="30"
-      name={review.userName}
-      round={true}
-      src={review.iconPath}
+      <ReviewList
+        allReviews={reviews}
+        totalpages={1}
+        currentPage={1}
+        setCurrentPage={(currentPage) => console.log(currentPage)}
       />
-      <span>{review.userName} {review.createdAt}</span>
-      <p>{review.review}</p>
-      <Rating
-        readonly
-        initialRating={review.value}
-        fractions={2}
-      />
-      
-
-      {review.review !== "" && (
-      <>
-      <button onClick={() => toggleReplyForm(review.reviewId)}>
-        {replyFormVisible[review.reviewId] ? '閉じる' : '返信'}
-      </button>
-      <LikeButton
-      id={review.reviewId}
-      type="review"
-      />
-      </>
-      )}
-
-      {review.review !== "" && review.replyLength > 0 && (
-      <button onClick={() => toggleReplies(review.reviewId)}>
-        {replyData[review.reviewId] ? '隠す' : `${review.replyLength}件のリプライ`}
-      </button>
-      )}
-
-      {replyFormVisible[review.reviewId] && (
-        // 返信フォームを表示
-        <ReplyForm
-        id = {review.reviewId}
-        />
-      )}
-
-      {replyData[review.reviewId] && (
-        // リプライを表示
-        <>
-        <ReplyList
-        id = {review.reviewId}
-        />
-        <ReplyForm
-        id = {review.reviewId}
-        />
-        </>
-      )}
-    </div>
-  )
-))}
-      </div>
     </div>
   );
   
