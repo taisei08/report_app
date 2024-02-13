@@ -22,12 +22,14 @@ class Api::V1::ReviewsController < ApplicationController
   
     user_review = @reviews.find { |review| review.user_id == user_id }
   
-    if user_review
+    if user_review && user_id
       @reviews = @reviews.reject { |review| review.user_id == user_id }
-      render json: { status: 'success', reviews: @reviews, own_review: user_review }
+      render json: { status: 'success', reviews: @reviews, own_review: user_review, current_user_id: user_id }
+    elsif user_id
+      render json: { status: 'success', reviews: @reviews, own_review: false, current_user_id: user_id }
     else
-      render json: { status: 'success', reviews: @reviews, own_review: false }
-    end
+      render json: { status: 'success', reviews: @reviews, own_review: false, current_user_id: false }
+    end    
   end
 
   def create

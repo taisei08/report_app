@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Grid, Box, Typography } from '@material-ui/core';
+import { Grid, Box, Typography, Container } from '@material-ui/core';
 import client from 'lib/api/client';
 import Avatar from 'react-avatar';
 import CustomRating from './CustomRating';
@@ -14,7 +14,7 @@ import FollowButton from 'components/utils/userpage/FollowButton';
 import LikeButton from 'components/utils/postpage/LikeButton';
 import HamburgerMenu from './HamburgerMenu';
 import PostInfo from './PostInfo';
-import { UserReviewss } from 'interfaces';
+import { UserReviews } from 'interfaces';
 import ReviewForm from './ReviewForm';
 import ReviewList from './ReviewList';
 const PostPage = () => {
@@ -24,10 +24,10 @@ const PostPage = () => {
   const [isYourPost, setIsYourPost] = useState<boolean>(false);
   const [postData, setPostData] = useState({});
   const [paramReview, setParamReview] = useState();
-  const [currentUserReview, setCurrentUserReview] = useState<UserReviewss | false>();
+  const [currentUserReview, setCurrentUserReview] = useState<UserReviews | false>();
   const [reviews, setReviews] = useState([]);
   const [reviewComment, setReviewComment] = useState('');
-  const [userId, setUserId] = useState('')
+  const [currentUserId, setCurrentUserId] = useState<number>(0)
   const [replyFormVisible, setReplyFormVisible] = useState({}); // レビューIDをキーとした返信フォームの表示ステート
   const [replyData, setReplyData] = useState({}); // レビューIDをキーとしたリプライデータ
   const Id = useParams()
@@ -80,7 +80,7 @@ const PostPage = () => {
     try {
       const response = await client.get('/reviews', { params: postId, headers: getAuthHeaders() });
       setReviews(response.data.reviews);
-      setUserId(response.data.currentUserId);
+      setCurrentUserId(response.data.currentUserId);
       console.log(response.data.ownReview)
       if (response.data.ownReview) {
         setCurrentUserReview(response.data.ownReview)
@@ -89,18 +89,6 @@ const PostPage = () => {
       console.error('Error fetching reviews:', error);
     }
   };
-
-  const handleReviewSubmit = async () => {
-    try {
-      const response = await client.post('/reviews', { postId: Id.postId, review: reviewComment }, { headers: getAuthHeaders() });
-      console.log('Review data sent successfully:', response.data);
-      await fetchReviews();
-    } catch (error) {
-      console.error('Error sending rating data:', error);
-    }
-  };
-  
-
 
   const toggleReplyForm = (reviewId) => {
     // 返信フォームの表示を切り替える
@@ -175,7 +163,7 @@ const PostPage = () => {
   }
 
   return (
-    <div>
+    <Box>
       <PostInfo postData={postData} />
       <PdfViewer fileData={postData.documentPath.url} />
       <LikeButton
@@ -193,11 +181,13 @@ const PostPage = () => {
       </Grid>
       {!isYourPost && <FollowButton id={postData.userId} />}
       {!isYourPost && (!currentUserReview || !currentUserReview.review) && (
+                  <Container style={{marginTop: 10, marginBottom: 10, width: 'calc(min(1000px, 90vw))'}}>
         <ReviewForm
           reviewComment = {reviewComment}
           setReviewComment = {setReviewComment}
-          handleReviewSubmit = {handleReviewSubmit}
+          fetchReviews = {fetchReviews}
         />
+        </Container>
       )}
   
 
@@ -294,116 +284,27 @@ const PostPage = () => {
 </div>
 
 
+      {currentUserReview &&
+          <Container style={{display: 'flex', alignItems: 'center'}}>
 
+        <ReviewList
+          allReviews={[currentUserReview]}
+          currentUserId={currentUserId}
+          handleDeleteReview={handleDeleteReview}
+        />
+                  </Container>
 
-
-{console.log(currentUserReview)}
-      <div>
-        {currentUserReview && (
-            <div key={currentUserReview.reviewId} style={{ border: '1px solid #000', padding: '10px', marginBottom: '10px' }}>
-                  <Avatar
-      size="30"
-      name={currentUserReview.userName}
-      round={true}
-      src={currentUserReview.iconPath}
-    />
-    <span>
-      {currentUserReview.userName} {currentUserReview.createdAt}
-    </span>
-{editingReviewId === currentUserReview.reviewId ? (
-  // Edit mode
-  <div>
-    <textarea
-      value={editedReviewText}
-      onChange={e => setEditedReviewText(e.target.value)}
-    />
-    <button onClick={() =>{
-      handleSaveReview(currentUserReview.reviewId)
-      currentUserReview.review = editedReviewText;
       }
-    }>
-      保存
-    </button>
-    <button onClick={handleCancelEdit}>
-      キャンセル
-    </button>
-  </div>
-) : (
-  <div>
-    <p>{currentUserReview.review}</p>
-    <button onClick={() =>
-      handleEditReview(currentUserReview.reviewId, currentUserReview.review)}>
-      編集
-    </button>
-  </div>
-)
-}
-<div>
-
-      {/* メニュー内の削除ボタン */}
-      <button onClick={handleShowDeleteModal}>削除</button>
-      {/* 削除モーダル */}
-      <Modal
-        isOpen={showDeleteModal}
-        onRequestClose={handleCloseDeleteModal}
-        contentLabel="削除の確認"
-      >
-        <h2>削除の確認</h2>
-        <p>本当に削除してもよろしいですか？</p>
-        <div>
-        <button onClick={() => handleDeleteReview(currentUserReview.reviewId)}>削除</button>
-        </div>
-        <div>
-        <button onClick={handleCloseDeleteModal}>中止</button>
-        </div>
-      </Modal>
-
-      {/* ... (既存のコード) */}
-    </div>
-<div>
-<Rating readonly initialRating={currentUserReview.value} fractions={2} />
-{currentUserReview.review !== "" && (
-    <button onClick={() => toggleReplyForm(currentUserReview.reviewId)}>
-      {replyFormVisible[currentUserReview.reviewId] ? '閉じる' : '返信'}
-    </button>
-    )}
-</div>     
-
-      {currentUserReview.review !== "" && currentUserReview.replyLength > 0 && (
-      <button onClick={() => toggleReplies(review.reviewId)}>
-        {replyData[currentUserReview.reviewId] ? '隠す' : `${currentUserReview.replyLength}件のリプライ`}
-      </button>
-      )}
-
-      {replyFormVisible[currentUserReview.reviewId] && (
-        // 返信フォームを表示
-        <ReplyForm
-        id = {currentUserReview.reviewId}
-        />
-      )}
-
-      {replyData[currentUserReview.reviewId] && (
-        // リプライを表示
-        <>
-        <ReplyList
-        id = {currentUserReview.reviewId}
-        />
-        <ReplyForm
-        id = {currentUserReview.reviewId}
-        />
-        </>
-      )}
-            </div>
-          )
-        }
-      </div>
+          <Container style={{display: 'flex', alignItems: 'center'}}>
       <ReviewList
         allReviews={reviews}
+        currentUserId={currentUserId}
         totalpages={1}
         currentPage={1}
         setCurrentPage={(currentPage) => console.log(currentPage)}
       />
-    </div>
+    </Container>
+    </Box>
   );
   
 };

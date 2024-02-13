@@ -6,12 +6,14 @@ import { UserReviews } from 'interfaces/index';
 
 interface Props {
   allReviews: Array<UserReviews>;
-  totalPages: number;
-  currentPage: number;
-  setCurrentPage: (currentPage: number) => void;
+  currentUserId: number;
+  handleDeleteReview?: (reviewId: number) => void;
+  totalPages?: number;
+  currentPage?: number;
+  setCurrentPage?: (currentPage: number) => void;
 }
 
-const ReviewList: React.FC<Props> = ({ allReviews, totalPages, currentPage, setCurrentPage }) => {
+const ReviewList: React.FC<Props> = ({ allReviews, currentUserId, handleDeleteReview, totalPages, currentPage, setCurrentPage }) => {
   const boxRef = useRef<HTMLDivElement>();
 
 
@@ -22,8 +24,10 @@ const ReviewList: React.FC<Props> = ({ allReviews, totalPages, currentPage, setC
   };
 
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => {
-    setCurrentPage(newPage);
-    scrollToTop();
+    if (setCurrentPage){
+      setCurrentPage(newPage);
+      scrollToTop();
+    }
   };
 
   return (
@@ -40,14 +44,18 @@ const ReviewList: React.FC<Props> = ({ allReviews, totalPages, currentPage, setC
             {allReviews.map(review => (
               <ReviewItem 
                 key={review.reviewId} 
+                currentUserId={currentUserId}
                 review={review} 
+                handleDeleteReview={handleDeleteReview}
               />
             ))}
+            {setCurrentPage && totalPages && currentPage &&
             <CustomPagination
               totalPages={totalPages}
               currentPage={currentPage}
               handlePageChange={handlePageChange}
             />
+            }
           </>
         )}
     </Box>

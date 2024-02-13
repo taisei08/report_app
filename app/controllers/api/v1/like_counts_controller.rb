@@ -1,5 +1,4 @@
 class Api::V1::LikeCountsController < ApplicationController
-  before_action :authenticate_api_v1_user!, only: [:index]
 
   def index
     @like_count = Like
@@ -7,8 +6,9 @@ class Api::V1::LikeCountsController < ApplicationController
     .count
     
 
-    is_liked = current_api_v1_user.likes
-    .exists?(like_params)
+    is_liked = current_api_v1_user.present? && 
+    current_api_v1_user.likes.exists?(like_params)
+
 
     render json: { status: 200, count: @like_count, is_liked: is_liked}
   end
