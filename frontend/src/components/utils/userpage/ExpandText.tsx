@@ -15,9 +15,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   statement: string;
+  length: number;
 }
 
-const ExpandText: React.FC<Props> = ({ statement }) => {
+const ExpandText: React.FC<Props> = ({ statement, length }) => {
   const classes = useStyles();
 
   const [showFullProfile, setShowFullProfile] = useState<boolean>(false);
@@ -27,17 +28,17 @@ const ExpandText: React.FC<Props> = ({ statement }) => {
   };
 
   const renderProfileStatement = () => {
-    if (showFullProfile || statement.length <= 50) {
+    if (showFullProfile || statement.length <= length) {
       return statement;
     } else {
-      return `${statement.slice(0, 50)}...`;
+      return `${statement.slice(0, length)}...`;
     }
   };
 
   return (
     <Typography variant="body1" className={`${classes.userInfo} ${classes.profileStatement}`}>
       {renderProfileStatement()}
-      {statement.length > 50 && !showFullProfile && (
+      {statement.length > length && !showFullProfile && (
         <IconButton size="small" onClick={toggleShowFullProfile}>
           <ExpandMoreIcon />
         </IconButton>

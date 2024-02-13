@@ -1,29 +1,26 @@
 class Api::V1::ReviewOrReplySpottedController < ApplicationController
 
   def index
-    @resource = Review
+    p review_params
+    @review = Review
     .joins(:user)
     .select("users.user_name", "users.icon_path", "reviews.*")
-    .where(resource_params)
+    .find(review_params[:review_id])
     
-    @resource.each do |resource|
-      resource.icon_path = resource.user.icon_path.url
-    end
+    @review.icon_path = @review.user.icon_path.url
 
-    @resource.each do |resource|
-      reply_length = Reply.joins(:review)      
-      .where('reviews.review_id' => resource.review_id)
-      .count
-      resource[:reply_length] = reply_length
-    end
+    reply_length = Reply.joins(:review)      
+    .where('reviews.review_id' => @review.review_id)
+    .count
+    @review[:reply_length] = reply_length
 
-    render json: { status: 'success', resource: @resource }
+    render json: { status: 'success', review: @review }
   end
 
   private
 
-  def resource_params
-    params.permit(:review_id, :reply_id)
+  def review_params
+    params.permit(:review_id)
   end
 
 end

@@ -1,19 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Card, CardContent, Typography, Grid, Button, IconButton, Menu, MenuItem, Container } from "@material-ui/core";
+import { Box, Card, CardContent, Typography, Grid, Button, IconButton, Menu, MenuItem } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import { blue } from '@material-ui/core/colors';
 import UserInfo from "components/utils/posts/post_item/UserInfo";
-import { UserReviews } from "interfaces";
 import LikeButton from "components/utils/postpage/LikeButton";
-import ReplyForm from "components/utils/postpage/ReplyForm";
-import ReplyList from "components/utils/postpage/ReplyList";
+import ReplyForm from "components/utils/postpage/reply/ReplyForm";
+import ReplyList from "components/utils/postpage/reply/ReplyList";
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ReviewEditForm from "./ReviewEditForm";
 import ConfirmationDialog from "components/utils/ConfirmationDialog";
-import { Reply } from "interfaces";
+import { Review, Reply } from "interfaces";
 import client from "lib/api/client";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  review: UserReviews;
+  review: Review;
   currentUserId: number;
   handleDeleteReview?: (reviewId: number) => void;
 }
@@ -44,11 +43,11 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [replyFormVisible, setReplyFormVisible] = useState<boolean>(false);
   const [replyData, setReplyData] = useState<boolean>(false);
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null); // メニューアンカーエレメントの状態
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const showDialog = () => {
     setShowConfirmation(true);
-  }
+  };
 
   const toggleReplyForm = () => {
     setReplyFormVisible((prevVisible) => !prevVisible);
@@ -71,24 +70,25 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
     setMenuAnchorEl(null);
   };
 
-
-  const [prevPage, setPrevPage] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [allReplies, setAllReplies] = useState<Reply[]>([]);
   const [moreReplies, setMoreReplies] = useState<boolean>(true);
 
-  const fetchData = async () => {
+  const fetchData = async (shouldIncrementPage: boolean = false) => {
     try {
       const response = await client.get(`/replies?page=${currentPage}`, { params: { reviewId: review.reviewId } });
-      console.log(review.reviewId, response.data);
       if (response.data.replies.length < 10) {
         setMoreReplies(false);
       }
-      setAllReplies(prevReplies => {
-        const newReplies = response.data.replies.filter(newReply => !prevReplies.some(oldReply => oldReply.replyId === newReply.replyId));
+      
+      if (shouldIncrementPage && !moreReplies && response.data.replies.length === 10) {
+        setCurrentPage(prevPage => prevPage + 1);
+      }
+
+      setAllReplies((prevReplies: Reply[]) => {
+        const newReplies = response.data.replies.filter((newReply: Reply) => !prevReplies.some((oldReply: Reply) => oldReply.replyId === newReply.replyId));
         return [...prevReplies, ...newReplies];
       });      
-      setPrevPage(currentPage);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -98,12 +98,11 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
     setCurrentPage(currentPage + 1);
   };
 
-
   if (!review.review) return null;
 
   return (
     <>
-    <Box key={review.postId} style={{ textDecoration: "none", color: "inherit" }}>
+      <Box key={review.postId} style={{ textDecoration: "none", color: "inherit" }}>
         <Card className={classes.card}>
           <CardContent>
             <UserInfo
@@ -166,9 +165,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
               </MenuItem>
             </Menu>
 
-            {replyFormVisible && (
-              <ReplyForm id={review.reviewId} fetchData={fetchData}/>
-            )}
+            {replyFormVisible && <ReplyForm id={review.reviewId} fetchData={fetchData}/>}
 
             {replyData && (
               <>
@@ -180,20 +177,14 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
                   fetchData={fetchData}
                   loadMore={loadMore}
                 />
-                <ReplyForm
-                  id={review.reviewId} 
-                  fetchData={fetchData}
-                />
+                <ReplyForm id={review.reviewId} fetchData={fetchData}/>
               </>
             )}
-
           </CardContent>
         </Card>
-    </Box>
-    {modalOpen && (
-    <ReviewEditForm review={review} setModalOpen={setModalOpen} modalOpen={modalOpen} />
-    )}
-          <ConfirmationDialog
+      </Box>
+      {modalOpen && <ReviewEditForm review={review} setModalOpen={setModalOpen} modalOpen={modalOpen} />}
+      <ConfirmationDialog
         open={showConfirmation}
         onClose={() => setShowConfirmation(false)}
         onConfirm={handleDeleteReview ? () => handleDeleteReview(review.reviewId) : () => {}  }
