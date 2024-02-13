@@ -10,6 +10,16 @@ class Api::V1::RepliesController < ApplicationController
     .page(params[:page])
     .per(10)
 
+    if @replies.empty?
+      latest_replies = Reply.joins(:review, :user)
+                            .select("users.user_name", "users.icon_path", "replies.*")
+                            .where('reviews.review_id' => reply_params[:review_id])
+                            .order("created_at DESC")
+                            .limit(10)
+      @replies += latest_replies.reverse
+    end
+   
+
     @replies.each do |reply|
       reply.icon_path = reply.user.icon_path.url
     end

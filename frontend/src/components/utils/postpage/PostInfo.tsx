@@ -68,7 +68,7 @@ const PostInfo: React.FC<Props> = ({ postData }) => {
       <Typography variant="body2" color="textSecondary" style={{ marginTop: 10, marginBottom: 40 }}>
         最終更新日: {formatDate(postData.updatedAt)} 投稿日: {formatDate(postData.createdAt)}
       </Typography>
-      <ExpandText statement={postData.description} />
+      <ExpandText statement={postData.description} length={50}/>
     </>
   );
 };

@@ -63,7 +63,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ userData }) => {
           専攻: {userData.facultyDepartment}
         </Typography>
       )}
-      <ExpandText statement={userData.profileStatement} />
+      <ExpandText statement={userData.profileStatement} length={50}/>
     </Box>
   );
 };

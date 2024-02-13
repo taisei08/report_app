@@ -43,7 +43,7 @@ export interface SignUpData {
     description: string
     fieldId: number
     subFieldId: number
-    documentPath: string
+    documentPath?: { url: string };
     createdAt: string
     updatedAt: string
     tags: { tagId: number; tagName: string }[];
@@ -59,7 +59,7 @@ export interface SignUpData {
     tag_name: string;
   }
 
-  export interface UserReviews {
+  export interface Review {
     reviewId: number
     postId: number
     userId: number

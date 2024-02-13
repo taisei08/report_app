@@ -1,3 +1,4 @@
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,27 +11,26 @@ import { getAuthHeaders } from 'lib/api/auth';
 interface Props {
   reviewComment: string;
   setReviewComment: React.Dispatch<React.SetStateAction<string>>;
-  fetchReviews: () => Promise<void>; // 非同期関数に変更
+  fetchReviews: () => Promise<void>;
 }
 
+const ReviewForm: React.FC<Props> = ({ reviewComment, setReviewComment, fetchReviews }) => {
+  const { postId } = useParams<{ postId: string }>();
 
-const ReviewForm: React.FC<Props> = ({ reviewComment, setReviewComment, fetchReviews}) => {
-
-  const Id = useParams()
   const handleReviewSubmit = async () => {
     try {
-      const response = await client.post('/reviews', { postId: Id.postId, review: reviewComment }, { headers: getAuthHeaders() });
+      const response = await client.post('/reviews', { postId, review: reviewComment }, { headers: getAuthHeaders() });
       console.log('Review data sent successfully:', response.data);
       await fetchReviews();
     } catch (error) {
-      console.error('Error sending rating data:', error);
+      console.error('Error sending review data:', error);
     }
   };
 
   return (
     <Card>
-      <CardContent >
-        <Typography variant="body1" style={{fontWeight: 'bold'}}>レビューの投稿:</Typography>
+      <CardContent>
+        <Typography variant="body1" style={{ marginBottom: '1rem', fontWeight: 'bold' }}>レビューの投稿:</Typography>
         <TextField
           label="レビューを入力してください"
           multiline

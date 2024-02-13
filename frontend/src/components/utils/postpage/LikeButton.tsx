@@ -59,7 +59,7 @@ const LikeButton: React.FC<Props> = ({ id, type }) => {
 
   return (
     <>
-      <IconButton onClick={handleLike} aria-label="like">
+      <IconButton onClick={handleLike}>
         {liked ? (
           <Favorite style={{ color: red[500] }} />
         ) : (
@@ -69,7 +69,7 @@ const LikeButton: React.FC<Props> = ({ id, type }) => {
       <Typography variant="body2" color="textSecondary" component="span">
         {likeCount}
       </Typography>
-      <Typography variant="body2" color="textSecondary" component="span">
+      <Typography variant="body2" color="textSecondary" component="span" style={{marginRight: 10}}>
         いいね
       </Typography>
     </>
