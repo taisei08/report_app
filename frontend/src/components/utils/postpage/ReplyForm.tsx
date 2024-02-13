@@ -20,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   id: number;
+  fetchData: () => Promise<void>;
 }
 
-const ReplyForm: React.FC<Props> = ({ id }) => {
+const ReplyForm: React.FC<Props> = ({ id, fetchData }) => {
   const classes = useStyles();
   const [replyText, setReplyText] = useState<string>('');
 
@@ -30,6 +31,7 @@ const ReplyForm: React.FC<Props> = ({ id }) => {
     try {
       await client.post('/replies', { reviewId: id, reply: replyText }, { headers: getAuthHeaders() });
       console.log('Reply data sent successfully');
+      await fetchData();
       setReplyText('');
     } catch (error) {
       console.error('Error sending reply data:', error);

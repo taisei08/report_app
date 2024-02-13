@@ -72,3 +72,12 @@ export interface SignUpData {
     value: number
     replyLength: number
   }
+
+  export interface Reply {
+    replyId: number;
+    userId: number;
+    userName: string;
+    iconPath: string;
+    createdAt: string;
+    reply: string;
+  }

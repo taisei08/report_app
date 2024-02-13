@@ -1,7 +1,6 @@
 class Api::V1::RepliesController < ApplicationController
   # app/controllers/posts_controller.rb
-  before_action :set_post, only: [:show, :edit, :destroy]
-  before_action :authenticate_api_v1_user!, only: [:create]
+  before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy]
 
   def index
     @replies = Reply.joins(:review, :user)      
@@ -54,8 +53,13 @@ class Api::V1::RepliesController < ApplicationController
   end
 
   def destroy
-    @post.destroy
-    redirect_to posts_url, notice: 'Post was successfully destroyed.'
+    @reply = current_api_v1_user.replies
+    .find(reply_destroy_params[:id])
+    if @reply.destroy
+      render json: { message: 'Review Deleted' }, status: :ok
+    else
+      render json: { error: 'Review Delete Failed' }, status: :unprocessable_entity
+    end
   end
 
   private
@@ -70,6 +74,10 @@ class Api::V1::RepliesController < ApplicationController
 
   def reply_update_params
     params.permit(:id, :reply)
+  end
+
+  def reply_destroy_params
+    params.permit(:id)
   end
   
 
