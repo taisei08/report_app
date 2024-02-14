@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :likes, only: %i[index create destroy]
       resources :like_counts, only: %i[index]
       resources :notifications, only: %i[index]
+      resources :notifications_checked, only: %i[index]
       resources :posts, only: %i[index create destroy]
       resources :post_detail, only: %i[index]
       resources :posts_of_field, only: %i[index]

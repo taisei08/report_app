@@ -13,14 +13,14 @@ const UploadPage = () => {
   };
 
   return (
-    <Box>
+    <>
       <Typography variant="h4" style={{marginBottom: '3rem', textAlign: 'center', fontWeight: 'bold'}}>新しい投稿</Typography>
       {filePath ? (
         <PostDetail submitFile={filePath}/>
       ) : (
         <ChooseFile handleFileData={handleFileData} />
       )}
-    </Box>
+    </>
   );
 };
 

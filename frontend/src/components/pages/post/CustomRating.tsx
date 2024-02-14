@@ -10,7 +10,7 @@ import { useFormState } from "../../utils/error/useFormState";
 
 interface Props {
   postId: number;
-  initialRating: number;
+  initialRating?: number;
   readOnly?: boolean;
 }
 

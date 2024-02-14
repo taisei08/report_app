@@ -5,9 +5,9 @@ class Api::V1::NotificationsController < ApplicationController
     @notifications = current_api_v1_user.passive_notifications
     .left_outer_joins(:post, :active_user)
     .select("users.user_name", "users.account_name", "users.icon_path", "posts.title", "notifications.*")
-    #.order("created_at DESC")
-    #.page(params[:page])
-    #.per(20)
+    .order("created_at DESC")
+    .page(params[:page])
+    .per(10)
 
     @notifications.each do |notification|
       notification.icon_path = notification.active_user.icon_path.url
@@ -23,15 +23,12 @@ class Api::V1::NotificationsController < ApplicationController
       end
     end
 
-    p "wジオfjうぇ"
-    p @notifications
+    render json: { status: 200, notifications: @notifications}
 
     @notifications.each do |notification|
       notification.update(checked: true)
     end
     
-    render json: { status: 200, notifications: @notifications}
-
   end
 
   private
