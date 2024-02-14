@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {
   id: number;
-  fetchData: (shouldIncrementPage?: boolean) => Promise<void>;
+  fetchData: (shouldIncrementPage?: boolean, shouldIncrementReply?: boolean) => Promise<void>;
 }
 
 const ReplyForm: React.FC<Props> = ({ id, fetchData }) => {
@@ -31,7 +31,7 @@ const ReplyForm: React.FC<Props> = ({ id, fetchData }) => {
     try {
       await client.post('/replies', { reviewId: id, reply: replyText }, { headers: getAuthHeaders() });
       console.log('Reply data sent successfully');
-      await fetchData(true);
+      await fetchData(true, true);
       setReplyText('');
     } catch (error) {
       console.error('Error sending reply data:', error);

@@ -42,8 +42,9 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [replyFormVisible, setReplyFormVisible] = useState<boolean>(false);
-  const [replyData, setReplyData] = useState<boolean>(false);
+  const [showReplyData, setShowReplyData] = useState<boolean>(false);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [replyLength, setReplyLength] = useState<number>(review.replyLength);
 
   const showDialog = () => {
     setShowConfirmation(true);
@@ -54,7 +55,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
   };
 
   const toggleReplies = () => {
-    setReplyData((prevData) => !prevData);
+    setShowReplyData((prevData) => !prevData);
   };
 
   const handleModalOpen = () => {
@@ -74,7 +75,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
   const [allReplies, setAllReplies] = useState<Reply[]>([]);
   const [moreReplies, setMoreReplies] = useState<boolean>(true);
 
-  const fetchData = async (shouldIncrementPage: boolean = false) => {
+  const fetchData = async (shouldIncrementPage: boolean = false, shouldIncrementReply: boolean = false) => {
     try {
       const response = await client.get(`/replies?page=${currentPage}`, { params: { reviewId: review.reviewId } });
       if (response.data.replies.length < 10) {
@@ -83,6 +84,14 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
       
       if (shouldIncrementPage && !moreReplies && response.data.replies.length === 10) {
         setCurrentPage(prevPage => prevPage + 1);
+      }
+
+      if (response.data.replies.length === 1) {
+        setReplyFormVisible(true);
+      }
+
+      if (shouldIncrementReply) {
+        setReplyLength(prevLength => prevLength + 1);
       }
 
       setAllReplies((prevReplies: Reply[]) => {
@@ -138,9 +147,9 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
               {replyFormVisible ? '閉じる' : '返信'}
             </Button>
 
-            {review.review !== "" && review.replyLength > 0 && (
+            {replyLength > 0 && (
               <Button onClick={toggleReplies}>
-                {replyData ? '隠す' : `${review.replyLength}件のリプライ`}
+                {showReplyData ? '隠す' : `${replyLength}件のリプライ`}
               </Button>
             )}
 
@@ -167,7 +176,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
 
             {replyFormVisible && <ReplyForm id={review.reviewId} fetchData={fetchData}/>}
 
-            {replyData && (
+            {showReplyData && replyLength > 0 && (
               <>
                 <ReplyList
                   currentUserId={currentUserId}
@@ -176,6 +185,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
                   moreReplies={moreReplies}
                   fetchData={fetchData}
                   loadMore={loadMore}
+                  setReplyLength={setReplyLength}
                 />
                 <ReplyForm id={review.reviewId} fetchData={fetchData}/>
               </>
@@ -187,7 +197,11 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
       <ConfirmationDialog
         open={showConfirmation}
         onClose={() => setShowConfirmation(false)}
-        onConfirm={handleDeleteReview ? () => handleDeleteReview(review.reviewId) : () => {}  }
+        onConfirm={handleDeleteReview ? () => {
+          handleMenuClose();
+          setShowConfirmation(false);
+          handleDeleteReview(review.reviewId);
+        } : () => {}}
         title="投稿の削除"
         content="本当にレビューを削除しますか？"
         cancelText="戻る"

@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignItems: 'center',
     marginTop: theme.spacing(2),
+    width: 'calc(min(600px, 90vw))',
   },
   form: {
     display: 'flex',
@@ -70,7 +71,7 @@ const EditMailAddressPage = () => {
           <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
             メールアドレスの変更
           </Typography> 
-          <Typography variant="body2" style={{ paddingInline: 60, marginTop: '10px' }}>
+          <Typography variant="body2" style={{ marginTop: '10px' }}>
             新しいメールアドレスを入力してください。データを送った後確認メールが送信されます
           </Typography>
           <form>

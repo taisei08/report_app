@@ -81,3 +81,15 @@ export interface SignUpData {
     createdAt: string;
     reply: string;
   }
+
+  export interface Notification {
+    action: string;
+    activeUserId: number;
+    accountName: string;
+    userName: string;
+    iconPath: string;
+    postId?: number;
+    reviewId?: number;
+    replyId?: number;
+    title?: string;
+  }

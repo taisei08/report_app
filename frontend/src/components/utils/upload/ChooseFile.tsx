@@ -47,6 +47,7 @@ const ChooseFile: React.FC<Props> = ({ handleFileData }) => {
   return (
     <Box
       style={{
+        width: 'calc(min(600px, 90vw))',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -61,7 +62,7 @@ const ChooseFile: React.FC<Props> = ({ handleFileData }) => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
     >
-      <Typography variant="h5" style={{ padding: 90,fontWeight: 'bold' }}>
+      <Typography variant="h5" style={{  fontWeight: 'bold' }}>
         ファイルをドラッグ＆ドロップ
       </Typography>
       <Typography variant="body2" color="textSecondary" style={{ marginTop: '1rem' }}>

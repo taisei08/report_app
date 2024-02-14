@@ -20,9 +20,10 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   reply: Reply;
   currentUserId: number;
+  setReplyLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ReplyItem: React.FC<Props> = ({ reply, currentUserId }) => {
+const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) => {
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
@@ -46,6 +47,7 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId }) => {
       const response = await client.delete(`/replies/${replyId}`, { headers: getAuthHeaders() });
       console.log('削除が成功しました', response);
       reply.reply = '';
+      setReplyLength((prevLength) => prevLength - 1);
       setShowConfirmation(false);
     } catch (error) {
       console.error('削除中にエラーが発生しました', error);

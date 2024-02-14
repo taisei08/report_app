@@ -10,9 +10,10 @@ interface Props {
   moreReplies: boolean;
   fetchData: (shouldIncrementPage?: boolean) => Promise<void>;
   loadMore: () => void;
+  setReplyLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ReplyList: React.FC<Props> = ({ currentUserId, allReplies, currentPage, moreReplies, fetchData, loadMore }) => {
+const ReplyList: React.FC<Props> = ({ currentUserId, allReplies, currentPage, moreReplies, fetchData, loadMore, setReplyLength }) => {
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const ReplyList: React.FC<Props> = ({ currentUserId, allReplies, currentPage, mo
       {allReplies.length === 0 ? null : (
         <>
           {allReplies.map(reply => (
-            <ReplyItem key={reply.replyId} reply={reply} currentUserId={currentUserId} />
+            <ReplyItem key={reply.replyId} reply={reply} currentUserId={currentUserId} setReplyLength={setReplyLength}/>
           ))}
           <Container style={{ display: 'flex', justifyContent: 'center' }}>
             {moreReplies && (
