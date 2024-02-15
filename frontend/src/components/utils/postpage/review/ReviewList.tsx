@@ -37,7 +37,7 @@ const ReviewList: React.FC<Props> = ({
   return (
     <Box {...{ ref: boxRef }} style={{ width: '90vw' }}>
       {allReviews.length === 0 ? (
-        null
+        <Typography variant='h6' style={{marginTop: '2rem', marginBottom: '2rem', fontWeight: 'bold', textAlign: 'center'}}>まだレビューがありません</Typography>
       ) : (
         <>
           {allReviews.map(review => (

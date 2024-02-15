@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Typography, makeStyles, Theme, Card, CardContent, TextField, Button, Box } from '@material-ui/core';
+import Cookies from 'js-cookie';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/setting/SettingsMenu';
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const EditMailAddressPage = () => {
   const classes = useStyles();
   const [formData, setFormData] = useState({
-    confirmSuccessUrl: 'http://localhost:3000',
+    confirmSuccessUrl: 'http://localhost:3000/email_confirmed',
     email: '',
   });
   const [formState, setFormState] = useFormState();
@@ -54,6 +55,7 @@ const EditMailAddressPage = () => {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       await client.put('/auth', formData, { headers: getAuthHeaders() });
       setFormState({ alertSeverity: 'info', alertMessage: '新しいアドレスに確認メールを送信しました。添付のリンクをクリックし確認を完了させてください' });
+      Cookies.set('_new_email', `${formData.email}`, { expires: 1 });
       console.log('User data updated successfully!');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: '既に登録されているメールアドレスです' });

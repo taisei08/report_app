@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, Box, makeStyles, Fade, Button } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
-
-interface Props {
-  mainText: string;
-  subText: string;
-  buttonText?: string;
-  buttonUrl?: string;
-}
+import Cookies from 'js-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,23 +21,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Finish: React.FC<Props> = ({ mainText, subText, buttonText, buttonUrl }) => {
+const EditMailAddressCompletePage: React.FC = () => {
   const classes = useStyles();
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+
+    const handleBeforeUnload = () => {
+      Cookies.remove('_new_email');
+    };
+
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 200);
+    
+    const newUid = Cookies.get("_new_email");
+    if (newUid) {
+    Cookies.set("_uid", newUid, { expires: 1 });
+    }
 
-    return () => clearTimeout(timer);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleNavigate = () => {
-    if (buttonUrl) {
-      navigate(buttonUrl);
-    }
+    navigate('/');
   };
 
   return (
@@ -51,20 +57,18 @@ const Finish: React.FC<Props> = ({ mainText, subText, buttonText, buttonUrl }) =
       <Fade in={isVisible} timeout={500}>
         <Box>
           <Typography variant="h4" className={classes.text} gutterBottom>
-            {mainText}
+            メールアドレスの変更が完了しました
           </Typography>
           <Typography variant="body1" gutterBottom>
-            {subText}
+            今後は新しいメールアドレスでログインできます
           </Typography>
-          {buttonText && buttonUrl && (
-            <Button variant="contained" color="primary" className={classes.button} onClick={handleNavigate}>
-              {buttonText}
-            </Button>
-          )}
+          <Button variant="contained" color="primary" className={classes.button} onClick={handleNavigate}>
+            ホームヘ
+          </Button>
         </Box>
       </Fade>
     </Box>
   );
 };
 
-export default Finish;
+export default EditMailAddressCompletePage;

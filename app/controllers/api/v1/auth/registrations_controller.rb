@@ -17,7 +17,7 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
 
     if current_api_v1_user.update(unconfirmed_email: params[:email])
       current_api_v1_user.send_confirmation_instructions({
-        client_config: params[:config_name],
+        client_config: params[:email],
         redirect_url: @redirect_url
       })
       render json: { message: "Confirmation email sent to #{params[:email]}" }, status: :ok
