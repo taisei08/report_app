@@ -126,7 +126,7 @@ const InputPage: React.FC<Props> = ({ handleIsSuccessful }) => {
     <Card style={{ width: '100%', maxWidth: 512 }}>
       <CardHeader title="新規登録" style={{ textAlign: "center" }} />
       <CardContent>
-        <form>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
           <TextField
             variant="outlined"
             required

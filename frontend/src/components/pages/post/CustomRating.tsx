@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Rating from '@material-ui/lab/Rating';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
@@ -10,13 +10,17 @@ import { useFormState } from "../../utils/error/useFormState";
 
 interface Props {
   postId: number;
-  initialRating?: number;
+  initialRating: number;
   readOnly?: boolean;
 }
 
-const CustomRating: React.FC<Props> = ({ postId, initialRating = 0, readOnly = false }) => {
-  const [rating, setRating] = useState<number>(initialRating);
+const CustomRating: React.FC<Props> = ({ postId, initialRating, readOnly = false }) => {
+  const [rating, setRating] = useState<number>(0);
   const [formState, setFormState] = useFormState();
+
+  useEffect(() => {
+    setRating(initialRating);
+  }, [initialRating]);
 
   const handleRatingChange: (e: React.ChangeEvent<{}>, newValue: number | null) => void = (e, newValue) => {
     try {

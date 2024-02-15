@@ -24,6 +24,8 @@ const PostPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewComment, setReviewComment] = useState<string>('');
   const [currentUserId, setCurrentUserId] = useState<number>(0)
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const { postId } = useParams<{ postId: string }>();
 
   useEffect(() => {
@@ -45,7 +47,7 @@ const PostPage = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await client.get('/post_detail', { params: { postId } });
+        const response = await client.get('/post_detail', { params: { postId } , headers: getAuthHeaders()});
         setPostData(response.data.post);
         setIsYourPost(response.data.isOwner)
       } catch (error) {
@@ -61,9 +63,15 @@ const PostPage = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await client.get('/reviews', { params: { postId }, headers: getAuthHeaders() });
+      const [response, response2] = await Promise.all([
+        client.get(`/reviews?page=${currentPage}`, { params: { postId }, headers: getAuthHeaders() }),
+        client.get('/review_of_post_counts', { params: { postId } })
+      ]);
+      
       setReviews(response.data.reviews);
       setCurrentUserId(response.data.currentUserId);
+      const fullLength = response2.data.length;
+      setTotalPages(Math.ceil(fullLength / 10));
       if (response.data.ownReview) {
         setCurrentUserReview(response.data.ownReview)
       }
@@ -150,9 +158,9 @@ const PostPage = () => {
         <ReviewList
           allReviews={reviews}
           currentUserId={currentUserId}
-          totalPages={1}
-          currentPage={1}
-          setCurrentPage={(currentPage) => console.log(currentPage)}
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </Container>
     </Box>

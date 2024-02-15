@@ -21,7 +21,6 @@ const NotificationButton: React.FC = () => {
       }
     };
 
-    console.log('あああああああ')
     fetchNotificationChecked();
   }, []);
 

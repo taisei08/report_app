@@ -3,11 +3,11 @@ class Api::V1::RatingsController < ApplicationController
 
   def create
 
-    @rating = current_api_v1_user.reviews.new(rating_params)
+    @rating = current_api_v1_user.ratings.new(rating_params)
 
     action_result = nil
 
-    existing_rating = current_api_v1_user.reviews.find_by(user_id: rating_params[:user_id], post_id: rating_params[:post_id])
+    existing_rating = current_api_v1_user.ratings.find_by(user_id: rating_params[:user_id], post_id: rating_params[:post_id])
 
     @rating.transaction do
       if existing_rating

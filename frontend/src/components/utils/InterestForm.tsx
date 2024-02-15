@@ -45,7 +45,7 @@ const InterestForm = (props) => {
   return (
     <div>
       <h2>興味のある分野を選択してください</h2>
-      <form>
+      <form onSubmit={(e) => { e.preventDefault(); }}>
         {fields.map((field) => (
           <div key={field.id}>
             <label>

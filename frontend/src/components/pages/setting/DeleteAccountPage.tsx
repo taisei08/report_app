@@ -83,31 +83,34 @@ const DeleteAccountPage: React.FC = () => {
           <Typography variant="body2" style={{ marginTop: '10px' }}>
             パスワードを入力してください
           </Typography>
-          <Box className={classes.form}>
-            <TextField
-              label="パスワード"
-              variant="outlined"
-              type="password"
-              name="password"
-              value={password}
-              onChange={handleInputChange}
-              required
-              fullWidth
-              margin="dense"
-              autoComplete="current-password"
-            />
-            <Box textAlign="center">
-              <Button
-                variant="contained"
-                color="inherit"
-                className={classes.button}
-                onClick={handleOpen}
-                disabled={!password || formState.isSubmitting || !formState.isChanged}
-              >
-                消去する
-              </Button>
+          <form onSubmit={(e) => { e.preventDefault(); }}>
+            <input type="text" style={{ display: 'none' }} autoComplete='username'/>
+            <Box className={classes.form}>
+              <TextField
+                label="パスワード"
+                variant="outlined"
+                type="password"
+                name="password"
+                value={password}
+                onChange={handleInputChange}
+                required
+                fullWidth
+                margin="dense"
+                autoComplete="current-password"
+              />
+              <Box textAlign="center">
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  className={classes.button}
+                  onClick={handleOpen}
+                  disabled={!password || formState.isSubmitting || !formState.isChanged}
+                >
+                  消去する
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          </form>
         </CardContent>
       </Card>
       <ConfirmationDialog

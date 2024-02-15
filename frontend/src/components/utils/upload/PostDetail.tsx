@@ -134,7 +134,7 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
     <Card>
       <CardHeader title="投稿の詳細" style={{ padding: 20, fontWeight: 'bold', textAlign: "center" }} />
       <CardContent>
-        <form>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
           <TextField
             variant="outlined"
             required
@@ -144,6 +144,7 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
             value={postData.title}
             margin="dense"
             onChange={handleChange}
+            inputProps={{ maxLength: 80 }}
           />
           <TextField
             variant="outlined"
@@ -156,6 +157,7 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
             multiline
             rows={4}
             onChange={handleChange}
+            inputProps={{ maxLength: 400 }}
           />
           <TextField
             variant="outlined"

@@ -1,25 +1,36 @@
-import { useState, useEffect } from 'react';
-import client from 'lib/api/client';
+import { useState, useEffect, useRef } from 'react';
+import { CardContent, Typography } from '@material-ui/core';
+import { Box, Button, Container, Card, IconButton, TextField, Modal, Slider } from '@mui/material';
+import { CloudUpload, ZoomIn, ZoomOut } from '@material-ui/icons';
+import { red } from '@mui/material/colors';
 import AvatarEditor from 'react-avatar-editor';
-import Modal from 'react-modal';
+import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import SettingsMenu from 'components/utils/setting/SettingsMenu';
-import { Card, Box, TextField, Button } from '@material-ui/core';
-import { CloudUpload } from '@material-ui/icons';
 
-const EditProfilePage = () => {
-  const [image, setImage] = useState(null);
-  const [editor, setEditor] = useState(null);
-  const [scale, setScale] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userData, setUserData] = useState({
+interface User {  
+  userId: number;
+  accountName: string;
+  iconPath: { file: File | null; url: string };
+  school: string;
+  facultyDepartment: string;
+  profileStatement: string;
+}
+
+const EditProfilePage: React.FC = () => {
+  const [image, setImage] = useState<File | null>(null);
+  const [editor, setEditor] = useState<AvatarEditor | null>(null);
+  const [scale, setScale] = useState<number>(1);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [userData, setUserData] = useState<User>({
     userId: 0,
     accountName: '',
-    iconPath: null,
+    iconPath: { file: null, url: '' },
     school: '',
     facultyDepartment: '',
     profileStatement: '',
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchUserData();
@@ -27,55 +38,75 @@ const EditProfilePage = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await client.get("/users_index_for_header", { headers: getAuthHeaders() });
+      const response = await client.get<User>("/users_index_for_header", { headers: getAuthHeaders() });
       setUserData(response.data);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error('Error fetching data:', error);
     }
   };
 
   const openModal = () => setIsModalOpen(true);
+  const cancelModal = () => {
+    setIsModalOpen(false);
+    resetModal();
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    const canvas = editor.getImageScaledToCanvas();
-    canvas.toBlob((blob) => {
-      const fileName = "icon.png";
-      const file = new File([blob], fileName, {
-        type: "image/png",
-        lastModified: new Date().getTime(),
-      });
-      setUserData(prevUserData => ({ 
-        ...prevUserData, 
-        iconPath: {
-          ...prevUserData.iconPath,
-          url: URL.createObjectURL(file)
-        } 
-      }));
-    }, "image/png");
+    resetModal();
+    if (editor && image) {
+      const canvas = editor.getImageScaledToCanvas();
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const fileName = "icon.png";
+          const file = new File([blob], fileName, {
+            type: "image/png",
+            lastModified: new Date().getTime(),
+          });
+          setUserData(prevUserData => ({
+            ...prevUserData,
+            iconPath: {
+              ...prevUserData.iconPath,
+              url: URL.createObjectURL(file),
+              file: file
+            }
+          }));
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
+      }, "image/png");
+    }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    openModal();
-    setUserData(prevUserData => ({ 
-      ...prevUserData, 
-      iconPath: {
-        ...prevUserData.iconPath,
-        url: null
-      } 
-    }));
+  const resetModal = () => {
+    setScale(1);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      openModal();
+    }
   };
 
   const handleUploadButtonClick = () => {
-    const fileInput = document.getElementById('icon-button-file');
-    fileInput.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
-  const handleScaleChange = (e) => setScale(parseFloat(e.target.value));
+  const handleScaleChange = (_: Event, newValue: number | number[]) => {
+    if (typeof newValue === 'number') {
+      setScale(newValue);
+    }
+  };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserData(prevUserData => ({ ...prevUserData, [name]: value }));
   };
@@ -83,75 +114,113 @@ const EditProfilePage = () => {
   const handleSave = async () => {
     try {
       await client.put(`/users/${userData.userId}`, createFormData(userData), { headers: getAuthHeaders() });
-      console.log('User data updated successfully!');
+      console.log('ユーザーデータが正常に更新されました！');
     } catch (error) {
-      console.error('Error updating user data:', error);
+      console.error('ユーザーデータの更新エラー:', error);
     }
   };
 
-  const createFormData = (data) => {
+  const createFormData = (data: User) => {
     const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined) {
-        formData.append(key, value);
-      }
-    });
+    formData.append('userId', data.userId.toString());
+    formData.append('accountName', data.accountName);
+    formData.append('iconPath', data.iconPath.file || '');
+    formData.append('school', data.school);
+    formData.append('facultyDepartment', data.facultyDepartment);
+    formData.append('profileStatement', data.profileStatement);
     return formData;
   };
 
   return (
-    <Box p={2}>
+    <>
       <SettingsMenu />
-      <h1>プロフィール</h1>
       <Card>
-        <Box p={2}>
-          {userData.iconPath !== null && (
-            <img
-              src={userData.iconPath.url}
-              alt="Icon"
-              style={{ width: '100px', height: '100px', borderRadius: '50%' }}
-            />
-          )}
-
-            <Box sx={{ position: 'relative', display: 'inline-block' }}>
-              <input
-                accept="image/*"
-                style={{ display: 'none' }}
-                id="icon-button-file"
-                type="file"
-                onChange={handleImageChange}
+        <CardContent>
+          <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
+            プロフィールの編集
+          </Typography>
+          <Box style={{ display: 'flex', justifyContent: 'center' }}>
+            {userData.iconPath.url && (
+              <img
+                src={userData.iconPath.url}
+                alt="アイコン"
+                style={{
+                  width: '150px',
+                  height: '150px',
+                  borderRadius: '50%',
+                  marginBottom: '1rem',
+                  boxShadow: '0px 0px 2px rgba(0, 0, 0, 0.5)'
+                }}
               />
-              <Button
-                variant="contained"
-                startIcon={<CloudUpload />}
-                onClick={handleUploadButtonClick}
-              >
-                画像をアップロード
-              </Button>
-            </Box>
-          <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
-            <input
-              type="range"
-              min="0.1"
-              max="2"
-              step="0.01"
-              value={scale}
-              onChange={handleScaleChange}
-            />
-            <label>
-              Icon
-              {image && (
-                <AvatarEditor
-                  ref={setEditor}
-                  image={image}
-                  width={250}
-                  height={250}
-                  scale={scale}
-                  borderRadius={125}
-                />
-              )}
-            </label>
-            <button onClick={closeModal}>Close</button>
+            )}
+          </Box>
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="icon-button-file"
+            type="file"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+          />
+          <Container style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              startIcon={<CloudUpload />}
+              onClick={handleUploadButtonClick}
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              画像をアップロード
+            </Button>
+          </Container>
+
+          <Modal
+            open={isModalOpen}
+            onClose={closeModal}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Card style={{ marginTop: '4rem', maxHeight: '400px', overflow: 'auto' }}>
+              <CardContent>
+                <Typography variant="h5" style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                  アイコンを編集
+                </Typography>
+                {image && (
+                  <AvatarEditor
+                    ref={setEditor}
+                    image={image}
+                    scale={scale}
+                    borderRadius={125}
+                    style={{ display: 'flex', margin: '0 auto' }}
+                  />
+                )}
+                <Container style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                  <IconButton onClick={() => setScale(prev => Math.max(prev - 0.1, 0.1))} color="primary">
+                    <ZoomOut />
+                  </IconButton>
+                  <Slider
+                    min={0.1}
+                    max={2}
+                    step={0.01}
+                    value={scale}
+                    onChange={handleScaleChange}
+                    aria-labelledby="image-scale"
+                    valueLabelDisplay="auto"
+                    style={{ flexGrow: 1 }}
+                  />
+                  <IconButton onClick={() => setScale(prev => Math.min(prev + 0.1, 2))} color="primary">
+                    <ZoomIn />
+                  </IconButton>
+                </Container>
+
+                <Box display="flex" justifyContent="space-between">
+                  <Button onClick={cancelModal} style={{ color: red[500] }}>キャンセル</Button>
+                  <Button onClick={closeModal}>変更</Button>
+                </Box>
+              </CardContent>
+            </Card>
           </Modal>
 
           <TextField
@@ -193,13 +262,14 @@ const EditProfilePage = () => {
             variant="outlined"
             margin="normal"
           />
-
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save Changes
-          </Button>
-        </Box>
+          <Container style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              変更を保存
+            </Button>
+          </Container>
+        </CardContent>
       </Card>
-    </Box>
+    </>
   );
 };
 

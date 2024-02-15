@@ -1,30 +1,23 @@
-import { useRef, useContext, useEffect, useState } from "react"
-import { useNavigate, Link, Navigate } from "react-router-dom"
-import Avatar from "react-avatar"
-import Cookies from "js-cookie"
-
-import { makeStyles, Theme } from "@material-ui/core/styles"
-
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
-import Typography from "@material-ui/core/Typography"
-import Button from "@material-ui/core/Button"
-import IconButton from "@material-ui/core/IconButton"
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import Avatar from "react-avatar";
+import Cookies from "js-cookie";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, InputBase } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-
-
-import client from "lib/api/client"
-import { signOut } from "lib/api/auth"
-import { getAuthHeaders } from "lib/api/auth"
-
-import { AuthContext } from "App"
-
-import NotificationButton from "components/utils/header/NotificationButton"
+import client from "lib/api/client";
+import { signOut } from "lib/api/auth";
+import { getAuthHeaders } from "lib/api/auth";
+import { AuthContext } from "App";
+import NotificationButton from "components/utils/header/NotificationButton";
+import MenuButton from "./MenuButton";
 
 const useStyles = makeStyles((theme: Theme) => ({
+  whiteInput: {
+    '& .MuiInputBase-input': {
+      color: 'white',
+    },
+  },
   iconButton: {
     marginRight: theme.spacing(2),
   },
@@ -36,20 +29,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkBtn: {
     textTransform: "none"
   }
-}))
+}));
 
 const Form: React.FC = () => {
-
-  const navigate = useNavigate()
+  const classes = useStyles();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
     const cleanedSearchQuery = searchQuery.replace(/　/g, ' '); // 全角スペースを半角スペースに変換
-    // ここでクリーンアップされたクエリを使って検索処理を行うなどの操作を実行
-    console.log(cleanedSearchQuery); // 例えば、クリーンアップされたクエリをコンソールに表示 
+    console.log(cleanedSearchQuery); 
     navigate(`/search/${cleanedSearchQuery}`);
-    }
-    ;
+  };
 
   return (
     <InputBase
@@ -59,43 +50,41 @@ const Form: React.FC = () => {
       onChange={(e) => setSearchQuery(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' && !e.nativeEvent.isComposing && searchQuery.trim() !== '') {
-          e.preventDefault(); // デフォルトのEnterキーの動作を阻止
+          e.preventDefault(); 
           handleSearch();
         }
       }}
+      className={classes.whiteInput}
       autoFocus
       endAdornment={
-      <IconButton onClick={() => searchQuery.trim() !== '' && handleSearch()}>
-        <SearchIcon />
-      </IconButton>
+        <IconButton onClick={() => searchQuery.trim() !== '' && handleSearch()}>
+          <SearchIcon style={{color: 'white'}}/>
+        </IconButton>
       }
     />
   );
 };
 
 const Header: React.FC = () => {
-  const { loading, isSignedIn, setIsSignedIn } = useContext(AuthContext)
-  const classes = useStyles()
-  const navigation = useNavigate()
-  const [icon, setIcon] = useState()
-  const [id, setId] = useState()
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const refObject = useRef()
-
+  const { loading, isSignedIn, setIsSignedIn } = useContext(AuthContext);
+  const classes = useStyles();
+  const navigation = useNavigate();
+  const [icon, setIcon] = useState();
+  const [id, setId] = useState();
+  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
+  console.log(menuAnchorEl)
 
   useEffect(() => {
-    // ログイン時にユーザーデータを取得する
     if (isSignedIn) {
       fetchUserData();
     }
   }, [isSignedIn]);
 
-  const handleSignOut = async (e) => {
+  const handleSignOut = async () => {
     try {
       const res = await signOut()
 
       if (res.data.success === true) {
-        // サインアウト時には各Cookieを削除
         Cookies.remove("_access_token")
         Cookies.remove("_client")
         Cookies.remove("_uid")
@@ -115,22 +104,22 @@ const Header: React.FC = () => {
 
   const fetchUserData = async () => {
     try {
-      // ユーザーデータをAPIから取得
       const response = await client.get("/users_index_for_header", {
         headers: getAuthHeaders(),
       });
       setIcon(response.data.iconPath.url);
       setId(response.data.userId)
-      console.log(response.data.iconPath.url);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
 
-
+  const handleMenuOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setMenuAnchorEl(e.currentTarget);
+  };
 
   const handleMenuClose = () => {
-    setMenuOpen(false);
+    setMenuAnchorEl(null);
   };
 
   const handleMenuItemClick = (destination: string) => {
@@ -138,97 +127,50 @@ const Header: React.FC = () => {
     handleMenuClose();
   };
 
-
   const AuthButtons = () => {
-    // 認証完了後はサインアウト用のボタンを表示
-    // 未認証時は認証用のボタンを表示
     if (!loading) {
       if (isSignedIn) {
         return (
           <>
             <Form/>
             <NotificationButton />
-            <Button component={Link} to="/post" variant="contained" color="primary">
+            <Button component={Link} to="/post" variant="contained">
               投稿
             </Button>
-            <IconButton
-              ref = {refObject}
-              color="inherit"
-              className={classes.iconButton}
-              onClick={(e) => {
-                setMenuOpen(true)
-              }}
-            >
-              <Avatar size="40" round={true} src={icon} />
-            </IconButton>
-            <Menu
-              anchorEl={refObject.current}
-              open={menuOpen}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={() =>
-                handleMenuItemClick(`/userpage/${id}`)
-                }>
-                マイページ
-              </MenuItem>
-              <MenuItem onClick={() => handleMenuItemClick("settings/edit_user_name")}>
-                設定
-              </MenuItem>
-              <MenuItem onClick={handleSignOut}>ログアウト</MenuItem>
-            </Menu>
+            <MenuButton icon={icon} id={id} handleSignOut={handleSignOut} />
           </>
         );
       } else {
         return (
           <>
-          <Form/>
-          <Button
-            component={Link}
-            to="/signin"
-            color="inherit"
-            className={classes.linkBtn}
-          >
-            サインイン
-          </Button>
-          <Button
-            component={Link}
-            to="/signup"
-            color="inherit"
-            className={classes.linkBtn}
-          >
-            新規登録
-          </Button>
+            <Form/>
+            <Button component={Link} to="/signin" color="inherit" className={classes.linkBtn}>
+              サインイン
+            </Button>
+            <Button component={Link} to="/signup" color="inherit" className={classes.linkBtn}>
+              新規登録
+            </Button>
           </>
-        )
+        );
       }
     } else {
       return <></>
     }
-  }
+  };
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" style={{ background: '#1976d2' }}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.iconButton}
-            color="inherit"
-          >
-          </IconButton>
-          <Typography
-            component={Link}
-            to="/"
-            variant="h6"
-            className={classes.title}
-          >
+          <IconButton edge="start" className={classes.iconButton} color="inherit" />
+          <Typography component={Link} to="/" variant="h6" className={classes.title}>
             Sample
           </Typography>
           <AuthButtons />
         </Toolbar>
       </AppBar>
     </>
-  )
+  );
 }
 
-export default Header
+export default Header;

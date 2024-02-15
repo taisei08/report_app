@@ -87,7 +87,7 @@ const InputNewPassword: React.FC<Props> = ({ handleIsSuccessful }) => {
           <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>
             パスワードの変更
           </Typography> 
-          <Typography variant="body2" style={{ paddingInline: 120, marginTop: '10px' }}>
+          <Typography variant="body2" style={{ marginTop: '10px' }}>
             新しいパスワードを入力してください。
           </Typography>
           <form className={classes.form}>

@@ -4,7 +4,7 @@ class Api::V1::ReviewsController < ApplicationController
 
   def index
     post_id = review_index_params[:post_id]
-    user_id = current_api_v1_user&.id
+    user_id = current_api_v1_user&.user_id
   
     @reviews = Review
       .joins(:user)
@@ -18,9 +18,24 @@ class Api::V1::ReviewsController < ApplicationController
                             .where(reviews: {review_id: review.review_id})
                             .count
       review[:reply_length] = reply_length
+      value = Rating.find_by(user_id: review.user_id, post_id: review.post_id)&.value
+      review[:value] = value if value
     end
   
-    user_review = @reviews.find { |review| review.user_id == user_id }
+    user_review = Review
+      .joins(:user)
+      .select("users.user_name", "users.icon_path", "reviews.*")
+      .find_by(user_id: user_id, post_id: post_id)
+
+    if user_review
+      user_review.icon_path = user_review.user.icon_path.url
+      rating = Rating.find_by(user_id: user_review.user_id, post_id: user_review.post_id)
+      user_review.value = rating&.value if rating
+    else
+      rating = Rating.find_by(user_id: user_id, post_id: post_id)
+      user_review = Review.new(user_id: 0, post_id: 0, review: '', value: rating.value) if rating
+    end
+
   
     if user_review && user_id
       @reviews = @reviews.reject { |review| review.user_id == user_id }

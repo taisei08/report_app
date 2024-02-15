@@ -65,7 +65,7 @@ const FollowerList: React.FC<Props> = ({ userId }) => {
           {allFollowers.map(follower => (
             <UserItem 
               key={follower.userId} 
-              follows={follower}
+              user={follower}
             />
           ))}
           <CustomPagination
