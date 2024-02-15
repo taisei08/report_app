@@ -117,10 +117,10 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
           </>
         );
       } else {
-        return '不明なアクション';
+        return null;
       }
     default:
-      return '不明なアクション';
+      return null;
   }
 };
 

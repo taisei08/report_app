@@ -38,6 +38,8 @@ const TabSwitcher: React.FC<Props> = ({ contentType, handleTabChange }) => {
       <Tab className={classes.tab} label="投稿" value="post" />
       <Tab className={classes.tab} label="レビュー" value="review" />
       <Tab className={classes.tab} label="いいねした投稿" value="like" />
+      <Tab value="following" style={{display: 'none'}} />
+      <Tab value="followed" style={{display: 'none'}} />
     </Tabs>
   );
 };

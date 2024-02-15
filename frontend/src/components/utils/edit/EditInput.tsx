@@ -120,7 +120,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
     } catch (error) {
       setFormState({ 
         alertSeverity: 'error', 
-        alertMessage: 'アップロードに失敗しました',
+        alertMessage: 'アップデートに失敗しました',
         alertMessageOpen: true 
       });
       console.error('Failed to create post', error);
@@ -146,7 +146,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
     <Card>
       <CardHeader title="投稿の詳細" style={{ padding: 20, fontWeight: 'bold', textAlign: "center" }} />
       <CardContent>
-        <form>
+        <form onSubmit={(e) => { e.preventDefault(); }}>
           <TextField
             variant="outlined"
             required
@@ -242,7 +242,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
               postData.fieldId === 0 || formState.isSubmitting || !formState.isChanged}
             style={{ marginTop: '1rem' }}
           >
-            投稿
+            更新
           </Button>
         </form>
       </CardContent>
@@ -250,10 +250,10 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
         open={openDialog}
         onClose={handleCloseDialog}
         onConfirm={handleSubmit}
-        title="投稿内容の確認"
-        content="この内容で投稿してもよろしいですか？"
+        title="更新内容の確認"
+        content="この内容で更新してもよろしいですか？"
         cancelText="戻る"
-        confirmText="投稿"
+        confirmText="更新"
       />
       {formState.alertSeverity && (
         <AlertMessage

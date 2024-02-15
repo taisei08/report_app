@@ -29,7 +29,10 @@ const Tag: React.FC<Tags>  = ({ tagId, tagName }) => {
   return (
     <Fragment key={tagId}>
       <Box className={classes.tag}>
-        <Link to={`/search/${tagName}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link
+        to={`/search/${tagName}`}
+        onClick={(e) => e.stopPropagation()}
+        style={{ textDecoration: 'none', color: 'inherit' }}>
           {tagName}
         </Link>
       </Box>

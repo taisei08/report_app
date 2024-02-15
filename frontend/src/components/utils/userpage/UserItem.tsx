@@ -18,27 +18,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface Props {
-  follows: User;
+  user: User;
 }
 
-const UserItem: React.FC<Props> = ({ follows }) => {
+const UserItem: React.FC<Props> = ({ user }) => {
   const classes = useStyles();
 
   return (
-    <Box key={follows.userId}>
+    <Box key={user.userId}>
       <Link
-        to={`/userpage/${follows.userId}`}
+        to={`/userpage/${user.userId}`}
         className={classes.userInfoLink}
       >
         <Card className={classes.card}>
           <CardContent>
             <UserInfo
-              userId={follows.userId}
-              userName={follows.userName}
-              iconPath={follows.iconPath.url}
+              userId={user.userId}
+              userName={user.userName}
+              iconPath={user.iconPath.url}
             />
             <Typography variant="body1" className={classes.userName}>
-              {follows.accountName}
+              {user.accountName}
             </Typography>
           </CardContent>
         </Card>

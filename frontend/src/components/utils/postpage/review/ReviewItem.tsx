@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Card, CardContent, Typography, Grid, Button, IconButton, Menu, MenuItem } from "@material-ui/core";
+import { Box, Container, Card, CardContent, Typography, Button, IconButton, Menu, MenuItem } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
@@ -128,21 +128,18 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
                 {review.review}
               </Typography>
             </Box>
-            <Grid container style={{ marginTop: "7px" }} alignItems="center">
-              {review.value !== 0 && (
-                <Grid item>
-                  <Rating
-                    name={`rating-${review.reviewId}`}
-                    value={review.value}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={<StarBorderIcon style={{ color: blue[500], fontSize: 25 }} />}
-                    icon={<StarIcon style={{ color: blue[500], fontSize: 25 }} />}
-                  />
-                </Grid>
-              )}
-            </Grid>
-
+            {review.value !== 0 && (
+                <Rating
+                  name={`rating-${review.reviewId}`}
+                  value={review.value}
+                  readOnly
+                  precision={0.5}
+                  emptyIcon={<StarBorderIcon style={{ color: blue[500], fontSize: 25 }} />}
+                  icon={<StarIcon style={{ color: blue[500], fontSize: 25 }} />}
+                  style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}
+                />
+            )}
+            <Box>
             <Button onClick={toggleReplyForm}>
               {replyFormVisible ? '閉じる' : '返信'}
             </Button>
@@ -160,6 +157,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
                 <MoreVertIcon />
               </IconButton>
             )}
+            </Box>
 
             <Menu
               anchorEl={menuAnchorEl}
@@ -174,7 +172,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
               </MenuItem>
             </Menu>
 
-            {replyFormVisible && <ReplyForm id={review.reviewId} fetchData={fetchData}/>}
+            {replyFormVisible && <ReplyForm id={review.reviewId} fetchData={fetchData} toggleReplyForm={toggleReplyForm}/>}
 
             {showReplyData && replyLength > 0 && (
               <>

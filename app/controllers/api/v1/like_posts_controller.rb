@@ -24,7 +24,7 @@ class Api::V1::LikePostsController < ApplicationController
 
     @posts.each do |post|
       # ポストに関連するレビューの平均評価を計算
-      average_rating = post.reviews.average(:value)
+      average_rating = post.ratings.average(:value)
       post[:average_rating] = average_rating
     end
 

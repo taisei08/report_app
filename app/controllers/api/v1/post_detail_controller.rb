@@ -1,7 +1,7 @@
 class Api::V1::PostDetailController < ApplicationController
 
   def index
-    user_id = current_api_v1_user&.id
+    user_id = current_api_v1_user&.user_id
     post_id = post_detail_params[:post_id]
   
     @post = Post.joins(:user)

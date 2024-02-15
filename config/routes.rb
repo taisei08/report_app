@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :reviews, only: %i[index create update destroy]
       resources :reviews_by_user, only: %i[index]
       resources :review_counts, only: %i[index]
+      resources :review_of_post_counts, only: %i[index]
       resources :replies, only: %i[index create update destroy]
       resources :reply_counts, only: %i[index]
       resources :users, only: %i[index update]

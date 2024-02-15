@@ -56,7 +56,7 @@ const EditMailAddressPage = () => {
       setFormState({ alertSeverity: 'info', alertMessage: '新しいアドレスに確認メールを送信しました。添付のリンクをクリックし確認を完了させてください' });
       console.log('User data updated successfully!');
     } catch (error) {
-      setFormState({ alertSeverity: 'error', alertMessage: '正しい形式で入力してください' });
+      setFormState({ alertSeverity: 'error', alertMessage: '既に登録されているメールアドレスです' });
       console.error('Error updating user data:', error);
     } finally {
       setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
@@ -74,7 +74,7 @@ const EditMailAddressPage = () => {
           <Typography variant="body2" style={{ marginTop: '10px' }}>
             新しいメールアドレスを入力してください。データを送った後確認メールが送信されます
           </Typography>
-          <form>
+          <form onSubmit={(e) => { e.preventDefault(); }}>
             <Box className={classes.form}>
               <TextField
                 label="新しいメールアドレス"

@@ -20,9 +20,7 @@ const EditPasswordPagePhase2: React.FC = () => {
       {isSuccessful && (
         <Finish
           mainText='パスワードの変更が完了しました'
-          subText='下のボタンを押してログインしましょう'
-          buttonText='サインイン'
-          buttonUrl='/signin'
+          subText='今後は新しいパスワードでログインできます'
         />
       )}
     </>

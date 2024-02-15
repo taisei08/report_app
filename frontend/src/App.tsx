@@ -4,7 +4,7 @@ import Cookies from "js-cookie"
 import CommonLayout from "components/layouts/CommonLayout"
 import DeleteComplete from "components/pages/setting/DeleteComplete"
 import Home from "components/pages/Home"
-import LikedUser from "components/pages/post/LikedUser"
+import LikeList from "components/pages/post/LikeList"
 import SignUp from "components/pages/SignUp"
 import SignIn from "components/pages/signin/SignIn"
 import UploadPage from "components/pages/UploadPage"
@@ -121,7 +121,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/article/:postId" element={<PostPage />} />
-            <Route path="/article/:postId/likes" element={<LikedUser />} /> 
+            <Route path="/article/:postId/likes" element={<LikeList />} /> 
             <Route path="/userpage/:userId" element={<UserPage />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />

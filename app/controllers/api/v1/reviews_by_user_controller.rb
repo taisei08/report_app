@@ -1,11 +1,11 @@
 class Api::V1::ReviewsByUserController < ApplicationController
 
   def index
-    @reviews = Post.joins(:user, :reviews)      
+    @reviews = Post.joins(:user, :reviews, :ratings)      
     .select("users.user_id", "users.user_name", "users.icon_path", "posts.post_id",
       "posts.title", "posts.created_at as post_created_at", "reviews.review_id",
       "reviews.review", "reviews.created_at as review_created_at",
-      "reviews.value")
+      "ratings.value")
     .where('reviews.user_id' => review_params[:user_id])
     .order("reviews.created_at DESC")
     .page(params[:page])
