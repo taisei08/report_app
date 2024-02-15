@@ -21,6 +21,7 @@ import EditPasswordPagePhase2 from "components/pages/setting/EditPasswordPagePha
 import EditMailAddressPage from "components/pages/setting/EditMailAddressPage"
 import DeleteAccountPage from "components/pages/setting/DeleteAccountPage"
 import EditInterests from "components/pages/setting/EditInterests"
+import EditMailAddressCompletePage from "components/pages/setting/EditMailAddressCompletePage"
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
@@ -112,6 +113,16 @@ const App: React.FC = () => {
     }
   }
 
+  const ChangeEmail = ({ children }: { children: React.ReactElement }) => {
+    console.log(Cookies.get("_new_email"))
+    if (Cookies.get("_new_email")) {
+      return children
+    } 
+    else {
+      return <Navigate replace to="/" />
+    }
+  }
+
   return (
 
     
@@ -126,7 +137,16 @@ const App: React.FC = () => {
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings/edit_new_password" element={<EditPasswordPagePhase2 />} />
-            
+            <Route
+              path="/email_confirmed"
+              element={
+                <ChangeEmail>
+                  <Routes>
+                  <Route index element={<EditMailAddressCompletePage />} />
+                  </Routes>
+                </ChangeEmail>
+              }
+            /> 
             <Route
               path="/deleted"
               element={

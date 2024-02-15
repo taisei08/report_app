@@ -56,11 +56,11 @@ const SearchList: React.FC<Props> = ({ searchQuery }) => {
   const handlePostClick = (postId: number) => {
     navigate(`/article/${postId}`);
   };
-
+  console.log(searchQuery)
   return (
     <Box {...{ ref: boxRef }}>
-      <Typography variant="h2" gutterBottom style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
-        {searchQuery} の検索結果: {totalArticles}件
+      <Typography variant="h5" gutterBottom style={{ wordBreak: 'break-all', display: 'flow', textAlign: 'center', fontWeight: 'bold'}}>
+        {searchQuery}の検索結果: {totalArticles}件
       </Typography>
       <Box style={{ width: '90vw' }}>
         {allPosts.map(post => (
