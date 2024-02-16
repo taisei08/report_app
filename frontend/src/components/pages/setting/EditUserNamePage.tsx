@@ -7,7 +7,7 @@ import SettingsMenu from 'components/utils/setting/SettingsMenu';
 import ErrorMessage from 'components/utils/error/ErrorMessage';
 import AlertMessage from 'components/utils/error/AlertMessage';
 import { useFormState } from "../../utils/error/useFormState";
-import { checkUserNameFormat, checkUserNameLength } from 'lib/function';
+import { checkUserNameFormat } from 'lib/function';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -32,7 +32,6 @@ const EditUserNamePage: React.FC = () => {
   const [userId, setUserId] = useState<number>();
   const [formState, setFormState] = useFormState();
   const [userNameFormatError, setUserNameFormatError] = useState<boolean>(false);
-  const [userNameLengthError, setUserNameLengthError] = useState<boolean>(false);
 
   useEffect(() => {
     fetchUserData();
@@ -56,9 +55,8 @@ const EditUserNamePage: React.FC = () => {
 
   const handleSave = async () => {
     setUserNameFormatError(checkUserNameFormat(userName));
-    setUserNameLengthError(checkUserNameLength(userName));
 
-    if (userNameFormatError || userNameLengthError) {
+    if (userNameFormatError) {
       return;
     }
 
@@ -96,9 +94,9 @@ const EditUserNamePage: React.FC = () => {
               fullWidth
               margin="dense"
               autoComplete="username"
+              inputProps={{ maxLength: 32 }}
             />
             {userNameFormatError && <ErrorMessage message='半角英数字と特殊文字は-と_のみが使用できます' />}
-            {userNameLengthError && <ErrorMessage message='32文字以内で入力してください' />}
             <Button
               variant="contained"
               color="inherit"

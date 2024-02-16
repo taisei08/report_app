@@ -1,68 +1,32 @@
 import { useState } from "react"
-import { makeStyles, Theme } from "@material-ui/core/styles"
-import AlertMessage from "components/utils/error/AlertMessage"
-import SignUpSuccessPage from "components/utils/SignUpSuccessPage"
-import IconSettingPage from "components/utils/IconSettingPage"
-import ProfileSettingPage from "components/utils/ProfileSettingPage"
-import InterestForm from "components/utils/InterestForm"
-import ProfileSettingPage2 from "components/utils/ProfileSettingPage2"
-import ProfileSettingCompletePage from "../utils/ProfileSettingCompletePage"
+import SignUpSuccess from "components/utils/initial/SignUpSuccess"
+import EditProfile from "components/utils/initial/EditProfile"
+import EditInterests from "components/utils/initial/EditInterests"
+import Finish from "components/utils/Finish"
 
-const useStyles = makeStyles((theme: Theme) => ({
-  submitBtn: {
-    paddingTop: theme.spacing(2),
-    textAlign: "right",
-    flexGrow: 1,
-    textTransform: "none"
-  },
-  header: {
-    textAlign: "center"
-  },
-  card: {
-    padding: theme.spacing(2),
-    maxWidth: 400
-  }
-}))
-
-// サインアップ用ページ
 const Initial: React.FC = () => {
-
-  const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false)
-
- 
-  // ステップの管理
   const [step, setStep] = useState<number>(1);
 
-  // ユーザー情報
-
-  const handleNextStep = (data: any) => {
-    // ステップを進める
+  const handleNextStep = () => {
     setStep((prevStep) => prevStep + 1);
-    console.log(data)
   };
-
 
   return (
     <>
-    <div>
-      {step === 1 && <SignUpSuccessPage
+      {step === 1 && <SignUpSuccess
       onNext={handleNextStep}/>}
-      {step === 2 && <IconSettingPage
+      {step === 2 && <EditProfile
       onNext={handleNextStep}/>}
-      {step === 3 && <ProfileSettingPage
+      {step === 3 && <EditInterests
       onNext={handleNextStep}/>}
-      {step === 4 && <InterestForm
-      onNext={handleNextStep}/>}
-      {step === 5 && <ProfileSettingPage2
-      onNext={handleNextStep}/>}
-      {step === 6 && <ProfileSettingCompletePage/>}
-    </div>
-      <AlertMessage // エラーが発生した場合はアラートを表示
-        open={alertMessageOpen}
-        setOpen={setAlertMessageOpen}
-        severity="error"
-        message="メールアドレスかパスワードが間違っています"
-      />
+      {step === 4 && (
+        <Finish
+        mainText='設定が完了しました'
+        subText='ボタンを押してホーム画面に進みましょう'
+        buttonText='ホームへ'
+        buttonUrl={'/'}
+        />
+      )}
     </>
   )
 }

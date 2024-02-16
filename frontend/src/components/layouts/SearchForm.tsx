@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, InputBase } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -20,7 +20,6 @@ const SearchForm: React.FC = () => {
   const handleSearch = () => {
     const cleanedSearchQuery = searchQuery.replace(/　/g, ' '); // 全角スペースを半角スペースに変換
     const Query = encodeURIComponent(cleanedSearchQuery);
-    console.log(Query); 
     navigate(`/search/${Query}`);
   };
 
@@ -38,6 +37,7 @@ const SearchForm: React.FC = () => {
       }}
       className={classes.whiteInput}
       autoFocus
+      autoComplete="off"
       endAdornment={
         <IconButton onClick={() => searchQuery.trim() !== '' && handleSearch()}>
           <SearchIcon style={{color: 'white'}}/>

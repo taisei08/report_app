@@ -59,7 +59,7 @@ const SearchList: React.FC<Props> = ({ searchQuery }) => {
   console.log(searchQuery)
   return (
     <Box {...{ ref: boxRef }}>
-      <Typography variant="h5" gutterBottom style={{ wordBreak: 'break-all', display: 'flow', textAlign: 'center', fontWeight: 'bold'}}>
+      <Typography variant="h5" gutterBottom style={{ display: 'flow', textAlign: 'center', fontWeight: 'bold'}}>
         {searchQuery}の検索結果: {totalArticles}件
       </Typography>
       <Box style={{ width: '90vw' }}>

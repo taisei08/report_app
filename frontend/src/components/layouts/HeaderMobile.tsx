@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography, Button, IconButton, InputBase, Container, Card } from "@material-ui/core";
+import { AppBar, Box, Toolbar, Button, IconButton, InputBase, Container, Card } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import client from "lib/api/client";
 import { signOut } from "lib/api/auth";
@@ -92,20 +92,20 @@ const Header: React.FC = () => {
     if (!loading) {
       if (isSignedIn) {
         return (
-          <>
+          <Container style={{paddingRight: '0px', display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
             <IconButton onClick={() => setFormVisible(prevData => !prevData)}>
               <SearchIcon style={{color: 'white'}}/>
             </IconButton>           
             <NotificationButton />
-            <Button component={Link} to="/post" variant="contained" >
+            <Button component={Link} to="/post" variant="contained">
               投稿
             </Button>
             <MenuButton icon={icon} id={id} handleSignOut={handleSignOut} />
-          </>
+          </Container>
         );
       } else {
         return (
-          <>
+          <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
             <IconButton onClick={() => setFormVisible(prevData => !prevData)}>
               <SearchIcon style={{color: 'white'}}/>
             </IconButton>           
@@ -115,7 +115,7 @@ const Header: React.FC = () => {
             <Button component={Link} to="/signup" color="inherit" className={classes.linkBtn}>
               新規登録
             </Button>
-          </>
+          </Container>
         );
       }
     } else {
@@ -127,9 +127,9 @@ const Header: React.FC = () => {
     <>
       <AppBar position="static" style={{ background: '#1976d2' }}>
         <Toolbar>
-          <Typography component={Link} to="/" variant="h6" className={classes.title}>
+          <Link to="/">
             <img src="/logo_white.png" alt="logo" style={{maxWidth: '80px', position: 'relative', top: '3px'}} />
-          </Typography>
+          </Link>
           <AuthButtons />
         </Toolbar>
       </AppBar>

@@ -1,14 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Typography, Box, makeStyles, Fade } from '@material-ui/core';
-import { Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-
-interface Props {
-  mainText: string;
-  subText: string;
-  buttonText?: string;
-  buttonUrl?: string;
-}
+import { Typography, Box, makeStyles, Fade, Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,10 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Finish: React.FC<Props> = ({ mainText, subText, buttonText, buttonUrl }) => {
+interface Props {
+  onNext: () => void;
+}
+
+const SignUpSuccess: React.FC<Props> = ({ onNext }) => {
   const classes = useStyles();
   const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,9 +36,7 @@ const Finish: React.FC<Props> = ({ mainText, subText, buttonText, buttonUrl }) =
   }, []);
 
   const handleNavigate = () => {
-    if (buttonUrl) {
-      navigate(buttonUrl);
-    }
+    onNext();
   };
 
   return (
@@ -52,20 +44,18 @@ const Finish: React.FC<Props> = ({ mainText, subText, buttonText, buttonUrl }) =
       <Fade in={isVisible} timeout={500}>
         <Box>
           <Typography variant="h4" className={classes.text} style={{fontWeight: 'bold'}} gutterBottom>
-            {mainText}
+            登録が成功しました
           </Typography>
           <Typography variant="body1" gutterBottom>
-            {subText}
+            ボタンをクリックしてプロフィールを設定してください
           </Typography>
-          {buttonText && buttonUrl && (
-            <Button variant="contained" color="primary" className={classes.button} onClick={handleNavigate}>
-              {buttonText}
-            </Button>
-          )}
+          <Button variant="contained" color="primary" className={classes.button} onClick={handleNavigate}>
+            プロフィールの設定
+          </Button>
         </Box>
       </Fade>
     </Box>
   );
 };
 
-export default Finish;
+export default SignUpSuccess;

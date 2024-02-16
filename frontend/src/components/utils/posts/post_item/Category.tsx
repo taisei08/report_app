@@ -25,14 +25,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
   },
-  categoryText: {
-    fontWeight: 'bold',
-    fontSize: '0.9rem',
-    marginRight: theme.spacing(1),
-  },
-  category: {
-    marginRight: theme.spacing(1),
-  },
 }));
 
 const Category: React.FC<CategoryProps> = ({ fieldId, subfieldId }) => {
@@ -43,7 +35,7 @@ const Category: React.FC<CategoryProps> = ({ fieldId, subfieldId }) => {
   const renderCategoryLink = (categoryName: string | undefined) => {
     if (categoryName) {
       return (
-        <Typography variant="body2" className={classes.category}>
+        <Typography variant="body2" style={{marginRight: '0.5rem'}}>
           <Link
             to={`/search/${categoryName}`}
             className={classes.link}
@@ -59,7 +51,7 @@ const Category: React.FC<CategoryProps> = ({ fieldId, subfieldId }) => {
 
   return (
     <Box className={classes.categoryContainer}>
-      <Typography variant="body2" className={classes.categoryText}>
+      <Typography variant="body2" style={{fontWeight: 'bold', fontSize: '0.9rem', marginRight: '0.2rem'}}>
         カテゴリ:
       </Typography>
       {renderCategoryLink(field)}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Box, IconButton, Menu, MenuItem } from '@material-ui/core';
 import Avatar from 'react-avatar';
 
 interface Props {
@@ -28,8 +28,8 @@ const MenuButton: React.FC<Props> = ({ icon, id, handleSignOut }) => {
 
   return (
     <>
-      <IconButton color="inherit" onClick={handleMenuOpen}>
-        <Avatar size="40" round={true} src={icon} />
+      <IconButton color="inherit" onClick={handleMenuOpen} style={{paddingRight: '0px'}}>
+        <Avatar size="40" round={true} src={icon}/>
       </IconButton>
       <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
         <MenuItem onClick={() => handleMenuItemClick(`/userpage/${id}`)}>マイページ</MenuItem>

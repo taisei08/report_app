@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -20,6 +20,10 @@ const ReviewForm: React.FC<Props> = ({ reviewComment, setReviewComment, fetchRev
   const { postId } = useParams<{ postId: string }>();
   const [isInputValid, setIsInputValid] = useState<boolean>(false);
   const [formState, setFormState] = useFormState();
+
+  useEffect(() => {
+    setReviewComment('');
+  }, [postId]);  
 
   const handleReviewSubmit = async () => {
     try {
