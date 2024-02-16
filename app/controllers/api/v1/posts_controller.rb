@@ -37,29 +37,29 @@ class Api::V1::PostsController < ApplicationController
 
         tag_names = JSON.parse(params[:tags])
         p tag_names
-
         @post.transaction do
+          begin
             if @post.save
+              newly_created_post_id = @post.reload.post_id
               tag_names.each do |tag|
-                puts tag_name: tag
                 existing_tag = Tag.find_by(tag_name: tag)
-                puts "見てみて！"
-                p existing_tag
                 if existing_tag
-                  # 既に存在する場合はそれを使用
                   tag_to_use = existing_tag
-                  @post.set_tags.create(tag:tag_to_use)
+                  @post.set_tags.create(tag: tag_to_use)
                 else
-                  # 存在しない場合は新しく作成
                   tag_to_use = @post.tags.create(tag_name: tag)
                 end
-          
               end
-              render json: { status: 'success', message: 'Post created successfully' }
+              render json: { status: 'success', message: 'Post created successfully', post_id: newly_created_post_id}
             else
               render json: { status: 'error', message: @post.errors.full_messages.join(', ') }
             end
-        end
+          rescue => e
+            # エラーが発生した場合の処理
+            logger.error "An error occurred while creating post: #{e.message}"
+            render json: { status: 'error', message: 'An error occurred while creating post' }
+          end
+        end        
     end
   
     def edit

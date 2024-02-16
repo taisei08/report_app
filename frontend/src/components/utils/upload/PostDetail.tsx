@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { makeStyles, Chip, Card, CardHeader, CardContent, TextField, Button, MenuItem } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import client from "lib/api/client";
@@ -25,9 +26,10 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   submitFile: File;
+  setPostId: (postId: number) => void;
 }
 
-const PostDetail: React.FC<Props> = ({ submitFile }) => {
+const PostDetail: React.FC<Props> = ({ submitFile, setPostId }) => {
   const [formState, setFormState] = useFormState();
   const classes = useStyles();
   const [fields, setFields] = useState<Fields[]>([]);
@@ -40,6 +42,7 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
     tags: []
   });
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setFields(allFields);
@@ -74,12 +77,12 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
     if(postData.documentPath)
       {formData.append('document_path', postData.documentPath)};
     formData.append('tags', JSON.stringify(postData.tags));
-
     try {
       const response = await client.post('/posts', formData, {
         headers: getAuthHeaders()
       });
       setFormState({ alertSeverity: undefined });
+      setPostId(response.data.postId);
       console.log('Post created successfully', response.data);
     } catch (error) {
       setFormState({ 
