@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 
 const PostInfo: React.FC<Props> = ({ postData }) => {
   const classes = useStyles();
-  console.log(postData.iconPath)
 
   return (
     <>

@@ -14,9 +14,7 @@ if (rootElement) {
   const root = createRoot(rootElement);
 
   root.render(
-    <React.StrictMode>
       <Box style={{ wordBreak: 'break-all' }}>
       <App />
       </Box>
-    </React.StrictMode>
 )}

@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { Divider, Box, Typography, Container } from '@material-ui/core';
 import client from 'lib/api/client';
+import { AuthContext } from 'App';
 import CustomRating from './CustomRating';
 import { useParams, useLocation } from 'react-router-dom';
 import PdfViewer from 'components/utils/postpage/PdfViewer';
@@ -26,6 +27,7 @@ const PostPage = () => {
   const [currentUserId, setCurrentUserId] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const { isSignedIn } = useContext(AuthContext)
   const { postId } = useParams<{ postId: string }>();
 
   useEffect(() => {
@@ -80,6 +82,7 @@ const PostPage = () => {
     }
   };
 
+
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const handleCloseDeleteModal = () => {
@@ -113,11 +116,13 @@ const PostPage = () => {
           {postData.documentPath && (<DownloadButton url={postData.documentPath.url} />)}
           <HamburgerMenu isYourPost={isYourPost} />
         </Box>
+        { isSignedIn && (
         <Box style={{ textAlign: 'center' }}>
           <CustomRating postId={postData.postId} initialRating={currentUserReview ? currentUserReview.value : 0} />
         </Box>
+        )}
       </Box>
-      {!isYourPost && (!currentUserReview || !currentUserReview.review) && (
+      {isSignedIn && !isYourPost && (!currentUserReview || !currentUserReview.review) && (
         <Container style={{marginTop: 10, marginBottom: 10, width: 'calc(min(1000px, 90vw))'}}>
           <ReviewForm
             reviewComment={reviewComment}

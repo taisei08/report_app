@@ -196,6 +196,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
             freeSolo
             options={[]}
             value={postData.tags}
+            // @ts-ignore
             onChange={handleTagsChange}
             renderTags={(value, getTagProps) =>
               value.map((option, index) => (

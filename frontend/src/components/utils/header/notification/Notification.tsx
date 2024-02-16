@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Container, Card, CardContent, Typography } from '@
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import NotificationMessage from './NotificationMessage';
-import { Notification } from 'interfaces';
+import { Notification as NotificationInterface } from 'interfaces';
 
 const useStyles = makeStyles((theme) => ({
   notificationBox: {
@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Notifications: React.FC = () => {
+const Notification: React.FC = () => {
   const classes = useStyles();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationInterface[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [moreNotifications, setMoreNotifications] = useState<boolean>(true);
 
@@ -77,30 +77,40 @@ const Notifications: React.FC = () => {
       <Typography variant="h5" style={{fontWeight: 'bold', marginBottom: '10px'}}>
         通知
       </Typography>
-      {notifications.map((notification, index) => (
-        <Card key={index} className={classes.notificationItem}>
-          <CardContent style={{display: 'flex', alignItems: 'center'}}>
-            <Link to={`/userpage/${notification.activeUserId}`}>
-              <Avatar
-                className={classes.avatar}
-                src={notification.iconPath}
-              />
-            </Link>
-            <NotificationMessage notification={notification} />
-          </CardContent>
-          <CardContent style={{display: 'flex', alignItems: 'center'}}>
-          </CardContent>
-        </Card>
-      ))}
-      {moreNotifications && (
-        <Container style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-          <Button onClick={loadMore} variant="contained" style={{ width: '50vw', backgroundColor: 'white' }}>
-            さらに読み込む
-          </Button>
+      {notifications.length === 0 ? (
+        <Container style={{display: 'flow', textAlign: 'center'}}>
+          <Typography variant="body1">通知はありません</Typography>
+          <img src="/logo_black.png" alt="logo" style={{ opacity: 0.8, marginTop: '2rem', marginBottom: '6rem', maxWidth: '80px', position: 'relative', top: '3px'}} />
         </Container>
+      ) : (
+        <>
+          {notifications.map((notification, index) => (
+            <Card key={index} className={classes.notificationItem}>
+              <CardContent style={{display: 'flex', alignItems: 'center'}}>
+                <Link to={`/userpage/${notification.activeUserId}`}>
+                  <Avatar
+                    className={classes.avatar}
+                    src={notification.iconPath}
+                  />
+                </Link>
+                <NotificationMessage notification={notification} />
+              </CardContent>
+              <CardContent style={{display: 'flex', alignItems: 'center'}}>
+              </CardContent>
+            </Card>
+          ))}
+          {moreNotifications && (
+            <Container style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+              <Button onClick={loadMore} variant="contained" style={{ width: '50vw', backgroundColor: 'white' }}>
+                さらに読み込む
+              </Button>
+            </Container>
+          )}
+        </>
       )}
     </Box>
   );
+  
 };
 
-export default Notifications;
+export default Notification;
