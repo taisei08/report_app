@@ -25,7 +25,6 @@ import EditMailAddressCompletePage from "components/pages/setting/EditMailAddres
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
-// グローバルで扱う変数・関数
 export const AuthContext = createContext({} as {
   loading: boolean
   setLoading: React.Dispatch<React.SetStateAction<boolean>>
@@ -35,14 +34,11 @@ export const AuthContext = createContext({} as {
   setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>
 })
 
-
 const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
   const [currentUser, setCurrentUser] = useState<User | undefined>()
 
-  // 認証済みのユーザーがいるかどうかチェック
-  // 確認できた場合はそのユーザーの情報を取得
   const handleGetCurrentUser = async () => {
     try {
       const res = await getCurrentUser()
@@ -64,11 +60,7 @@ const App: React.FC = () => {
     handleGetCurrentUser()
   }, [setCurrentUser])
 
-
-  // ユーザーが認証済みかどうかでルーティングを決定
-  // 未認証だった場合は「/signin」ページに促す
   const Private = ({ children }: { children: React.ReactElement }) => {
-    console.log("joi")
     if (!loading) {
       if (isSignedIn) {
         return children
@@ -81,7 +73,6 @@ const App: React.FC = () => {
   }
 
   const NotSignin = ({ children }: { children: React.ReactElement }) => {
-    console.log("joi")
     if (!loading) {
       if (!isSignedIn) {
         return children
@@ -94,31 +85,25 @@ const App: React.FC = () => {
   }
 
   const FirstSession = ({ children }: { children: React.ReactElement }) => {
-    console.log(Cookies.get("_first_session"))
     if (Cookies.get("_first_session")) {
       return children
-    } 
-    else {
+    } else {
       return <Navigate replace to="/" />
     }
   }
 
   const AccountDeleted = ({ children }: { children: React.ReactElement }) => {
-    console.log(Cookies.get("_account_deleted"))
     if (Cookies.get("_account_deleted")) {
       return children
-    } 
-    else {
+    } else {
       return <Navigate replace to="/" />
     }
   }
 
   const ChangeEmail = ({ children }: { children: React.ReactElement }) => {
-    console.log(Cookies.get("_new_email"))
     if (Cookies.get("_new_email")) {
       return children
-    } 
-    else {
+    } else {
       return <Navigate replace to="/" />
     }
   }
@@ -138,60 +123,74 @@ const App: React.FC = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/settings/edit_new_password" element={<EditPasswordPagePhase2 />} />
             <Route
-              path="/email_confirmed"
+              path="/email_confirmed/*"
               element={
                 <ChangeEmail>
                   <Routes>
-                  <Route index element={<EditMailAddressCompletePage />} />
+                    <Route index element={<EditMailAddressCompletePage />} />
                   </Routes>
                 </ChangeEmail>
               }
             /> 
             <Route
-              path="/deleted"
+              path="/deleted/*"
               element={
                 <AccountDeleted>
                   <Routes>
-                  <Route index element={<DeleteComplete />} />
+                    <Route index element={<DeleteComplete />} />
                   </Routes>
                 </AccountDeleted>
               }
-            />       
-            
+            />
+            <Route
+              path="/signup/*"
+              element={
+                <NotSignin>
+                  <Routes>
+                    <Route index element={<SignUp />} />
+                  </Routes>
+                </NotSignin>
+              }
+            />
+            <Route
+              path="/signin/*"
+              element={
+                <NotSignin>
+                  <Routes>
+                    <Route index element={<SignIn />} />
+                  </Routes>
+                </NotSignin>
+              }
+            />
             <Route path="/*" element={
               <>
-  {isSignedIn ? (
-    <Private>
-      <Routes>
-        <Route path="/post" element={<UploadPage />} />
-        <Route path="/article/:postId/edit" element={<EditPage />} />
-        <Route path="/settings/edit_profile" element={<EditProfilePage />} />
-        <Route path="/settings/edit_user_name" element={<EditUserNamePage />} />
-        <Route path="/settings/edit_password" element={<EditPasswordPagePhase1 />} />
-        <Route path="/settings/edit_email" element={<EditMailAddressPage />} />
-        <Route path="/settings/delete_account" element={<DeleteAccountPage />} />
-        <Route path="/settings/edit_interests" element={<EditInterests />} />
-        <Route path="/initial" 
-          element={<FirstSession><Routes><Route index element={<Initial />} /></Routes></FirstSession>} />
-      </Routes>
-    </Private>
-  ) : (
-    <NotSignin>
-      <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
-        {/* 他のNotSignin内のルートを追加 */}
-      </Routes>
-    </NotSignin>
-  )}
-</>
-
+                <Private>
+                  <Routes>
+                    <Route path="/post" element={<UploadPage />} />
+                    <Route path="/article/:postId/edit" element={<EditPage />} />
+                    <Route path="/settings/edit_profile" element={<EditProfilePage />} />
+                    <Route path="/settings/edit_user_name" element={<EditUserNamePage />} />
+                    <Route path="/settings/edit_password" element={<EditPasswordPagePhase1 />} />
+                    <Route path="/settings/edit_email" element={<EditMailAddressPage />} />
+                    <Route path="/settings/delete_account" element={<DeleteAccountPage />} />
+                    <Route path="/settings/edit_interests" element={<EditInterests />} />
+                    <Route path="/initial" 
+                      element={
+                        <FirstSession>
+                          <Routes>
+                            <Route index element={<Initial />} />
+                          </Routes>
+                        </FirstSession>
+                      }
+                    />
+                  </Routes>
+                </Private>
+              </>
             }
             />        
           </Routes>
         </CommonLayout>
       </AuthContext.Provider>
-
     </Router>
   )
 }

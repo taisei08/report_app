@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@material-ui/core";
-import HeaderMobile from "./HeaderMobile";
-import HeaderWide from "./HeaderWide";
+import HeaderMobile from "components/utils/header/HeaderMobile";
+import HeaderWide from "components/utils/header/HeaderWide";
 
 const Header: React.FC = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");

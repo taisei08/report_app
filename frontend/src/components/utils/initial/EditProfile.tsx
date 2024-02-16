@@ -147,7 +147,6 @@ const EditProfile: React.FC<Props> = ({ onNext }) => {
 
   return (
     <>
-      <SettingsMenu />
       <Card>
         <CardContent>
           <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>

@@ -92,7 +92,6 @@ const EditInterests: React.FC<Props> = ({ onNext }) => {
 
   return (
     <Box>
-      <SettingsMenu />
       <Card>
         <CardContent className={classes.cardContent}>
           <Typography variant="h4" style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '10px' }}>

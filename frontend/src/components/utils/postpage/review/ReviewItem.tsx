@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Container, Card, CardContent, Typography, Button, IconButton, Menu, MenuItem } from "@material-ui/core";
+import { Box, Card, CardContent, Typography, Button, IconButton, Menu, MenuItem } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import StarIcon from "@material-ui/icons/Star";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
@@ -13,6 +13,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ReviewEditForm from "./ReviewEditForm";
 import ConfirmationDialog from "components/utils/ConfirmationDialog";
 import { Review, Reply } from "interfaces";
+import { AuthContext } from "App";
 import client from "lib/api/client";
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +46,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
   const [showReplyData, setShowReplyData] = useState<boolean>(false);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [replyLength, setReplyLength] = useState<number>(review.replyLength);
+  const { isSignedIn } = useContext(AuthContext)
 
   const showDialog = () => {
     setShowConfirmation(true);
@@ -140,9 +142,11 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
                 />
             )}
             <Box>
+            {isSignedIn && (
             <Button onClick={toggleReplyForm}>
               {replyFormVisible ? '閉じる' : '返信'}
             </Button>
+            )}
 
             {replyLength > 0 && (
               <Button onClick={toggleReplies}>
@@ -185,7 +189,9 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
                   loadMore={loadMore}
                   setReplyLength={setReplyLength}
                 />
+                {isSignedIn && (
                 <ReplyForm id={review.reviewId} fetchData={fetchData}/>
+                )}
               </>
             )}
           </CardContent>

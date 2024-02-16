@@ -2,14 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Box, Toolbar, Button, IconButton, InputBase, Container, Card } from "@material-ui/core";
+import { AppBar, Toolbar, Button, IconButton, InputBase, Container, Card } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import client from "lib/api/client";
 import { signOut } from "lib/api/auth";
 import { getAuthHeaders } from "lib/api/auth";
 import { AuthContext } from "App";
-import NotificationButton from "components/utils/header/NotificationButton";
-import MenuButton from "./MenuButton";
+import NotificationButton from "./button/NotificationButton";
+import MenuButton from "./button/MenuButton";
 
 const useStyles = makeStyles(() => ({
   title: {

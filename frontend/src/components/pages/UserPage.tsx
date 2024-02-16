@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
+import { AuthContext } from 'App';
 import UserLikePosts from 'components/utils/userpage/UserPosts';
 import UserReviews from 'components/utils/userpage/UserReviews';
 import LikeList from 'components/utils/userpage/UserLikePosts';
@@ -21,7 +22,9 @@ interface UserDataCounts {
 }
 
 const UserPage = () => {
+  const { isSignedIn } = useContext(AuthContext)
   const { userId } = useParams<{ userId: string }>();
+  const [isYourPage, setIsYourPage] = useState<boolean>(false)
   const [contentType, setContentType] = useState<string>('post');
   const [userData, setUserData] = useState<User | undefined>();
   const [dataCounts, setDataCounts] = useState<UserDataCounts | undefined>();
@@ -44,6 +47,7 @@ const UserPage = () => {
       ]);
       console.log(response1.data)
       setUserData(response1.data.user);
+      setIsYourPage(response1.data.isMe);
       setDataCounts(response2.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -70,7 +74,7 @@ const UserPage = () => {
             resetParentState={resetParentState}
             setContentType={setContentType}
           />
-          {userId && (
+          {userId && !isYourPage && isSignedIn && (
             <Box style={{ marginTop: 10 }}>
               <FollowButton id={userId}/>
             </Box>

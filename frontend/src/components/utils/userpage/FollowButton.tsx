@@ -5,7 +5,6 @@ import { blue } from '@material-ui/core/colors';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 
-
 const useStyles = makeStyles((theme) => ({
   followButton: {
     width: "100px",
@@ -37,7 +36,6 @@ type Props = {
 const FollowButton = ({ id }: Props) => {
   const classes = useStyles();
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
-  const [userId, setUserId] = useState<number>();
 
   useEffect(() => {
     fetchFollowStatus();
@@ -49,7 +47,6 @@ const FollowButton = ({ id }: Props) => {
         params: { userId: id },
         headers: getAuthHeaders()
       });
-      setUserId(response.data.userId)
       setIsFollowing(response.data.isFollowing);
     } catch (error) {
       console.error('Error fetching follow status:', error);
@@ -73,24 +70,20 @@ const FollowButton = ({ id }: Props) => {
       console.error('Error unfollowing user:', error);
     }
   };
-  console.log(typeof(id), typeof(userId))
 
-  if (userId !== undefined && id === userId.toString())
-    return null;
-  else
-    return (
-      <Box>
-        {isFollowing ? (
-          <Button className={classes.removeButton} onClick={handleUnfollow}>
-            リムーブ
-          </Button>
-        ) : (
-          <Button className={classes.followButton} onClick={handleFollow}>
-            フォロー
-          </Button>
-        )}
-      </Box>
-    );
+  return (
+    <Box>
+      {isFollowing ? (
+        <Button className={classes.removeButton} onClick={handleUnfollow}>
+          リムーブ
+        </Button>
+      ) : (
+        <Button className={classes.followButton} onClick={handleFollow}>
+          フォロー
+        </Button>
+      )}
+    </Box>
+  );
 };
 
 export default FollowButton;

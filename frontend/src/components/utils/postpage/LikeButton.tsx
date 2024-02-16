@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Typography, IconButton } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@material-ui/icons';
 import { red } from '@mui/material/colors';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
+import { AuthContext } from 'App';
 
 interface Props {
   id: number;
@@ -13,6 +14,8 @@ interface Props {
 const LikeButton: React.FC<Props> = ({ id, type }) => {
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
+  const { isSignedIn } = useContext(AuthContext)
+  
 
   const getItemId = (id: number, type: string): { [key: string]: number } => {
     if (type === 'post') {
@@ -59,7 +62,7 @@ const LikeButton: React.FC<Props> = ({ id, type }) => {
 
   return (
     <>
-      <IconButton onClick={handleLike}>
+      <IconButton onClick={handleLike} disabled={!isSignedIn}>
         {liked ? (
           <Favorite style={{ color: red[500] }} />
         ) : (

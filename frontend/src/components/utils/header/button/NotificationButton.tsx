@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Notifications as NotificationIcon } from "@material-ui/icons";
 import { Box } from "@material-ui/core";
 import { IconButton } from "@mui/material";
-import Notifications from "./notification/Notification";
+import Notification from "../notification/Notification";
 import client from "lib/api/client";
 import { getAuthHeaders } from "lib/api/auth";
 
@@ -45,7 +45,7 @@ const NotificationButton: React.FC = () => {
           </Box>
         )}
       </IconButton>
-      {showNotifications && <Notifications />}
+      {showNotifications && <Notification />}
     </div>
   );
 };
