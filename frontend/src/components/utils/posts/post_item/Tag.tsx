@@ -25,12 +25,13 @@ interface Tags {
 
 const Tag: React.FC<Tags>  = ({ tagId, tagName }) => {
   const classes = useStyles();
+  const query: string = encodeURIComponent(tagName);
 
   return (
     <Fragment key={tagId}>
       <Box className={classes.tag}>
         <Link
-        to={`/search/${tagName}`}
+        to={`/search/${query}`}
         onClick={(e) => e.stopPropagation()}
         style={{ textDecoration: 'none', color: 'inherit' }}>
           {tagName}

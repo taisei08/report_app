@@ -47,7 +47,8 @@ const EditMailAddressPage = () => {
   const handleSave = async () => {
     setEmailError(checkEmail(formData.email));
 
-    if (emailError) {
+    if (checkEmail(formData.email)) {
+      setFormState({ isChanged: false })
       return;
     }
 

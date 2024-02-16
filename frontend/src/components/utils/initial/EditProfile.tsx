@@ -19,7 +19,11 @@ interface User {
   profileStatement: string;
 }
 
-const EditProfilePage: React.FC = () => {
+interface Props {
+  onNext: () => void;
+}
+
+const EditProfile: React.FC<Props> = ({ onNext }) => {
   const [image, setImage] = useState<File | null>(null);
   const [editor, setEditor] = useState<AvatarEditor | null>(null);
   const [scale, setScale] = useState<number>(1);
@@ -120,7 +124,7 @@ const EditProfilePage: React.FC = () => {
     try {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       await client.put(`/users/${userData.userId}`, createFormData(userData), { headers: getAuthHeaders() });
-      setFormState({ alertSeverity: 'success', alertMessage: 'ユーザーデータが正常に更新されました' });
+      onNext();
       console.log('ユーザーデータが正常に更新されました！');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: 'ユーザーデータの更新に失敗しました' });
@@ -300,4 +304,4 @@ const EditProfilePage: React.FC = () => {
   );
 };
 
-export default EditProfilePage;
+export default EditProfile;

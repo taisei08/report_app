@@ -59,7 +59,7 @@ const UserPage = () => {
   };
 
   return (
-    <Box width='90vw'>
+    <>
       {userData && <UserProfile userData={userData} />}
       {dataCounts && (
         <>
@@ -78,16 +78,18 @@ const UserPage = () => {
         </>
       )}
       {userId && (
-        <Box style={{ marginTop: 15 }}>
+        <>
           <TabSwitcher contentType={contentType} handleTabChange={handleTabChange} />
+          <Box style={{ display: 'flex', justifyContent: 'center' }} >
             {contentType === 'post' && <UserLikePosts userId={userId} />}
             {contentType === 'review' && <UserReviews userId={userId} />}
             {contentType === 'like' && <LikeList userId={userId} />}
             {contentType === 'following' && <FollowingList userId={userId} />}
             {contentType === 'followed' && <FollowerList userId={userId} />}
-        </Box>
+          </Box>
+        </>
       )}
-    </Box>
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import { Box, Typography } from "@material-ui/core";
 import Avatar from "react-avatar";
 import { makeStyles } from "@material-ui/core/styles";
 import { formatDate } from "lib/function";
+import { trimText } from "lib/function";
 
 const useStyles = makeStyles((theme) => ({
   avatarContainer: {
@@ -14,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
   user: {
-    fontWeight: 400,
     display: "inline-block",
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -68,13 +68,13 @@ const UserInfo: React.FC<UserInfoProps> = ({
         />
       </Link>
       <Box>
-        <Typography variant="body1" className={classes.user}>
+        <Typography variant="body1" className={classes.user} style={{fontWeight: 'bold'}}>
           <Link
             to={`/userpage/${userId}`}
             onClick={handleChildLinkClick}
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            @{userName}
+            @{trimText(userName, 15)}
           </Link>
         </Typography>
         {createdAt && (

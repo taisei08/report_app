@@ -52,6 +52,7 @@ const ChooseFile: React.FC<Props> = ({ handleFileData }) => {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
+        textAlign: 'center',
         height: '20rem',
         border: `2px dashed ${isDragging ? blue[500] : grey[500]}`,
         borderRadius: 10,

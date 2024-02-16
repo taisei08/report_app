@@ -55,41 +55,17 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
   };
 
   const handleTagsChange = (e: React.ChangeEvent<{}>, newValue: string[]) => {
+    const filteredValue = newValue.filter(tag => tag.trim() !== "");
     const currentTagCount = postData.tags.length;
     if (newValue.length > currentTagCount && currentTagCount >= 10) {
       return;
     }
-    setPostData({ ...postData, tags: newValue });
+    setPostData({ ...postData, tags: filteredValue });
     setFormState({ isChanged: true });
   };
 
   const handleSubmit = async () => {
     setFormState({ alertMessageOpen: false, isSubmitting: true });
-    
-    if (postData.title.trim().length > 80) {
-      setFormState({  
-        alertSeverity: 'error',
-        alertMessage: 'タイトルは80文字以内で入力してください',
-        isSubmitting: false,
-        alertMessageOpen: true,
-        isChanged: false
-      });
-      handleCloseDialog();
-      return;
-    }
-    
-    if (postData.description.trim().length > 400) {
-      setFormState({  
-        alertSeverity: 'error',
-        alertMessage: '説明は400文字以内で入力してください',
-        isSubmitting: false,
-        alertMessageOpen: true,
-        isChanged: false
-      });
-      handleCloseDialog();
-      return;
-    }
-
     const formData = new FormData();
     formData.append('title', postData.title);
     formData.append('description', postData.description);
@@ -219,7 +195,11 @@ const PostDetail: React.FC<Props> = ({ submitFile }) => {
                 variant="filled" 
                 label="タグ" 
                 placeholder="タグを入力"
-              />
+                inputProps={{
+                  ...params.inputProps,
+                  maxLength: 20
+                }}
+                />
             )}
           />
           <Button

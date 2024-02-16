@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Typography, Box, makeStyles, Fade, Button } from '@material-ui/core';
+import { Typography, Box, makeStyles, Fade } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -43,7 +44,7 @@ const DeleteComplete: React.FC = () => {
     <Box className={classes.root}>
       <Fade in={isVisible} timeout={500}>
         <Box>
-          <Typography variant="h4" className={classes.text} gutterBottom>
+          <Typography variant="h4" className={classes.text} style={{fontWeight: 'bold'}} gutterBottom>
             アカウントの削除が完了しました
           </Typography>
           <Typography variant="body1" gutterBottom>

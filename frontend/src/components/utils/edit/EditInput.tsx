@@ -75,41 +75,17 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
   };
 
   const handleTagsChange = (e: React.ChangeEvent<{}>, newValue: string[]) => {
+    const filteredValue = newValue.filter(tag => tag.trim() !== "");
     const currentTagCount = postData.tags.length;
     if (newValue.length > currentTagCount && currentTagCount >= 10) {
       return;
     }
-    setPostData({ ...postData, tags: newValue });
+    setPostData({ ...postData, tags: filteredValue });
     setFormState({ isChanged: true });
   };
 
   const handleSubmit = async () => {
     setFormState({ alertMessageOpen: false, isSubmitting: true });
-    
-    if (postData.title.trim().length > 80) {
-      setFormState({  
-        alertSeverity: 'error',
-        alertMessage: 'タイトルは80文字以内で入力してください',
-        isSubmitting: false,
-        alertMessageOpen: true,
-        isChanged: false
-      });
-      handleCloseDialog();
-      return;
-    }
-    
-    if (postData.description.trim().length > 400) {
-      setFormState({  
-        alertSeverity: 'error',
-        alertMessage: '説明は400文字以内で入力してください',
-        isSubmitting: false,
-        alertMessageOpen: true,
-        isChanged: false
-      });
-      handleCloseDialog();
-      return;
-    }
-    
     try {
       const response = await client.put('/posts_edit', postData, {
         headers: getAuthHeaders()
@@ -156,6 +132,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
             value={postData.title}
             margin="dense"
             onChange={handleChange}
+            inputProps={{ maxLength: 80 }}
           />
           <TextField
             variant="outlined"
@@ -168,6 +145,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
             multiline
             rows={4}
             onChange={handleChange}
+            inputProps={{ maxLength: 400 }}
           />
           <TextField
             variant="outlined"
@@ -229,6 +207,10 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
                 variant="filled" 
                 label="タグ" 
                 placeholder="タグを入力"
+                inputProps={{
+                  ...params.inputProps,
+                  maxLength: 20
+                }}
               />
             )}
           />

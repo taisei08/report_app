@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Cookies from "js-cookie";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
+import { AppBar, Toolbar, Button, IconButton, Container } from "@material-ui/core";
 import client from "lib/api/client";
 import { signOut } from "lib/api/auth";
 import { getAuthHeaders } from "lib/api/auth";
@@ -11,23 +10,8 @@ import NotificationButton from "components/utils/header/NotificationButton";
 import MenuButton from "./MenuButton";
 import SearchForm from "./SearchForm";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  iconButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-    textDecoration: "none",
-    color: "inherit"
-  },
-  linkBtn: {
-    textTransform: "none"
-  }
-}));
-
 const Header: React.FC = () => {
   const { loading, isSignedIn, setIsSignedIn } = useContext(AuthContext);
-  const classes = useStyles();
   const navigation = useNavigate();
   const [icon, setIcon] = useState();
   const [id, setId] = useState();
@@ -76,26 +60,26 @@ const Header: React.FC = () => {
     if (!loading) {
       if (isSignedIn) {
         return (
-          <>
+          <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
             <SearchForm/>
             <NotificationButton />
             <Button component={Link} to="/post" variant="contained">
               投稿
             </Button>
             <MenuButton icon={icon} id={id} handleSignOut={handleSignOut} />
-          </>
+          </Container>
         );
       } else {
         return (
-          <>
+          <Container style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
             <SearchForm/>
-            <Button component={Link} to="/signin" color="inherit" className={classes.linkBtn}>
+            <Button component={Link} to="/signin" color="inherit">
               サインイン
             </Button>
-            <Button component={Link} to="/signup" color="inherit" className={classes.linkBtn}>
+            <Button component={Link} to="/signup" color="inherit">
               新規登録
             </Button>
-          </>
+          </Container>
         );
       }
     } else {
@@ -107,10 +91,10 @@ const Header: React.FC = () => {
     <>
       <AppBar position="static" style={{ background: '#1976d2' }}>
         <Toolbar>
-          <IconButton edge="start" className={classes.iconButton} color="inherit" />
-          <Typography component={Link} to="/" variant="h6" className={classes.title}>
-            <img src="/logo_white.png" alt="logo" style={{maxWidth: '80px', position: 'relative', top: '3px'}} />
-          </Typography>
+          <IconButton edge="start" color="inherit" />
+          <Link to="/">
+            <img src="/logo_white.png" alt="logo" style={{ maxWidth: '80px', position: 'relative', top: '3px'}} />
+          </Link>
           <AuthButtons />
         </Toolbar>
       </AppBar>

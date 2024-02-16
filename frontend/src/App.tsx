@@ -173,7 +173,6 @@ const App: React.FC = () => {
         <Route path="/settings/edit_interests" element={<EditInterests />} />
         <Route path="/initial" 
           element={<FirstSession><Routes><Route index element={<Initial />} /></Routes></FirstSession>} />
-        {/* 他のPrivate内のルートを追加 */}
       </Routes>
     </Private>
   ) : (

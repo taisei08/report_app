@@ -105,7 +105,7 @@ const PostPage = () => {
 
   return (
     <Box>
-      <PostInfo postData={postData} />
+      <PostInfo postData={postData}/>
       {postData.documentPath && (<PdfViewer fileData={postData.documentPath.url} />)}
       <Box style={{ textAlign: 'right' }}>
       <Box style={{ margin: '0 0 0 auto' }}>

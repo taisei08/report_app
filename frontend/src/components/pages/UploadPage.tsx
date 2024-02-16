@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import ChooseFile from '../utils/upload/ChooseFile';
 import PostDetail from '../utils/upload/PostDetail';
-import { Styles } from 'lib/styles';
 
 const UploadPage = () => {
-  const classes = Styles()
   const [filePath, setFilePath] = useState<File>();
 
   const handleFileData = (sendData: File) => {
