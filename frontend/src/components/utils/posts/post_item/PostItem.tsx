@@ -11,6 +11,7 @@ import { trimText } from "lib/function";
 import UserInfo from "./UserInfo";
 import { Styles } from "lib/styles";
 import Category from "./Category";
+import LikeButton from "components/utils/postpage/LikeButton";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -91,7 +92,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, handlePostClick }) => {
                   e.preventDefault();
                   handlePostClick(post.postId);
                 }}
-                className={importClasses.link} // ここでスタイルを適用
+                className={importClasses.link}
               >
                 {trimText(post.title, 30)}
               </Link>
@@ -110,11 +111,16 @@ const PostItem: React.FC<PostItemProps> = ({ post, handlePostClick }) => {
               emptyIcon={<StarBorderIcon style={{ color: blue[500], fontSize: 16 }} />}
               icon={<StarIcon style={{ color: blue[500], fontSize: 16 }} />}
             />
-            <Category fieldId={post.fieldId} subfieldId={post.subFieldId} />
+            <Box style={{ display: 'flex', alignItems: 'center'}}>
+              <Category fieldId={post.fieldId} subfieldId={post.subFieldId} />
+            </Box>
             <Box className={classes.tagsContainer}>
               {post.tags.map((tag, index) => (
                 <Tag key={index} tagName={tag.tagName} tagId={tag.tagId} />
               ))}
+            </Box>
+            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
+              <LikeButton id={post.postId} type="post" disabled={true}/>
             </Box>
           </CardContent>
         </Card>

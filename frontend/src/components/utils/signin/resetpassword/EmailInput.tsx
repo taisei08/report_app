@@ -73,7 +73,7 @@ const EmailInput: React.FC<Props> = ({ handleIsSuccessful }) => {
           <Typography variant="body2" style={{ marginTop: '10px' }}>
             ご登録のメールアドレスにパスワード変更用のリンクを記載したメールを送付します
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={(e) => { e.preventDefault(); }}>
             <TextField
               label="現在のメールアドレス"
               variant="outlined"
