@@ -1,7 +1,5 @@
 class Api::V1::PostsByUserController < ApplicationController
 
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
-
   def index
     @posts = Post.joins(:user)      
     .select("users.user_name", "users.icon_path", "posts.*")
@@ -10,19 +8,10 @@ class Api::V1::PostsByUserController < ApplicationController
     .page(params[:page])
     .per(10)
 
-
     @posts.each do |post|
       post.icon_path = post.user.icon_path.url
-    end
-
-    @posts.each do |post|
-      tag_names = SetTag.joins(:tag).where(post_id: post.post_id).pluck("tags.tag_name")
-      # タグ名をTagモデルのインスタンスに変換してtags属性に代入
+      tag_names = SetTag.joins(:tag).where(post_id: post.id).pluck("tags.tag_name")
       post[:tags] = tag_names
-    end
-
-    @posts.each do |post|
-      # ポストに関連するレビューの平均評価を計算
       average_rating = post.ratings.average(:value)
       post[:average_rating] = average_rating
     end
@@ -30,7 +19,6 @@ class Api::V1::PostsByUserController < ApplicationController
     render json: { status: 200, posts: @posts}
 
   end
-
 
   private
 

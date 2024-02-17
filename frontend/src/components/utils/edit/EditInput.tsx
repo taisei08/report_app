@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { makeStyles, Chip, Card, CardHeader, CardContent, TextField, Button, MenuItem } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import client from "lib/api/client";
@@ -30,6 +30,7 @@ interface Props {
 
 const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
   const Id = useParams()
+  const navigate = useNavigate();
   const [formState, setFormState] = useFormState();
   const classes = useStyles();
   const [fields, setFields] = useState<Fields[]>([]);
@@ -50,7 +51,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
   const fetchData = async () => {
     try {
       const response = await client.get
-      ('/posts_edit', { params: {postId: Id.postId} });
+      ('/posts_edit', { params: {postId: Id.postId}, headers: getAuthHeaders() });
       console.log(response.data.post)
       setPostData(response.data.post);
       const tags: string[]= []
@@ -62,6 +63,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
             setFields(allFields);
     } catch (error) {
       console.error('Failed to fetch fields', error);
+      navigate('/not_found');
     }
   };
 

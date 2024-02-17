@@ -14,12 +14,8 @@ class Api::V1::ReviewsController < ApplicationController
       
     @reviews.each do |review|
       review.icon_path = review.user.icon_path.url
-      reply_length = Reply.joins(:review)      
-                            .where(reviews: {review_id: review.review_id})
-                            .count
-      review[:reply_length] = reply_length
-      value = Rating.find_by(user_id: review.user_id, post_id: review.post_id)&.value
-      review[:value] = value if value
+      review.reply_length = Reply.where(review_id: review.review_id).count
+      review.value = Rating.find_by(user_id: review.user_id, post_id: review.post_id)&.value || 0
     end
   
     user_review = Review
@@ -29,13 +25,13 @@ class Api::V1::ReviewsController < ApplicationController
 
     if user_review
       user_review.icon_path = user_review.user.icon_path.url
-      rating = Rating.find_by(user_id: user_review.user_id, post_id: user_review.post_id)
-      user_review.value = rating&.value if rating
+      user_review.reply_length = Reply.where(review_id: user_review.review_id).count
+      user_review.value = Rating.find_by(user_id: user_review.user_id, post_id: user_review.post_id)&.value
     else
       rating = Rating.find_by(user_id: user_id, post_id: post_id)
       user_review = Review.new(user_id: 0, post_id: 0, review: '', value: rating.value) if rating
     end
-
+    
   
     if user_review && user_id
       @reviews = @reviews.reject { |review| review.user_id == user_id }
@@ -51,52 +47,56 @@ class Api::V1::ReviewsController < ApplicationController
     @review = current_api_v1_user.reviews.new(review_create_params)
     @post = @review.post
 
-    action_result = nil
+    existing_review = current_api_v1_user.reviews.find_by(post_id: review_create_params[:post_id])
+    user_id_of_post_creator = Post.find_by(post_id: review_create_params[:post_id])&.user_id
 
-    existing_review = current_api_v1_user.reviews.find_by(user_id: review_create_params[:user_id], post_id: review_create_params[:post_id])
-
-    user = Post
-    .joins(:user)
-    .select("users.user_id")
-    .where('posts.post_id' => review_create_params[:post_id])
-    .pluck(:user_id)
-
-    p user[0]
-    p current_api_v1_user.id
-
-    @review.transaction do
-      if user[0] != current_api_v1_user.id
+    if user_id_of_post_creator == current_api_v1_user.user_id
+      render json: { status: 'error', message: 'You cannot review your own post' }
+      return
+    end
+    
+    begin
+      @review.transaction do
         @review.save
         @post.save_notification_review!(current_api_v1_user, @review.review_id)
         render json: { status: 'success', message: 'Review operation successful' }
-      else
-        render json: { status: 'error', message: 'Review operation failed' }
       end
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { status: 'error', message: e.record.errors.full_messages.join(', ') }
     end
 
   end
 
   def update
-    p "エジフェイw"
-    p current_api_v1_user.reviews.find(review_update_params[:id])
-    @review = current_api_v1_user.reviews.find(review_update_params[:id])
 
+    begin
+      @review = current_api_v1_user.reviews.find(review_update_params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: 'Review not found' }, status: :not_found
+    end
 
     if @review.update(review: review_update_params[:review])
       render json: { message: 'Review updated successfully' }, status: :ok
     else
-      render json: { error: 'Review update failed' }, status: :unprocessable_entity
+      render json: { error: 'Review update failed', errors: @review.errors.full_messages }, status: :unprocessable_entity
     end
+
   end
 
   def destroy
-    @review = current_api_v1_user.reviews
-    .find(review_destroy_params[:id])
-    if @review.destroy
-      render json: { message: 'Review Deleted' }, status: :ok
-    else
-      render json: { error: 'Review Delete Failed' }, status: :unprocessable_entity
+
+    begin
+      @review = current_api_v1_user.reviews.find(review_update_params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: 'Review not found' }, status: :not_found
     end
+
+    if @review.destroy
+      render json: { message: 'Review deleted successfully' }, status: :ok
+    else
+      render json: { error: 'Review deletion failed' }, status: :unprocessable_entity
+    end
+    
   end
 
   private
@@ -106,7 +106,7 @@ class Api::V1::ReviewsController < ApplicationController
   end
 
   def review_create_params
-    params.permit(:post_id, :review).merge(user_id: current_api_v1_user.id)
+    params.permit(:post_id, :review)
   end
 
   def review_update_params

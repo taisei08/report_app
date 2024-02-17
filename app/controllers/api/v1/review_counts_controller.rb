@@ -1,11 +1,8 @@
 class Api::V1::ReviewCountsController < ApplicationController
+
   def index
-    length = Review.joins(:user)      
-    .where('users.user_id' => post_params[:user_id])
-    .count
-
+    length = Review.where('reviews.user_id' => post_params[:user_id]).count
     render json: { status: 200, length: length }
-
   end
 
   private
@@ -13,4 +10,5 @@ class Api::V1::ReviewCountsController < ApplicationController
   def post_params
     params.permit(:user_id)
   end
+  
 end

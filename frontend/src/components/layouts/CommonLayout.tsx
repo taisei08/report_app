@@ -35,4 +35,4 @@ const CommonLayout = ({ children }: CommonLayoutProps) => {
   )
 }
 
-export default CommonLayout
+export default CommonLayout;

@@ -6,7 +6,6 @@ import { red } from '@mui/material/colors';
 import AvatarEditor from 'react-avatar-editor';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
-import SettingsMenu from 'components/utils/setting/SettingsMenu';
 import AlertMessage from 'components/utils/error/AlertMessage';
 import { useFormState } from "../../utils/error/useFormState";
 

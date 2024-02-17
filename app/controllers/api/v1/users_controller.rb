@@ -3,17 +3,11 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:update]
 
   def index
-    @user = User
-    .find(index_params[:user_id])
-    field_ids = User.find(index_params[:user_id])
-    .interests.pluck(:field_id)
+    @user = User.find(index_params[:user_id])
+    field_ids = @user.interests.pluck(:field_id)
+    is_me = current_api_v1_user&.user_id == @user.user_id
 
-    if current_api_v1_user && current_api_v1_user.user_id == @user.user_id
-      render json: { user: @user, field_ids: field_ids, is_me: true }
-    else
-      render json: { user: @user, field_ids: field_ids, is_me: false }
-    end
-
+    render json: { user: @user, field_ids: field_ids, is_me: is_me }
   end
 
   def update

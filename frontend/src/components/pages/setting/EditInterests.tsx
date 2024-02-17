@@ -138,7 +138,7 @@ const EditInterests: React.FC = () => {
             variant="contained"
             color="inherit"
             onClick={handleSubmit}
-            disabled={selectedFields.length === 0 || formState.isSubmitting || !formState.isChanged}
+            disabled={formState.isSubmitting || !formState.isChanged}
           >
             更新する
           </Button>

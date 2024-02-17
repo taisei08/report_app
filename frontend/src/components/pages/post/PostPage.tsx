@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Divider, Box, Typography, Container } from '@material-ui/core';
 import client from 'lib/api/client';
 import { AuthContext } from 'App';
 import CustomRating from './CustomRating';
-import { useParams, useLocation } from 'react-router-dom';
 import PdfViewer from 'components/utils/postpage/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
 import LikeButton from 'components/utils/postpage/LikeButton';
@@ -16,6 +16,8 @@ import ReviewList from 'components/utils/postpage/review/ReviewList';
 
 const PostPage = () => {
   const location = useLocation();
+  const { postId } = useParams<{ postId: string }>();
+  const navigate = useNavigate();
   const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const paramValue: string | null = queryParams.get("type");
   const [isYourPost, setIsYourPost] = useState<boolean>(false);
@@ -28,7 +30,6 @@ const PostPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const { isSignedIn } = useContext(AuthContext)
-  const { postId } = useParams<{ postId: string }>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +55,7 @@ const PostPage = () => {
         setIsYourPost(response.data.isOwner)
       } catch (error) {
         console.error('Error fetching post data:', error);
+        navigate('/not_found');
       }
     };
     fetchPostData();
@@ -70,6 +72,7 @@ const PostPage = () => {
         client.get('/review_of_post_counts', { params: { postId } })
       ]);
       
+      console.log(response.data.reviews)
       setReviews(response.data.reviews);
       setCurrentUserId(response.data.currentUserId);
       const fullLength = response2.data.length;

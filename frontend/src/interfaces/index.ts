@@ -83,6 +83,7 @@ export interface SignUpData {
   }
 
   export interface Notification {
+    id?: number;
     action: string;
     activeUserId: number;
     accountName: string;

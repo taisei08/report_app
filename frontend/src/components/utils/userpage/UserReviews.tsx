@@ -36,7 +36,7 @@ const UserLikePosts: React.FC<Props> = ({ userId }) => {
           client.get(`/reviews_by_user?page=${currentPage}`, { params: { userId } }),
           client.get('/review_counts', { params: { userId } }),
         ]);
-        console.log(response.data)
+        console.log(response2.data)
         const fullLength = response2.data;
         setAllReviews(response.data.reviews);
         setTotalPages(Math.ceil(fullLength.length / 10));

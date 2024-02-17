@@ -16,21 +16,26 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   notification: Notification;
+  setShowNotifications: (showNotifications: boolean) => void;
 }
 
-const NotificationMessage: React.FC<Props> = ({ notification }) => {
+const NotificationMessage: React.FC<Props> = ({ notification, setShowNotifications }) => {
   const classes = useStyles();
+
+  const handleNotifications = () => {
+    setShowNotifications(false);
+  }
 
   switch (notification.action) {
     case 'review':
       return (
         <>
           <Typography variant='body2'>
-            <Link to={`/userpage/${notification.activeUserId}`} className={classes.link}>
+            <Link to={`/userpage/${notification.activeUserId}`} className={classes.link} onClick={handleNotifications}>
               {`${notification.accountName}(${notification.userName})`}
             </Link>
             さんがあなたの投稿:
-            <Link to={`/article/${notification.postId}`} className={classes.link}>
+            <Link to={`/article/${notification.postId}`} className={classes.link} onClick={handleNotifications}>
               {`${notification.title}`}
             </Link>
             に
@@ -40,6 +45,7 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
                 search: `?id=${notification.reviewId}&type=reviewId`,
               }}
               className={classes.link}
+              onClick={handleNotifications}
             >
               レビュー
             </Link>
@@ -51,7 +57,7 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
       return (
         <>
           <Typography variant='body2'>
-            <Link to={`/userpage/${notification.activeUserId}`} className={classes.link}>
+            <Link to={`/userpage/${notification.activeUserId}`} className={classes.link} onClick={handleNotifications}>
               {`${notification.accountName}(${notification.userName})`}
             </Link>
             さんがあなたをフォローしました
@@ -63,11 +69,11 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
         return (
           <>
             <Typography variant='body2'>
-              <Link to={`/userpage/${notification.activeUserId}`} className={classes.link}>
+              <Link to={`/userpage/${notification.activeUserId}`} className={classes.link} onClick={handleNotifications}>
                 {`${notification.accountName}(${notification.userName})`}
               </Link>
               さんがあなたの投稿:
-              <Link to={`/article/${notification.postId}`} className={classes.link}>
+              <Link to={`/article/${notification.postId}`} className={classes.link} onClick={handleNotifications}>
                 {`${notification.title}`}
               </Link>
               をいいねしました
@@ -78,7 +84,7 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
         return (
           <>
             <Typography variant='body2'>
-              <Link to={`/userpage/${notification.activeUserId}`} className={classes.link}>
+              <Link to={`/userpage/${notification.activeUserId}`} className={classes.link} onClick={handleNotifications}>
                 {`${notification.accountName}(${notification.userName})`}
               </Link>
               さんがあなたの
@@ -88,6 +94,7 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
                   search: `?id=${notification.reviewId}&type=reviewId`,
                 }}
                 className={classes.link}
+                onClick={handleNotifications}
               >
                 レビュー
               </Link>
@@ -99,7 +106,7 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
         return (
           <>
             <Typography variant='body2'>
-              <Link to={`/userpage/${notification.activeUserId}`} className={classes.link}>
+              <Link to={`/userpage/${notification.activeUserId}`} className={classes.link} onClick={handleNotifications}>
                 {`${notification.accountName}(${notification.userName})`}
               </Link>
               さんがあなたの
@@ -109,6 +116,7 @@ const NotificationMessage: React.FC<Props> = ({ notification }) => {
                   search: `?id=${notification.reviewId}&type=reviewId`,
                 }}
                 className={classes.link}
+                onClick={handleNotifications}
               >
                 リプライ
               </Link>

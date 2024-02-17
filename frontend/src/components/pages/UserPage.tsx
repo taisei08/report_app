@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
@@ -24,6 +24,7 @@ interface UserDataCounts {
 const UserPage = () => {
   const { isSignedIn } = useContext(AuthContext)
   const { userId } = useParams<{ userId: string }>();
+  const navigate = useNavigate();
   const [isYourPage, setIsYourPage] = useState<boolean>(false)
   const [contentType, setContentType] = useState<string>('post');
   const [userData, setUserData] = useState<User | undefined>();
@@ -51,6 +52,7 @@ const UserPage = () => {
       setDataCounts(response2.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
+      navigate('/not_found');
     }
   };
 
