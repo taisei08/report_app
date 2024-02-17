@@ -69,6 +69,9 @@ const HamburgerMenu: React.FC<{ isYourPost: boolean }> = ({ isYourPost }) => {
         <MenuItem onClick={() =>{navigate(`/article/${postId}/likes`)}}>
           <Typography variant="body2">いいねしたユーザーを表示</Typography>
         </MenuItem>
+        <MenuItem onClick={() =>{navigate(`/article/${postId}/ratings`)}}>
+          <Typography variant="body2">評価をしたユーザーを表示</Typography>
+        </MenuItem>
       </Menu>
       <ConfirmationDialog
         open={showConfirmation}

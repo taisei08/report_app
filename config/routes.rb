@@ -23,6 +23,8 @@ Rails.application.routes.draw do
       resources :posts_search, only: %i[index]
       resources :posts_search_counts, only: %i[index]
       resources :ratings, only: %i[index create]
+      resources :rating_of_users, only: %i[index]
+      resources :rating_of_users_counts, only: %i[index]
       resources :review_or_reply_spotted, only: %i[index]
       resources :reviews, only: %i[index create update destroy]
       resources :reviews_by_user, only: %i[index]

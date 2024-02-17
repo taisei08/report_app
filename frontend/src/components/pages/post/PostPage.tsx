@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Divider, Box, Typography, Container } from '@material-ui/core';
 import client from 'lib/api/client';
 import { AuthContext } from 'App';
-import CustomRating from './CustomRating';
+import CustomRating from 'components/utils/CustomRating';
 import PdfViewer from 'components/utils/postpage/PdfViewer';
 import { getAuthHeaders } from "lib/api/auth"
 import LikeButton from 'components/utils/postpage/LikeButton';
