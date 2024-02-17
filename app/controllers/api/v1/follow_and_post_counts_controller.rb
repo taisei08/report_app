@@ -1,25 +1,23 @@
 class Api::V1::FollowAndPostCountsController < ApplicationController
 
   def index
-
-    p follow_params[:user_id]
-
-    posts = Post.joins(:user)      
-    .where('users.user_id' => follow_params[:user_id])
-    .count
-
-    followings = User.find(follow_params[:user_id]).followings      
-    .count
-
-    followers = User.find(follow_params[:user_id]).followers
-    .count
-
-    render json: { status: 200,
-    posts: posts,
-    followings: followings,
-    followers: followers }
-
+    
+    begin
+      user_id = follow_params[:user_id]
+      user = User.find(user_id)
+    rescue ActiveRecord::RecordNotFound
+      return render json: { error: "User not found" }, status: :not_found
+    end
+  
+    posts_count = Post.joins(:user)
+                     .where(users: { user_id: user_id })
+                     .count
+    followings_count = user.followings.count
+    followers_count = user.followers.count
+  
+    render json: { status: 200, posts: posts_count, followings: followings_count, followers: followers_count }
   end
+  
 
   private
   

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Typography, Box, makeStyles, Fade } from '@material-ui/core';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,33 +21,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditMailAddressCompletePage: React.FC = () => {
+const NotFound: React.FC = () => {
   const classes = useStyles();
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
-
-  const handleBeforeUnload = () => {
-    Cookies.remove('_new_email');
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 200);
-    const newUid = Cookies.get("_new_email");
-    if (newUid) {
-    Cookies.set("_uid", newUid, { expires: 1 });
-    }
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   const handleNavigate = () => {
-    handleBeforeUnload();
     navigate('/');
   };
 
@@ -57,10 +43,10 @@ const EditMailAddressCompletePage: React.FC = () => {
       <Fade in={isVisible} timeout={500}>
         <Box>
           <Typography variant="h4" className={classes.text} style={{fontWeight: 'bold'}} gutterBottom>
-            メールアドレスの変更が完了しました
+            このページは表示できません
           </Typography>
           <Typography variant="body1" gutterBottom>
-            今後は新しいメールアドレスでログインできます
+            お探しのページは利用できないか、移動・削除された可能性があります
           </Typography>
           <Button variant="contained" color="primary" className={classes.button} onClick={handleNavigate}>
             ホームヘ
@@ -71,4 +57,4 @@ const EditMailAddressCompletePage: React.FC = () => {
   );
 };
 
-export default EditMailAddressCompletePage;
+export default NotFound;

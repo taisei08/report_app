@@ -1,21 +1,16 @@
 class Api::V1::FollowingController < ApplicationController
 
   def index
-
-    user = User.find(follow_params[:follower_id])
-    @users = user.followings
-    .page(params[:page])
-    .per(10)
-
-    p "フィオ"
-    p follow_params[:follower_id]
-    p @users
-
-    render json: { status: 200,
-    followings: @users
-    }
-
-  end
+    begin
+      user = User.find(follow_params[:follower_id])
+    rescue ActiveRecord::RecordNotFound
+      return render json: { error: "User not found" }, status: :not_found
+    end
+  
+    @users = user.followings.page(params[:page]).per(10)
+  
+    render json: { status: 200, followings: @users }
+  end  
 
   private
   

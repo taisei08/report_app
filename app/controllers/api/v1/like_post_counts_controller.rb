@@ -4,9 +4,6 @@ class Api::V1::LikePostCountsController < ApplicationController
     .where('likes.user_id' => post_params[:user_id])
     .count
 
-    p post_params[:user_id]
-    p "ああああ"
-
     render json: { status: 200, length: length }
 
   end

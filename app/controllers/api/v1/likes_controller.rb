@@ -13,27 +13,34 @@ class Api::V1::LikesController < ApplicationController
   end
 
   def create
-    @like = current_api_v1_user.likes.new(like_params)
-    like = Like.find_by(like_include_user_params)
-    p "ウィj０frじげろい"
-    p like
-    if @like != like && @like.save && @like.create_notification_like!(current_api_v1_user, like_params.keys, like_params.values)
-      render json: { status: 'success', message: 'Post created successfully' }
+    existing_like = Like.find_by(like_params, user_id: current_api_v1_user.user_id)
+    
+    begin
+      @like = current_api_v1_user.likes.new(like_params)
+    rescue ActiveRecord::RecordInvalid => e
+      return render json: { status: 'error', message: e.message }, status: :unprocessable_entity
+    end
+  
+    if existing_like.nil? && @like.save && @like.create_notification_like!(current_api_v1_user, like_params.keys, like_params.values)
+      render json: { status: 'success', message: 'Like created successfully' }
     else
-      puts @like.errors.full_messages
-      render json: { status: 'error', message: @like.errors.full_messages.join(', ') }
+      render json: { status: 'error', message: @like.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
-
+  
   def destroy
-    @like = current_api_v1_user.likes
-    .find_by(like_params)
-    if @like.destroy
-      render json: { message: 'Like Deleted' }, status: :ok
-    else
-      render json: { error: 'Like Delete Failed' }, status: :unprocessable_entity
+    begin
+      @like = current_api_v1_user.likes.find_by(like_params)
+    rescue ActiveRecord::RecordNotFound
+      return render json: { error: "Like not found" }, status: :not_found
     end
-  end
+  
+    if @like.destroy
+      render json: { message: 'like deleted' }, status: :ok
+    else
+      render json: { error: 'failed to delete like' }, status: :unprocessable_entity
+    end
+  end  
 
   private
 

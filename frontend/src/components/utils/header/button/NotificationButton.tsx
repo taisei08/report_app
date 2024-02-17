@@ -45,7 +45,7 @@ const NotificationButton: React.FC = () => {
           </Box>
         )}
       </IconButton>
-      {showNotifications && <Notification />}
+      {showNotifications && <Notification setShowNotifications={setShowNotifications}/>}
     </div>
   );
 };

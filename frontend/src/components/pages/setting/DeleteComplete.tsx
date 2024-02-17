@@ -51,7 +51,7 @@ const DeleteComplete: React.FC = () => {
             ご利用いただきありがとうございました
           </Typography>
           <Button variant="contained" color="primary" className={classes.button} onClick={handleNavigate}>
-            ホームに戻る
+            ホームへ
           </Button>
         </Box>
       </Fade>

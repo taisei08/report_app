@@ -44,7 +44,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Notification: React.FC = () => {
+interface Props {
+  setShowNotifications: (showNotifications: boolean) => void;
+}
+
+const Notification: React.FC<Props> = ({ setShowNotifications }) => {
   const classes = useStyles();
   const [notifications, setNotifications] = useState<NotificationInterface[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -54,7 +58,11 @@ const Notification: React.FC = () => {
     const fetchNotifications = async () => {
       try {
         const response = await client.get(`/notifications?page=${currentPage}`, { headers: getAuthHeaders() });
-        setNotifications(prevNotifications => [...prevNotifications, ...response.data.notifications]);
+        const newNotifications: NotificationInterface[] = response.data.notifications;
+        const uniqueNotifications = newNotifications.filter(notification => {
+          return !notifications.some(existingNotification => existingNotification.id === notification.id);
+        });
+        setNotifications(prevNotifications => [...prevNotifications, ...uniqueNotifications]);
 
         if (response.data.notifications.length < 10) {
           setMoreNotifications(false);
@@ -93,7 +101,7 @@ const Notification: React.FC = () => {
                     src={notification.iconPath}
                   />
                 </Link>
-                <NotificationMessage notification={notification} />
+                <NotificationMessage notification={notification} setShowNotifications={setShowNotifications}/>
               </CardContent>
               <CardContent style={{display: 'flex', alignItems: 'center'}}>
               </CardContent>
