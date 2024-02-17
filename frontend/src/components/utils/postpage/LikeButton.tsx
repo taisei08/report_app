@@ -9,9 +9,10 @@ import { AuthContext } from 'App';
 interface Props {
   id: number;
   type: 'post' | 'review' | 'reply';
+  disabled?: boolean;
 }
 
-const LikeButton: React.FC<Props> = ({ id, type }) => {
+const LikeButton: React.FC<Props> = ({ id, type, disabled=false }) => {
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
   const { isSignedIn } = useContext(AuthContext)
@@ -62,7 +63,7 @@ const LikeButton: React.FC<Props> = ({ id, type }) => {
 
   return (
     <>
-      <IconButton onClick={handleLike} disabled={!isSignedIn}>
+      <IconButton onClick={handleLike} disabled={!isSignedIn || disabled}>
         {liked ? (
           <Favorite style={{ color: red[500] }} />
         ) : (

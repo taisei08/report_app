@@ -15,7 +15,7 @@ class Post < ApplicationRecord
   has_many :notifications, class_name: "Notification", dependent: :destroy
 
   def save_notification_review!(current_api_v1_user, review_id)
-    # コメントは複数回することが考えられるため、１つの投稿に複数回通知する
+
     temp = Notification.where(["active_user_id = ? and passive_user_id = ? and action = ? ",current_api_v1_user.user_id, user_id, 'review'])
     if temp.blank?
     notification = current_api_v1_user.active_notifications.new(

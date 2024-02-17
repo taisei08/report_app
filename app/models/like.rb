@@ -9,33 +9,19 @@ class Like < ApplicationRecord
 
 
   def create_notification_like!(current_api_v1_user, key, value)
-
     passive_user = nil
-    p "joipvfropk"
-    puts "#{value[0]}"
 
-    # key によって条件分岐
     case key[0]
     when 'post_id'
-      # post_id の場合は Post テーブルからユーザーIDを取得
       passive_user = Post.find(value) if Post.exists?("#{value[0]}")
     when 'review_id'
-      # review_id の場合は Review テーブルからユーザーIDを取得
       passive_user = Review.find(value) if Review.exists?("#{value[0]}")
     when 'reply_id'
-      # reply_id の場合は Reply テーブルからユーザーIDを取得
       passive_user = Reply.find(value) if Reply.exists?("#{value[0]}")
     end
 
-    # すでに「いいね」されているか検索
     temp = Notification.where(["active_user_id = ? and passive_user_id = ? and #{key[0]} = ? and action = ? ", user_id, passive_user[0].user_id, value[0], 'like'])
-    p "jiferjoiero"
-    puts user_id
-    p passive_user[0].user_id
-    p value
-    p key[0]
-    p temp
-    # いいねされていない場合のみ、通知レコードを作成
+
     if temp.blank?
       notification = current_api_v1_user.active_notifications.new(
         key[0].to_sym => value[0],

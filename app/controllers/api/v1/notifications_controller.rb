@@ -27,6 +27,8 @@ class Api::V1::NotificationsController < ApplicationController
     @notifications.each do |notification|
       notification.update(checked: true)
     end
+
+    @notifications.where("created_at < ?", 1.month.ago).destroy_all
     
   end
 
