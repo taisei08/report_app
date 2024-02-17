@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Box, Container, Typography, makeStyles } from '@material-ui/core';
-import UserItem from 'components/utils/userpage/UserItem';
+import RatingItem from 'components/utils/postpage/rating/RatingItem';
 import client from "lib/api/client";
 import { getAuthHeaders } from 'lib/api/auth';
 import CustomPagination from 'components/utils/posts/CustomPagination';
-import { User } from 'interfaces';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   link: {
     fontWeight: 'bold',
     color: 'black',
@@ -18,12 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LikeList: React.FC = () => {
+export interface RatingData {
+  iconPath: string;
+  id: number;
+  ratingCreatedAt: string;
+  userId: number;
+  userName: string;
+  accountName: string;
+  value: number;
+}
+
+const RatingList: React.FC = () => {
   const classes = useStyles();
   const Id = useParams()
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [allLikes, setAllLikes] = useState<User[]>([]);
+  const [allLikes, setAllLikes] = useState<RatingData[]>([]);
   const [counts, setCounts] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const boxRef = useRef<HTMLDivElement>();
@@ -32,15 +41,16 @@ const LikeList: React.FC = () => {
     const fetchData = async () => {
       try {
         const [response, response2] = await Promise.all([
-          client.get(`/likes?page=${currentPage}`, { params: {postId: Id.postId} }),
-          client.get('/like_counts', {
+          client.get(`/rating_of_users?page=${currentPage}`, { params: {postId: Id.postId} }),
+          client.get('/rating_of_users_counts', {
             params: { postId: Id.postId },
             headers: getAuthHeaders(),
           })
         ]);
         console.log(response.data)
+
         const fullLength = response2.data.count;
-        setAllLikes(response.data.likes);
+        setAllLikes(response.data.ratings);
         setCounts(fullLength)
         setTotalPages(Math.ceil(fullLength / 10));
       } catch (error) {
@@ -70,7 +80,7 @@ const LikeList: React.FC = () => {
         variant="h5"
         style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '40px' }}
       >
-        まだいいねされていません
+        まだ評価がありません
       </Typography>
     ) : (
         <>
@@ -84,17 +94,19 @@ const LikeList: React.FC = () => {
               記事
             </Typography>
             <Typography variant='body1'>
-            にいいねしたユーザー
+            に評価をしたユーザー
             </Typography>
           </Container>
           <Typography variant='body1' style={{marginBottom: '1rem'}}>
-            {counts}件のいいね
+            {counts}件の評価
           </Typography>
-          {allLikes.map(like => (
-            <UserItem 
-              key={like.userId} 
-              user={like}
-            />
+          {allLikes.map(rating => (
+            <>
+              <RatingItem 
+                key={rating.id} 
+                rating={rating}
+              />
+            </>
           ))}
           <CustomPagination
             totalPages={totalPages}
@@ -107,4 +119,4 @@ const LikeList: React.FC = () => {
   );
 };
 
-export default LikeList;
+export default RatingList;

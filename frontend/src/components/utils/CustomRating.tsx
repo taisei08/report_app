@@ -6,7 +6,7 @@ import { blue } from '@material-ui/core/colors';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
 import AlertMessage from 'components/utils/error/AlertMessage';
-import { useFormState } from "../../utils/error/useFormState";
+import { useFormState } from './error/useFormState';
 
 interface Props {
   postId: number;

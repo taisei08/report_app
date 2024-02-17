@@ -23,6 +23,7 @@ import DeleteAccountPage from "components/pages/setting/DeleteAccountPage"
 import EditInterests from "components/pages/setting/EditInterests"
 import EditMailAddressCompletePage from "components/pages/setting/EditMailAddressCompletePage"
 import NotFound from "components/pages/NotFound"
+import RatingList from "components/pages/post/RatingList"
 import { getCurrentUser } from "lib/api/auth"
 import { User } from "interfaces/index"
 
@@ -120,6 +121,7 @@ const App: React.FC = () => {
             <Route path="/not_found" element={<NotFound />} />
             <Route path="/article/:postId" element={<PostPage />} />
             <Route path="/article/:postId/likes" element={<LikeList />} /> 
+            <Route path="/article/:postId/ratings" element={<RatingList />} /> 
             <Route path="/userpage/:userId" element={<UserPage />} />
             <Route path="/search/:query" element={<Search />} />
             <Route path="/reset-password" element={<ResetPassword />} />

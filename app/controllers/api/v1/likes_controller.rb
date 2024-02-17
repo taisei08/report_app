@@ -2,18 +2,24 @@ class Api::V1::LikesController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:create, :destroy]
 
   def index
+
+    unless Post.find(index_params[:post_id])
+      render json: { status: 404, message: "post not found" }, status: :not_found
+      return
+    end
+    
     @like_users = Like.joins(:user)      
     .select("likes.*", "users.user_name", "users.icon_path", "users.profile_statement")
-    .where(like_params)
+    .where(post_id: index_params[:post_id])
     .order("created_at DESC")
-    .page(params[:page])
+    .page(index_params[:page])
     .per(10)
 
     render json: { status: 200, likes: @like_users}
   end
 
   def create
-    existing_like = Like.find_by(like_params, user_id: current_api_v1_user.user_id)
+    existing_like = current_api_v1_user.likes.find_by(like_params)
     
     begin
       @like = current_api_v1_user.likes.new(like_params)
@@ -44,12 +50,12 @@ class Api::V1::LikesController < ApplicationController
 
   private
 
-  def like_params
-      params.permit(:post_id, :review_id, :reply_id)
+  def index_params
+    params.permit(:post_id, :page)
   end
 
-  def like_include_user_params
-    params.permit(:user_id, :post_id, :review_id, :reply_id)
+  def like_params
+      params.permit(:post_id, :review_id, :reply_id)
   end
 
 end
