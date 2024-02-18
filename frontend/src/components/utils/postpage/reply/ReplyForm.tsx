@@ -23,10 +23,10 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   id: number;
   fetchData: (shouldIncrementPage?: boolean, shouldIncrementReply?: boolean) => Promise<void>;
-  toggleReplyForm?: () => void;
+  setShowReplyData?: (prevData: boolean) => void;
 }
 
-const ReplyForm: React.FC<Props> = ({ id, fetchData, toggleReplyForm }) => {
+const ReplyForm: React.FC<Props> = ({ id, fetchData, setShowReplyData }) => {
   const classes = useStyles();
   const [replyText, setReplyText] = useState<string>('');
   const [isInputValid, setIsInputValid] = useState<boolean>(false);
@@ -39,7 +39,8 @@ const ReplyForm: React.FC<Props> = ({ id, fetchData, toggleReplyForm }) => {
       console.log('Reply data sent successfully');
       await fetchData(true, true);
       setReplyText('');
-      if (toggleReplyForm) {toggleReplyForm();}
+      if (setShowReplyData) {setShowReplyData(true);}
+      setFormState({ alertSeverity: 'success', alertMessage: 'リプライを送信しました' });
     } catch (error) {
       console.error('Error sending reply data:', error);
       setFormState({ alertSeverity: 'error', alertMessage: 'リプライの送信に失敗しました' });

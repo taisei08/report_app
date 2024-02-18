@@ -10,8 +10,10 @@ class Api::V1::ReviewsController < ApplicationController
       .joins(:user)
       .select("users.user_name", "users.icon_path", "reviews.*")
       .where(post_id: post_id)
-      .order(created_at: :desc)
-      
+      .order("created_at DESC")
+      .page(params[:page])
+      .per(10)
+
     @reviews.each do |review|
       review.icon_path = review.user.icon_path.url
       review.reply_length = Reply.where(review_id: review.review_id).count
@@ -26,7 +28,7 @@ class Api::V1::ReviewsController < ApplicationController
     if user_review
       user_review.icon_path = user_review.user.icon_path.url
       user_review.reply_length = Reply.where(review_id: user_review.review_id).count
-      user_review.value = Rating.find_by(user_id: user_review.user_id, post_id: user_review.post_id)&.value
+      user_review.value = Rating.find_by(user_id: user_review.user_id, post_id: user_review.post_id)&.value || 0
     else
       rating = Rating.find_by(user_id: user_id, post_id: post_id)
       user_review = Review.new(user_id: 0, post_id: 0, review: '', value: rating.value) if rating
@@ -102,7 +104,7 @@ class Api::V1::ReviewsController < ApplicationController
   private
   
   def review_index_params
-    params.permit(:post_id)
+    params.permit(:post_id, :page)
   end
 
   def review_create_params

@@ -7,6 +7,11 @@ class Like < ApplicationRecord
 
     mount_uploader :icon_path, ImageUploader
 
+    validates :post_id, uniqueness: { scope: :user_id, message: "has already liked this post" }, allow_nil: true
+    validates :review_id, uniqueness: { scope: :user_id, message: "has already liked this review" }, allow_nil: true
+    validates :reply_id, uniqueness: { scope: :user_id, message: "has already liked this reply" }, allow_nil: true
+
+
 
   def create_notification_like!(current_api_v1_user, key, value)
     passive_user = nil

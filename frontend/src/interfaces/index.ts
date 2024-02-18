@@ -19,7 +19,6 @@ export interface SignUpData {
     userName: string;
     accountName: string;
     iconPath: { url: string }; // ファイルパスの型を仮定
-    birthday: string;
     school: string;
     facultyDepartment: string;
     profileStatement: string;

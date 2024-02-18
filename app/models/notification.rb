@@ -6,5 +6,5 @@ class Notification < ApplicationRecord
   belongs_to :like, optional: true
 
   belongs_to :active_user, class_name: 'User', foreign_key: 'active_user_id', optional: true
-  belongs_to :passive_user, class_name: 'User', foreign_key: 'passive_ussr_id', optional: true
+  belongs_to :passive_user, class_name: 'User', foreign_key: 'passive_user_id', optional: true
 end

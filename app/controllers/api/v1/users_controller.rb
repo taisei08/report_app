@@ -26,7 +26,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.permit(:account_name, :profile_statement, :icon_path, :birthday,
+    params.permit(:account_name, :profile_statement, :icon_path,
     :school, :faculty_department, :user_name)
   end
 

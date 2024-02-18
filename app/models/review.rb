@@ -9,4 +9,6 @@ class Review < ApplicationRecord
   has_many :likes, class_name: "Like", dependent: :destroy
   has_many :notifications, dependent: :destroy
 
+  validates :review_id, uniqueness: { scope: :post_id, message: "has already been created for this post" }
+
 end

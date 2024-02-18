@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Typography, makeStyles, IconButton, Box } from '@material-ui/core';
 import { NavigateBefore, NavigateNext, ZoomIn, ZoomOut } from '@material-ui/icons';
@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 auto',
     [theme.breakpoints.down('sm')]: {
       width: '90vw',
-      height: '500px'
+      height: '600px'
     },
   },
   pdfContainer: {
     justifyContent: 'center',
     maxWidth: '650px',
-    height: '600px',
+    height: '700px',
     overflow: 'auto',
     touchAction: 'manipulation',
     [theme.breakpoints.down('sm')]: {
@@ -56,28 +56,6 @@ const PdfViewer: React.FC<PdfViewerProps> = (props) => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1);
 
-  useEffect(() => {
-    function handleResize() {
-      const width = window.innerWidth;
-      if (width < 350) {
-        setScale(0.5);
-      } else if (width >= 350 && width < 450) {
-        setScale(0.6);
-      } else if (width >= 450 && width < 560) {
-        setScale(0.75);
-      } else {
-        setScale(1);
-      }
-    }
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
@@ -95,19 +73,8 @@ const PdfViewer: React.FC<PdfViewerProps> = (props) => {
       key={`page_${pageNumber}`}
       pageNumber={pageNumber}
       scale={scale}
-      onRenderSuccess={adjustPageContainer}
     />
   );
-
-  const adjustPageContainer = ({ width, height }: { width: number; height: number }) => {
-    const pdfContainer = document.querySelector('.react-pdf__Page') as HTMLDivElement;
-    if (pdfContainer) {
-      pdfContainer.style.width = `${width}px`;
-      pdfContainer.style.height = `${height}px`;
-      pdfContainer.scrollIntoView({ behavior: 'auto', block: 'center' });
-    }
-  };
-  
 
   return (
     <Box className={classes.container}>
@@ -138,7 +105,7 @@ const PdfViewer: React.FC<PdfViewerProps> = (props) => {
           <NavigateNext />
         </IconButton>
         <IconButton 
-          onClick={() => handleZoom(Math.max(0.5, scale - 0.2))} 
+          onClick={() => handleZoom(Math.max(0.8, scale - 0.2))} 
           disabled={scale <= 0.8} 
           style={{color: 'white'}}
         >

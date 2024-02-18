@@ -63,7 +63,7 @@ const PostPage = () => {
 
   useEffect(() => {
     fetchReviews();
-  }, [postId]);  
+  }, [postId, currentPage]);  
 
   const fetchReviews = async () => {
     try {
@@ -162,6 +162,7 @@ const PostPage = () => {
           />
         </Container>
       }
+      <Divider style={{ marginBottom: '10px' }} />
       <Container style={{display: 'flex', alignItems: 'center'}}>
         <ReviewList
           allReviews={reviews}

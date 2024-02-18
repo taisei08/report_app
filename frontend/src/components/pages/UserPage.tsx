@@ -77,7 +77,7 @@ const UserPage = () => {
             setContentType={setContentType}
           />
           {userId && !isYourPage && isSignedIn && (
-            <Box style={{ marginTop: 10 }}>
+            <Box style={{ marginTop: 10, marginBottom: 10}}>
               <FollowButton id={userId}/>
             </Box>
           )}
