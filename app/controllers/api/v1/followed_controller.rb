@@ -7,7 +7,7 @@ class Api::V1::FollowedController < ApplicationController
       return render json: { error: "User not found" }, status: :not_found
     end
   
-    @followers = user.followers.page(params[:page]).per(10)
+    @followers = user.followers.page(follow_params[:page]).per(10)
   
     render json: { status: 200, followers: @followers }
   end
@@ -15,7 +15,7 @@ class Api::V1::FollowedController < ApplicationController
   private
   
   def follow_params
-    params.permit(:following_id)
+    params.permit(:following_id, :page)
   end
 
 end

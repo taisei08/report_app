@@ -1,8 +1,9 @@
 class Api::V1::NotificationsController < ApplicationController
+  before_action :authenticate_api_v1_user!, only: [:index]
 
   def index
     @notifications = current_api_v1_user.passive_notifications
-    .joins(:post, :active_user)
+    .left_outer_joins(:post, :active_user)
     .select("users.user_name", "users.account_name", "users.icon_path", "posts.title", "notifications.*")
     .order("created_at DESC")
     .page(notification_params[:page])
@@ -24,12 +25,12 @@ class Api::V1::NotificationsController < ApplicationController
 
     render json: { status: 200, notifications: @notifications}
 
+
     @notifications.each do |notification|
       notification.update(checked: true)
     end
 
-    @notifications.where("created_at < ?", 1.month.ago).destroy_all
-    
+    current_api_v1_user.passive_notifications.where("created_at < ?", 1.month.ago).destroy_all
   end
 
   private

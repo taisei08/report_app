@@ -100,6 +100,7 @@ GEM
       bcrypt (~> 3.0)
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.1)
+    dotenv (3.0.2)
     erubi (1.12.0)
     ffi (1.16.3)
     globalid (1.2.1)
@@ -242,6 +243,7 @@ DEPENDENCIES
   devise-i18n
   devise-security
   devise_token_auth
+  dotenv
   kaminari
   letter_opener_web
   mysql2

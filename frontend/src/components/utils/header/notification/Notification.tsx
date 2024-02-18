@@ -62,6 +62,7 @@ const Notification: React.FC<Props> = ({ setShowNotifications }) => {
         const uniqueNotifications = newNotifications.filter(notification => {
           return !notifications.some(existingNotification => existingNotification.id === notification.id);
         });
+        console.log(response.data.notifications)
         setNotifications(prevNotifications => [...prevNotifications, ...uniqueNotifications]);
 
         if (response.data.notifications.length < 10) {

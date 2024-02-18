@@ -6,6 +6,7 @@ class Api::V1::PostsSearchController < ApplicationController
     @posts = @q.result(distinct: true)
     .select("users.user_name", "users.icon_path", "posts.*")
     .page(query_params[:page])
+    .order("created_at DESC")
     .per(20)
 
     @posts.each do |post|

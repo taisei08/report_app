@@ -3,15 +3,11 @@ import { Tabs, Tab, makeStyles} from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   tab: {
     textTransform: 'none',
-    margin: theme.spacing(0, 2),
-    padding: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     '&.Mui-selected': {
       color: '#007bff',
       backgroundColor: theme.palette.common.white,
       fontWeight: 'bold', // 文字を太くする
-    },
-    '& span': {
     },
   },
 }));

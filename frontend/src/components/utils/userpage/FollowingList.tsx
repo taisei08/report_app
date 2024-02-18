@@ -21,7 +21,7 @@ const FollowingList: React.FC<Props> = ({ userId }) => {
     const fetchData = async () => {
       try {
         const [response, response2] = await Promise.all([
-          client.get('/following', { params: { followerId: userId } }),
+          client.get(`/following?page=${currentPage}`, { params: { followerId: userId } }),
           client.get('/follow_and_post_counts', {
             params: { userId: userId },
             headers: getAuthHeaders(),

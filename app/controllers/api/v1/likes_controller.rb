@@ -26,6 +26,8 @@ class Api::V1::LikesController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       return render json: { status: 'error', message: e.message }, status: :unprocessable_entity
     end
+
+    p @like
   
     if existing_like.nil? && @like.save && @like.create_notification_like!(current_api_v1_user, like_params.keys, like_params.values)
       render json: { status: 'success', message: 'Like created successfully' }

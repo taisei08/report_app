@@ -7,7 +7,7 @@ import { getAuthHeaders } from 'lib/api/auth';
 import CustomPagination from 'components/utils/posts/CustomPagination';
 import { User } from 'interfaces';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   link: {
     fontWeight: 'bold',
     color: 'black',
