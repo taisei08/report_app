@@ -32,7 +32,7 @@ class Api::V1::PostsEditController < ApplicationController
           render json: { message: 'Post updated successfully' }, status: :ok
         else
           render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
-          raise ActiveRecord::Rollback # トランザクションをロールバックする
+          raise ActiveRecord::Rollback
         end
       end
 

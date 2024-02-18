@@ -1,5 +1,4 @@
 class Api::V1::RepliesController < ApplicationController
-  # app/controllers/posts_controller.rb
   before_action :authenticate_api_v1_user!, only: [:create, :update, :destroy]
 
   def index

@@ -39,7 +39,7 @@ const ReplyEditForm: React.FC<Props> = ({ reply, setModalOpen, modalOpen }) => {
     try {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       const response = await client.put(`/replies/${reply.replyId}`, { reply: editingReply }, { headers: getAuthHeaders() });
-      console.log('Reply data updated successfully:', response.data);
+      console.log('data updated successfully:', response.data);
       reply.reply = editingReply;
       handleClose();
     } catch (error) {

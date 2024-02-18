@@ -33,7 +33,7 @@ const HamburgerMenu: React.FC<{ isYourPost: boolean }> = ({ isYourPost }) => {
   
     try {
       await client.delete(`/posts/${postId}`, { headers: getAuthHeaders() });
-      console.log('削除が成功しました');
+      console.log('delete successed');
       setShowConfirmation(false);
       setFormState({ alertSeverity: 'success', alertMessage: '投稿の削除に成功しました' });
       setFormState({ alertMessageOpen: true });

@@ -6,8 +6,10 @@ import CardHeader from "@material-ui/core/CardHeader";
 import TextField from "@material-ui/core/TextField";
 import { signUp } from "lib/api/auth";
 import AlertMessage from "../error/AlertMessage";
-import { SignUpData } from "interfaces";
 import ErrorMessage from "../error/ErrorMessage";
+import { useFormState } from "../error/useFormState";
+import { checkUserNameFormat, checkUserNameLength, checkEmail, checkPassword, checkPasswordConfirmation } from "lib/function";
+import { SignUpData } from "interfaces";
 
 interface Props {
   handleIsSuccessful: () => void;
@@ -15,6 +17,7 @@ interface Props {
 
 const InputPage: React.FC<Props> = ({ handleIsSuccessful }) => {
   const confirmSuccessUrl: string = "http://localhost:3000";
+  const [formState, setFormState] = useFormState();
   const [formData, setFormData] = useState<SignUpData>({
     email: "",
     userName: "",
@@ -27,96 +30,35 @@ const InputPage: React.FC<Props> = ({ handleIsSuccessful }) => {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [userNameFormatError, setUserNameFormatError] = useState<boolean>(false);
   const [userNameLengthError, setUserNameLengthError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false);
-
-  const checkPassword = () => {
-    const passwordRegex: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?!.*[^\x01-\x7E]).{8,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      setPasswordError(true);
-      return true
-    }
-    else {
-      setPasswordError(false);
-      return false
-    }
-  };
-
-  const checkPasswordConfirmation = () => {
-    if (formData.password == formData.passwordConfirmation) {
-      setPasswordConfirmationError(false);
-      return false
-    }
-    else {
-      setPasswordConfirmationError(true);
-      return true
-    }
-  };
-
-  const checkuserNameFormat = () => {
-    const userNameRegex: RegExp = /^[a-zA-Z0-9_-]*$/;
-    if (!userNameRegex.test(formData.userName)) {
-      setUserNameFormatError(true);
-      return true
-    }
-    else {
-      setUserNameFormatError(false);
-      return false
-    }
-  };
-
-  const checkuserNameLength = () => {
-    if (!(formData.userName.length > 0 && formData.userName.length <= 32)) {
-      setUserNameLengthError(true);
-      return true
-    }
-    else {
-      setUserNameLengthError(false);
-      return false
-    }
-  };
-
-  const checkEmail = () => {
-    const emailRegex: RegExp = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(formData.email)) {
-      console.log(!emailRegex.test(formData.email))
-      setEmailError(true);
-      return true
-    } 
-    else {
-      setEmailError(false);
-      return false
-    }
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setFormState({ isChanged: true });
   };
 
   const handleSubmit = async () => {
-    checkPassword();
-    checkPasswordConfirmation();
-    checkEmail();
-    checkuserNameFormat();
-    checkuserNameLength();
+    setPasswordError(checkPassword(formData.password));
+    setPasswordConfirmationError(checkPasswordConfirmation(formData.password, formData.passwordConfirmation));
+    setEmailError(checkEmail(formData.email));
+    setUserNameFormatError(checkUserNameFormat(formData.userName));
+    setUserNameLengthError(checkUserNameLength(formData.userName));
   
-    if (!passwordError && !passwordConfirmationError && !emailError && !userNameFormatError && !userNameLengthError) {
-      if (!isSubmitting) {
+    if (!checkPassword(formData.password) &&
+        !checkPasswordConfirmation(formData.password, formData.passwordConfirmation) &&
+        !checkEmail(formData.email) &&
+        !checkUserNameLength(formData.userName) &&
+        !userNameLengthError){
+
+      if (!formState.isSubmitting) {
         try {
-          setIsSubmitting(true);
-          const res = await signUp(formData);
-          if (res.status === 200) {
-            handleIsSuccessful();
-          } else {
-            setAlertMessageOpen(true);
-          }
+          setFormState({ alertMessageOpen: false, isSubmitting: true });
+          await signUp(formData);
+          handleIsSuccessful();
         } catch (err: any) {
-          setErrorMessage(err.response.data.errors);
-          setAlertMessageOpen(true);
+          setFormState({ alertSeverity: 'error', alertMessage: 'ユーザー名かメールアドレスは既に使用されています' });
         } finally {
-          setIsSubmitting(false);
+          setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
         }
       }
     }
@@ -182,19 +124,21 @@ const InputPage: React.FC<Props> = ({ handleIsSuccessful }) => {
           <Button
             variant="contained"
             color="primary"
-            disabled={!formData.email || !formData.userName || !formData.password || !formData.passwordConfirmation || isSubmitting}
+            disabled={!formData.email || !formData.userName || !formData.password || !formData.passwordConfirmation || formState.isSubmitting || !formState.isChanged}
             onClick={handleSubmit}
             fullWidth
             style={{ marginTop: '1rem' }}
           >
             登録
           </Button>
-          <AlertMessage
-            open={alertMessageOpen}
-            setOpen={setAlertMessageOpen}
-            severity="error"
-            message={`${errorMessage}`}
-          />
+          {formState.alertSeverity && (
+            <AlertMessage
+              open={formState.alertMessageOpen}
+              setOpen={(isOpen: boolean) => setFormState({ alertMessageOpen: isOpen })}
+              severity={formState.alertSeverity}
+              message={formState.alertMessage}
+            />
+          )}
         </form>
       </CardContent>
     </Card>

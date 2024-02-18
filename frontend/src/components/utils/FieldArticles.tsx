@@ -23,7 +23,6 @@ const FieldArticles: React.FC<FieldArticlesProps> = ({ fieldId }) => {
   }, [fieldId]);
 
   const handlePostClick = (postId: number) => {
-    console.log('Clicked Post ID:', postId);
     navigate(`/article/${postId}`)
   };
 
@@ -34,7 +33,6 @@ const FieldArticles: React.FC<FieldArticlesProps> = ({ fieldId }) => {
         headers: getAuthHeaders(),
       });
       setArticles(response.data.posts);
-      console.log(response.data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -75,7 +73,7 @@ const FieldArticles: React.FC<FieldArticlesProps> = ({ fieldId }) => {
                         e.preventDefault();
                         handlePostClick(article.postId);
                       }}
-                      className={importClasses.link} // ここでスタイルを適用
+                      className={importClasses.link}
                     >
                       {trimText(article.title, 20)}
                     </Link>

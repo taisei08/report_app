@@ -5,7 +5,7 @@ import Finish from "components/utils/Finish";
 
 
 const EditPage: React.FC = () => {
-  // ステップの管理
+  
   const location = useLocation();
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
   const currentPathname: string = location.pathname;

@@ -83,7 +83,7 @@ const PostDetail: React.FC<Props> = ({ submitFile, setPostId }) => {
       });
       setFormState({ alertSeverity: undefined });
       setPostId(response.data.postId);
-      console.log('Post created successfully', response.data);
+      console.log('Post created successfully');
     } catch (error) {
       setFormState({ 
         alertSeverity: 'error', 

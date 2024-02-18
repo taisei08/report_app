@@ -48,8 +48,7 @@ const EditPasswordPagePhase1 = () => {
         alertSeverity: 'info',
         alertMessage: 'パスワード変更用のメールを送信しました。ご登録のメールアドレスをご確認ください'
       });
-      console.log(formData);
-      console.log('User data updated successfully!');
+      console.log('data updated successfully!');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: 'メールアドレスが間違っています' });
       console.error('Error updating user data:', error);

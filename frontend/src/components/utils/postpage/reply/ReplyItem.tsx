@@ -27,7 +27,7 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) =>
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null); // メニューアンカーエレメントの状態
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -45,12 +45,12 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) =>
   const handleDeleteReply = async (replyId: number) => {
     try {
       const response = await client.delete(`/replies/${replyId}`, { headers: getAuthHeaders() });
-      console.log('削除が成功しました', response);
+      console.log('delete successfully', response);
       reply.reply = '';
       setReplyLength((prevLength) => prevLength - 1);
       setShowConfirmation(false);
     } catch (error) {
-      console.error('削除中にエラーが発生しました', error);
+      console.error('delete failed', error);
     }
   };
 

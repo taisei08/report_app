@@ -2,9 +2,8 @@ import { useState } from "react"
 import InputPage from "components/utils/signup/InputPage"
 import Finish from "components/utils/Finish";
 
-// サインアップ用ページ
 const SignUp: React.FC = () => {
-  // ステップの管理
+  
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
   const handleIsSuccessful = () => {

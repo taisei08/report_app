@@ -13,22 +13,22 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: '#f5f5f5', // ドロワーの背景色
-    borderRadius: '0 10px 10px 0', // 右端を丸くする
+    backgroundColor: '#f5f5f5',
+    borderRadius: '0 10px 10px 0',
   },
   menuTitle: {
     textAlign: 'center',
     padding: theme.spacing(2),
     backgroundColor: '#1e90ff',
-    color: '#fff', // 白色のテキスト色
+    color: '#fff',
   },
   menuItem: {
     '&:hover': {
-      borderLeft: `4px solid ${theme.palette.primary.main}`, // ホバー時に枠線を表示する
+      borderLeft: `4px solid ${theme.palette.primary.main}`,
     },
   },
   menuItemText: {
-    paddingLeft: theme.spacing(1), // ListItemText の余白を調整
+    paddingLeft: theme.spacing(1),
   },
   menuButton: {
     position: 'fixed',

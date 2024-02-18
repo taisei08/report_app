@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     '&.Mui-selected': {
       color: '#007bff',
       backgroundColor: theme.palette.common.white,
-      fontWeight: 'bold', // 文字を太くする
+      fontWeight: 'bold',
     },
   },
 }));

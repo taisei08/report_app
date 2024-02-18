@@ -30,7 +30,7 @@ const CustomRating: React.FC<Props> = ({ postId, initialRating, readOnly = false
       client
       .post('/ratings', { postId: postId, value: newValue }, { headers: getAuthHeaders() })
       setFormState({ alertSeverity: 'success', alertMessage: '評価の更新に成功しました' });
-      console.log('Rating data sent successfully:');
+      console.log('data sent successfully:');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: '評価の更新に失敗しました' });
       console.error('Error setting rating:', error);

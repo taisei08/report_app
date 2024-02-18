@@ -16,9 +16,10 @@ import { AuthContext } from "App";
 import AlertMessage from "components/utils/error/AlertMessage";
 import { signIn } from "lib/api/auth";
 import { SignInData } from "interfaces/index";
+import { useFormState } from "../../utils/error/useFormState";
+
 
 const useStyles = makeStyles((theme: Theme) => ({
-  // 他のスタイル定義は省略
   
   link: {
     textDecoration: "none"
@@ -50,9 +51,9 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [alertMessageOpen, setAlertMessageOpen] = useState<boolean>(false);
+  const [formState, setFormState] = useFormState();
 
   const handleSuccessLogin = (res: any) => {
-    setIsSubmitting(false);
     const firstSessionCookie = Cookies.get("_first_session");
     if (firstSessionCookie) {
       Cookies.remove("_first_session");
@@ -75,12 +76,9 @@ const SignIn: React.FC = () => {
       navigate("/");
     }
 
-    console.log("Signed in successfully!");
+    console.log("Signed in successfully");
   };
 
-  const handleLoginError = () => {
-    setAlertMessageOpen(true);
-  };
 
   const handleCookies = () => {
     const firstSessionCookie = Cookies.get("_first_session");
@@ -97,25 +95,18 @@ const SignIn: React.FC = () => {
       password: password
     };
 
-    if (!isSubmitting) {
+    if (!formState.isSubmitting) {
       try {
-        setIsSubmitting(true);
+        setFormState({ alertMessageOpen: false, isSubmitting: true });
         handleCookies();
 
         const res = await signIn(data);
-        console.log(res);
-
-        if (res.status === 200) {
-          handleSuccessLogin(res);
-        } 
-        else {
-          handleLoginError();
-        }
+        setFormState({ alertSeverity: undefined });
+        handleSuccessLogin(res);
       } catch (err) {
-        console.log(err);
-        handleLoginError();
+        setFormState({ alertSeverity: 'error', alertMessage: 'メールアドレスかパスワードが間違っています' });
       } finally {
-        setIsSubmitting(false);
+        setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
       }
     }
   };
@@ -139,7 +130,10 @@ const SignIn: React.FC = () => {
               value={email}
               margin="dense"
               autoComplete="email"
-              onChange={event => setEmail(event.target.value)}
+              onChange={e => {
+                setEmail(e.target.value);
+                setFormState({ isChanged: true });
+              }}
             />
             <TextField
               variant="outlined"
@@ -151,13 +145,16 @@ const SignIn: React.FC = () => {
               value={password}
               margin="dense"
               autoComplete="current-password"
-              onChange={event => setPassword(event.target.value)}
+              onChange={e => {
+                setPassword(e.target.value);
+                setFormState({ isChanged: true });
+              }}
             />
             <Button
               type="submit"
               variant="outlined"
-              color="primary" // 青色を適用
-              disabled={!email || !password || isSubmitting}
+              color="primary"
+              disabled={!email || !password || formState.isSubmitting || !formState.isChanged}
               onClick={handleClickSubmit}
               fullWidth
             >
@@ -196,12 +193,14 @@ const SignIn: React.FC = () => {
           </CardContent>
         </Card>
       </form>
-      <AlertMessage
-        open={alertMessageOpen}
-        setOpen={setAlertMessageOpen}
-        severity="error"
-        message="メールアドレスかパスワードが間違っています"
-      />
+      {formState.alertSeverity && (
+        <AlertMessage
+          open={formState.alertMessageOpen}
+          setOpen={(isOpen: boolean) => setFormState({ alertMessageOpen: isOpen })}
+          severity={formState.alertSeverity}
+          message={formState.alertMessage}
+        />
+      )}
     </>
   );
 };

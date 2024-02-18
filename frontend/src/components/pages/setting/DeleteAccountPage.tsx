@@ -61,7 +61,7 @@ const DeleteAccountPage: React.FC = () => {
       Cookies.set("_account_deleted", "true");
       setFormState({ alertSeverity: undefined });
       navigate('/deleted')
-      console.log('User data updated successfully!');
+      console.log(' data updated successfully');
       handleClose();
     } catch (error) {
       handleClose();

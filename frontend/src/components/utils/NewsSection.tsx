@@ -9,7 +9,7 @@ import { Styles } from "lib/styles";
 
 const NewsSection = () => {
   const importClasses = Styles();
-  const [selectedFields, setSelectedFields] = useState<number[] | undefined>([]); // 初期値は分野1
+  const [selectedFields, setSelectedFields] = useState<number[] | undefined>([]);
   const [selectedField, setSelectedField] = useState<number | undefined>(undefined);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const NewsSection = () => {
             <Button
               key={fieldId}
               onClick={() => handleFieldChange(fieldId)}
-              className={importClasses.button} // カスタムスタイルを適用
+              className={importClasses.button}
             >
               {fields.find((field) => field.id === fieldId)?.name || 'Unknown'}
             </Button>

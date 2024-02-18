@@ -73,7 +73,7 @@ const EditInterests: React.FC<Props> = ({ onNext }) => {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       setFormState({ alertSeverity: 'success', alertMessage: '分野の変更に成功しました' });
       onNext();
-      console.log("Field data sent successfully:", response.data);
+      console.log("data sent successfully:", response.data);
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: '分野の変更に失敗しました' });
       console.error("Error sending rating data:", error);

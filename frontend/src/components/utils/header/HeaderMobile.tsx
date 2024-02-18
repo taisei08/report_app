@@ -50,7 +50,6 @@ const Header: React.FC = () => {
   const handleSearch = () => {
     const cleanedSearchQuery: string = searchQuery.replace(/　/g, ' '); 
     const Query: string = encodeURIComponent(cleanedSearchQuery);
-    console.log(Query); 
     navigation(`/search/${Query}`);
   };
 

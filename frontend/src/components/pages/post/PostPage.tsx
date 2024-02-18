@@ -95,12 +95,12 @@ const PostPage = () => {
   const handleDeleteReview = async (reviewId: number) => {
     try {
       const response = await client.delete(`/reviews/${reviewId}`, { headers: getAuthHeaders() });
-      console.log('削除が成功しました', response);
+      console.log('delete success');
       setCurrentUserReview(false)
       handleCloseDeleteModal();
       setReviewComment('')
     } catch (error) {
-      console.error('削除中にエラーが発生しました', error);
+      console.error('delete failed', error);
       handleCloseDeleteModal();
     }
   };  

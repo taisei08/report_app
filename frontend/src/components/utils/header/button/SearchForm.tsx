@@ -18,7 +18,7 @@ const SearchForm: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
-    const cleanedSearchQuery = searchQuery.replace(/　/g, ' '); // 全角スペースを半角スペースに変換
+    const cleanedSearchQuery = searchQuery.replace(/　/g, ' ');
     const Query = encodeURIComponent(cleanedSearchQuery);
     navigate(`/search/${Query}`);
   };
