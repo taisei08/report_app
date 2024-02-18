@@ -11,8 +11,6 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   validates :user_name, presence: true, uniqueness: true, format: { with: /\A[a-zA-Z0-9_-]+\z/, message: "は半角英数字と一部記号（_-）のみ使用できます" }
-  VALID_PASSWORD_REGEX = /\A(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/
-  #validates :password, format: { with: VALID_PASSWORD_REGEX }
 
   mount_uploader :icon_path, ImageUploader
 
@@ -32,12 +30,10 @@ class User < ActiveRecord::Base
 
 
 
-  # 指定したユーザーをフォローする
   def follow(user)
     active_follows.create(followed_id: user.id)
   end
   
-  # 指定したユーザーのフォローを解除する
   def unfollow(user)
     active_follows.find_by(followed_id: user.id).destroy
   end

@@ -69,12 +69,10 @@ const InputNewPassword: React.FC<Props> = ({ handleIsSuccessful }) => {
       } });
       setFormState({ alertSeverity: undefined });
       handleIsSuccessful();
-      console.log('User data updated successfully!');
-      console.log(formData);
-
+      console.log('data updated successfully!');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: 'パスワードの変更に失敗しました' });
-      console.error('Error updating user data:', error);
+      console.error('Error updating data:', error);
     } finally {
       setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
     }

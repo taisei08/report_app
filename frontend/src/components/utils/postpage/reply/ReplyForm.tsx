@@ -36,7 +36,7 @@ const ReplyForm: React.FC<Props> = ({ id, fetchData, setShowReplyData }) => {
     try {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       await client.post('/replies', { reviewId: id, reply: replyText }, { headers: getAuthHeaders() });
-      console.log('Reply data sent successfully');
+      console.log('data sent successfully');
       await fetchData(true, true);
       setReplyText('');
       if (setShowReplyData) {setShowReplyData(true);}

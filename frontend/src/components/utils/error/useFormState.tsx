@@ -1,4 +1,3 @@
-// useFormState.js
 import { useState } from 'react';
 
 interface FormState {

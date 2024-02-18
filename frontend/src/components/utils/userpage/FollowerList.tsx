@@ -27,7 +27,6 @@ const FollowerList: React.FC<Props> = ({ userId }) => {
             headers: getAuthHeaders(),
           })
         ]);
-        console.log(response.data.followers)
         const fullLength = response2.data.followers;
         setAllFollowers(response.data.followers);
         setTotalPages(Math.ceil(fullLength / 10));

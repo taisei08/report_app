@@ -58,7 +58,7 @@ const EditMailAddressPage = () => {
       setFormState({ alertSeverity: 'info', alertMessage: '新しいアドレスに確認メールを送信しました。添付のリンクをクリックし確認を完了させてください' });
       Cookies.remove('_new_email');
       Cookies.set('_new_email', `${formData.email}`, { expires: 1 });
-      console.log('User data updated successfully!');
+      console.log('data updated successfully');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: '既に登録されているメールアドレスです' });
       console.error('Error updating user data:', error);

@@ -4,7 +4,7 @@ import Finish from "components/utils/Finish";
 
 
 const ResetPassword: React.FC = () => {
-  // ステップの管理
+
   const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
   const handleIsSuccessful = () => {

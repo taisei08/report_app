@@ -1,95 +1,92 @@
-// サインアップ
 export interface SignUpData {
-    userName: string
-    email: string
-    password: string
-    passwordConfirmation: string
-    confirmSuccessUrl: string
-  }
-  
-  // サインイン
-  export interface SignInData {
-    email: string
-    password: string
-  }
-  
-  // ユーザー
-  export interface User {  
-    userId: number;
-    userName: string;
-    accountName: string;
-    iconPath: { url: string }; // ファイルパスの型を仮定
-    school: string;
-    facultyDepartment: string;
-    profileStatement: string;
-  }
+  userName: string
+  email: string
+  password: string
+  passwordConfirmation: string
+  confirmSuccessUrl: string
+}
 
-  export interface Posts {
-    title: string
-    description: string
-    fieldId: number
-    subFieldId: number
-    documentPath?: File
-    tags: string[]
-  }
+export interface SignInData {
+  email: string
+  password: string
+}
 
-  export interface PostLists {
-    postId: number
-    userId: number
-    userName: string
-    iconPath: string
-    title: string
-    description: string
-    fieldId: number
-    subFieldId: number
-    documentPath?: { url: string };
-    createdAt: string
-    updatedAt: string
-    tags: { tagId: number; tagName: string }[];
-    averageRating: number
-  }
+export interface User {  
+  userId: number;
+  userName: string;
+  accountName: string;
+  iconPath: { url: string };
+  school: string;
+  facultyDepartment: string;
+  profileStatement: string;
+}
 
-  export interface Fields {
-    id: number;
-    name: string;
-  }
+export interface Posts {
+  title: string
+  description: string
+  fieldId: number
+  subFieldId: number
+  documentPath?: File
+  tags: string[]
+}
 
-  export interface Tags {
-    tag_name: string;
-  }
+export interface PostLists {
+  postId: number
+  userId: number
+  userName: string
+  iconPath: string
+  title: string
+  description: string
+  fieldId: number
+  subFieldId: number
+  documentPath?: { url: string };
+  createdAt: string
+  updatedAt: string
+  tags: { tagId: number; tagName: string }[];
+  averageRating: number
+}
 
-  export interface Review {
-    reviewId: number
-    postId: number
-    userId: number
-    userName: string
-    iconPath: string
-    title: string
-    review: string
-    documentPath: string
-    createdAt: string
-    value: number
-    replyLength: number
-  }
+export interface Fields {
+  id: number;
+  name: string;
+}
 
-  export interface Reply {
-    replyId: number;
-    userId: number;
-    userName: string;
-    iconPath: string;
-    createdAt: string;
-    reply: string;
-  }
+export interface Tags {
+  tag_name: string;
+}
 
-  export interface Notification {
-    id?: number;
-    action: string;
-    activeUserId: number;
-    accountName: string;
-    userName: string;
-    iconPath: string;
-    postId?: number;
-    reviewId?: number;
-    replyId?: number;
-    title?: string;
-  }
+export interface Review {
+  reviewId: number
+  postId: number
+  userId: number
+  userName: string
+  iconPath: string
+  title: string
+  review: string
+  documentPath: string
+  createdAt: string
+  value: number
+  replyLength: number
+}
+
+export interface Reply {
+  replyId: number;
+  userId: number;
+  userName: string;
+  iconPath: string;
+  createdAt: string;
+  reply: string;
+}
+
+export interface Notification {
+  id?: number;
+  action: string;
+  activeUserId: number;
+  accountName: string;
+  userName: string;
+  iconPath: string;
+  postId?: number;
+  reviewId?: number;
+  replyId?: number;
+  title?: string;
+}

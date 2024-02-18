@@ -30,7 +30,6 @@ const SearchList: React.FC<Props> = ({ searchQuery }) => {
           client.get('/posts_search_counts', { params: {q: searchQuery}}),
         ]);
         const fullLength = response2.data     
-        console.log(response2.data)
         setAllPosts(response.data.posts);
         setTotalArticles(fullLength.length)
         setTotalPages(Math.ceil(fullLength.length / 20));
@@ -56,7 +55,7 @@ const SearchList: React.FC<Props> = ({ searchQuery }) => {
   const handlePostClick = (postId: number) => {
     navigate(`/article/${postId}`);
   };
-  console.log(searchQuery)
+
   return (
     <Box {...{ ref: boxRef }}>
       <Typography variant="h5" gutterBottom style={{ display: 'flow', textAlign: 'center', fontWeight: 'bold'}}>

@@ -30,12 +30,12 @@ const ReviewEditForm: React.FC<Props> = ({ review, setModalOpen, modalOpen }) =>
     try {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       const response = await client.put(`/reviews/${review.reviewId}`, { review: editingReview }, { headers: getAuthHeaders() });
-      console.log('Review data updated successfully:', response.data);
+      console.log('data updated successfully');
       review.review = editingReview;
       handleClose();
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: 'レビューの編集に失敗しました' });
-      console.error('Error updating review data:', error);
+      console.error('Error updating data:', error);
     } finally {
       setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
     }

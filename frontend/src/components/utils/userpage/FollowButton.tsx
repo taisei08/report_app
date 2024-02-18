@@ -9,10 +9,10 @@ const useStyles = makeStyles((theme) => ({
   followButton: {
     width: "100px",
     color: theme.palette.common.white,
-    backgroundColor: blue[500], // プライマリーの青色を使用
+    backgroundColor: blue[500],
     borderRadius: theme.spacing(3),
     '&:hover': {
-      backgroundColor: blue[800], // ホバー時の色はダークブルーに変更
+      backgroundColor: blue[800],
     },
     fontWeight: 'bold',
   },
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100px",
     color: theme.palette.common.black,
     borderRadius: theme.spacing(3),
-    boxShadow: `0px 2px 5px rgba(0, 0, 0, 0.5)`, // ボックスシャドウを追加
+    boxShadow: `0px 2px 5px rgba(0, 0, 0, 0.5)`,
     '&:hover': {
       backgroundColor: theme.palette.common.black,
       color: theme.palette.common.white,

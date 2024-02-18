@@ -52,7 +52,6 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
     try {
       const response = await client.get
       ('/posts_edit', { params: {postId: Id.postId}, headers: getAuthHeaders() });
-      console.log(response.data.post)
       setPostData(response.data.post);
       const tags: string[]= []
       response.data.post.tags.map((tag: any) => tags.push(tag.tagName));
@@ -94,7 +93,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
       });
       setFormState({ alertSeverity: undefined });
       handleIsSuccessful();
-      console.log('Post updated successfully', response.data);
+      console.log('updated successfully');
     } catch (error) {
       setFormState({ 
         alertSeverity: 'error', 

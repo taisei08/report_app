@@ -16,7 +16,7 @@ interface AlertMessageProps {
   message: string
 }
 
-// アラートメッセージ（何かアクションを行なった際の案内用に使い回す）
+
 const AlertMessage = ({ open, setOpen, severity, message}: AlertMessageProps) => {
   const handleCloseAlertMessage = (e?: React.SyntheticEvent, reason?: string) => {
     if (reason === "clickaway") return

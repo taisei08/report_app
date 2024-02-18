@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     right: '55%',
     transform: 'translateX(-50%)',
     overflowY: 'auto',
-    borderRadius: '10px', // 任意の値を設定して角を丸くします
+    borderRadius: '10px',
   },  
   notificationItem: {
     marginBottom: theme.spacing(1),
@@ -62,7 +62,6 @@ const Notification: React.FC<Props> = ({ setShowNotifications }) => {
         const uniqueNotifications = newNotifications.filter(notification => {
           return !notifications.some(existingNotification => existingNotification.id === notification.id);
         });
-        console.log(response.data.notifications)
         setNotifications(prevNotifications => [...prevNotifications, ...uniqueNotifications]);
 
         if (response.data.notifications.length < 10) {

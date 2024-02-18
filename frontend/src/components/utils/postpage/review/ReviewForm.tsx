@@ -29,7 +29,7 @@ const ReviewForm: React.FC<Props> = ({ reviewComment, setReviewComment, fetchRev
     try {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       const response = await client.post('/reviews', { postId, review: reviewComment }, { headers: getAuthHeaders() });
-      console.log('Review data sent successfully:', response.data);
+      console.log('data sent successfully:', response.data);
       await fetchReviews();
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: 'レビューの送信に失敗しました' });

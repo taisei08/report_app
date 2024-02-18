@@ -38,7 +38,6 @@ const LikeList: React.FC = () => {
             headers: getAuthHeaders(),
           })
         ]);
-        console.log(response.data)
         const fullLength = response2.data.count;
         setAllLikes(response.data.likes);
         setCounts(fullLength)

@@ -121,10 +121,10 @@ const EditProfilePage: React.FC = () => {
       setFormState({ alertMessageOpen: false, isSubmitting: true });
       await client.put(`/users/${userData.userId}`, createFormData(userData), { headers: getAuthHeaders() });
       setFormState({ alertSeverity: 'success', alertMessage: 'ユーザーデータが正常に更新されました' });
-      console.log('ユーザーデータが正常に更新されました！');
+      console.log('data updated successfully');
     } catch (error) {
       setFormState({ alertSeverity: 'error', alertMessage: 'ユーザーデータの更新に失敗しました' });
-      console.error('ユーザーデータの更新エラー:', error);
+      console.error('data update failed:', error);
     } finally {
       setFormState({ isSubmitting: false, alertMessageOpen: true, isChanged: false });
     }

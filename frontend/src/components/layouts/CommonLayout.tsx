@@ -13,7 +13,6 @@ interface CommonLayoutProps {
   children: React.ReactElement
 }
 
-// 全てのページで共通となるレイアウト
 const CommonLayout = ({ children }: CommonLayoutProps) => {
   const classes = useStyles()
 
