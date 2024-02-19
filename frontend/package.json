@@ -65,6 +65,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/axios": "^0.14.0",
     "@types/js-cookie": "^3.0.4",
     "@types/react-anchor-link-smooth-scroll": "^1.0.5",
