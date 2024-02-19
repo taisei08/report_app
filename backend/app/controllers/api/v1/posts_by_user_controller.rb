@@ -5,7 +5,7 @@ class Api::V1::PostsByUserController < ApplicationController
     .select("users.user_name", "users.icon_path", "posts.*")
     .where('users.user_id' => post_params[:user_id])
     .order("created_at DESC")
-    .page(params[:page])
+    .page(post_params[:page])
     .per(10)
 
     @posts.each do |post|
@@ -23,7 +23,7 @@ class Api::V1::PostsByUserController < ApplicationController
   private
 
   def post_params
-    params.permit(:user_id)
+    params.permit(:user_id, :page)
   end
 
 end

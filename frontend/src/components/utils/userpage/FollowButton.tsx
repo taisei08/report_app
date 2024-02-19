@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 import client from 'lib/api/client';
 import { getAuthHeaders } from 'lib/api/auth';
+import { useFormState } from '../error/useFormState';
 
 const useStyles = makeStyles((theme) => ({
   followButton: {
@@ -36,12 +37,14 @@ type Props = {
 const FollowButton = ({ id }: Props) => {
   const classes = useStyles();
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [ formState, setFormState ] = useFormState();
 
   useEffect(() => {
     fetchFollowStatus();
   }, [id]);
 
   const fetchFollowStatus = async () => {
+    if (formState.isSubmitting) return;
     try {
       const response = await client.get('/follows', {
         params: { userId: id },
@@ -54,31 +57,38 @@ const FollowButton = ({ id }: Props) => {
   };
 
   const handleFollow = async () => {
+    if (formState.isSubmitting) return;
     try {
+      setFormState({ isSubmitting: true })
       await client.post(`/follows`, { userId: id }, { headers: getAuthHeaders() });
       setIsFollowing(true);
     } catch (error) {
       console.error('Error following user:', error);
+    } finally {
+      setFormState({ isSubmitting: false })
     }
   };
 
   const handleUnfollow = async () => {
     try {
+      setFormState({ isSubmitting: true })
       await client.delete(`/follows/${id}`, { headers: getAuthHeaders() });
       setIsFollowing(false);
     } catch (error) {
       console.error('Error unfollowing user:', error);
+    } finally {
+      setFormState({ isSubmitting: false })
     }
   };
 
   return (
     <Box>
       {isFollowing ? (
-        <Button className={classes.removeButton} onClick={handleUnfollow}>
+        <Button className={classes.removeButton} onClick={handleUnfollow} onKeyDown={(e)=>{e.preventDefault()}}>
           リムーブ
         </Button>
       ) : (
-        <Button className={classes.followButton} onClick={handleFollow}>
+        <Button className={classes.followButton} onClick={handleFollow} onKeyDown={(e)=>{e.preventDefault()}}>
           フォロー
         </Button>
       )}

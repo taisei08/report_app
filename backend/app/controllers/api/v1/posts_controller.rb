@@ -20,7 +20,6 @@ class Api::V1::PostsController < ApplicationController
   def create
     @post = current_api_v1_user.posts.new(post_params)
     tag_names = JSON.parse(params[:tags])
-  
     @post.transaction do
 
       if @post.save
@@ -28,6 +27,7 @@ class Api::V1::PostsController < ApplicationController
         existing_tags = tag_names.map do |tag_info|
           existing_tag = Tag.find_by(tag_name: tag_info)
           if existing_tag
+            p existing_tag
             @post.set_tags.create(tag_id: existing_tag.tag_id)
           else
             @post.tags.create(tag_name: tag_info)

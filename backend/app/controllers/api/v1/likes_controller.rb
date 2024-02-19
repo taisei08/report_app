@@ -28,10 +28,12 @@ class Api::V1::LikesController < ApplicationController
     end
 
     p @like
+    p existing_like
   
     if existing_like.nil? && @like.save && @like.create_notification_like!(current_api_v1_user, like_params.keys, like_params.values)
       render json: { status: 'success', message: 'Like created successfully' }
     else
+      Rails.logger.debug "Failed to create like: #{@like.inspect}"
       render json: { status: 'error', message: @like.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end

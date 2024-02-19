@@ -1,0 +1,46 @@
+services:
+  db:
+    container_name: db
+    image: mysql:8.3.0
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 4306:3306
+    volumes:
+      - db:/var/lib/mysql
+    env_file: ./backend/development.env
+    environment:
+      - TZ=Asia/Tokyo
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    command: bash -c "rm -rf tmp/pids/server.pid && bundle exec rails s -p 3010 -b '0.0.0.0'"
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "3010:3010"
+    depends_on:
+      - db
+    env_file: ./backend/development.env
+    stdin_open: true
+    tty: true
+    environment:
+      TZ: Asia/Tokyo
+  frontend:
+    container_name: frontend
+    build:
+        context: ./frontend
+        dockerfile: ./Dockerfile
+    ports:
+        - 3000:3000
+    environment:
+        TZ: Asia/Tokyo
+    tty: true
+    volumes:
+        - ./frontend:/frontend
+        - /frontend/node_modules/
+volumes:
+  db:
+    driver: local

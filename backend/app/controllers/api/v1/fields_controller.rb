@@ -15,7 +15,7 @@ class Api::V1::FieldsController < ApplicationController
     ActiveRecord::Base.transaction do
       @before.destroy_all if @before.present?
 
-      if params[:field_id].present?
+      if field_id_params[:field_id].present?
         interests_data = params.require(:field_id)
       else
         interests_data = nil
@@ -24,6 +24,13 @@ class Api::V1::FieldsController < ApplicationController
       if interests_data.present?
         interests_data_objects = interests_data.map { |interest_data| interest_data.permit(:field_id) }
         @fields = current_api_v1_user.interests.new(interests_data_objects)
+
+        @fields.each do |field|
+          unless field.save
+            Rails.logger.error "Failed to save record with errors: #{field.errors.full_messages}"
+          end
+        end
+        
         if @fields.all?(&:save)
           render json: { message: "update success" }, status: :ok
         else
@@ -34,6 +41,12 @@ class Api::V1::FieldsController < ApplicationController
         render json: { message: "data not provided" }, status: :ok
       end
     end
+  end
+
+  private
+
+  def field_id_params
+    params.require(:field)
   end
 
 end

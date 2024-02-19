@@ -7,7 +7,7 @@ class Interest < ApplicationRecord
   private
 
   def validate_max_interests
-    if Interest.where(user_id: user_id).distinct.count(:field_id) >= 3
+    if Interest.where(user_id: user_id).distinct.count > 3
       errors.add(:base, "User can have maximum 3 different interests")
     end
   end

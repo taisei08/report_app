@@ -6,8 +6,8 @@ class Follow < ApplicationRecord
   validate :different_follower_and_followed
 
   def different_follower_and_followed
-    if follower_id == followed_id
-      errors.add(:base, "Follower and followed cannot be the same")
+    if Follow.exists?(follower_id: follower_id, followed_id: followed_id)
+      errors.add(:base, "You cannnot follow the same user twice")
     end
   end
 
