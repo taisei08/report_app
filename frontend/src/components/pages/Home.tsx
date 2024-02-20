@@ -7,6 +7,8 @@ import NewsSection from "components/utils/NewsSection";
 const Home: React.FC = () => {
   const { isSignedIn, currentUser } = useContext(AuthContext)
   console.log(currentUser);
+  console.log(process.env.REACT_APP_FRONTEND_URL)
+  console.log(process.env)
 
   return (
     <>

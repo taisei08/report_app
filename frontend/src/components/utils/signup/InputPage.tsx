@@ -16,7 +16,7 @@ interface Props {
 }
 
 const InputPage: React.FC<Props> = ({ handleIsSuccessful }) => {
-  const confirmSuccessUrl: string = "http://localhost:3000";
+  const confirmSuccessUrl: string = `${process.env.REACT_APP_FRONTEND_URL}`;
   const [formState, setFormState] = useFormState();
   const [formData, setFormData] = useState<SignUpData>({
     email: "",

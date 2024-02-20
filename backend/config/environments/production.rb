@@ -83,4 +83,21 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.active_storage.service = :amazon
+
+  config.action_mailer.default_url_options = { host: 'api.papers-app.net', protocl: 'https' }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default charset: 'utf-8'
+  config.action_mailer.smtp_settings = {
+    address: 'email-smtp.' + ENV.fetch("AWS_REGION") + '.amazonaws.com',
+    port: 587,
+    domain: ENV.fetch("FRONTEND_DOMAIN"),
+    authentication: :login,
+    user_name: ENV.fetch("SES_USERNAME"),
+    password: ENV.fetch("SES_PASSWORD"),
+  }
+
 end

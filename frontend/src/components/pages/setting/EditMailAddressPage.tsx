@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const EditMailAddressPage = () => {
   const classes = useStyles();
   const [formData, setFormData] = useState({
-    confirmSuccessUrl: 'http://localhost:3000/email_confirmed',
+    confirmSuccessUrl: `${process.env.REACT_APP_FRONTEND_URL}/email_confirmed`,
     email: '',
   });
   const [formState, setFormState] = useFormState();

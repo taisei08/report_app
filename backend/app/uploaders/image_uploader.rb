@@ -16,7 +16,8 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Provide a default URL as a default if there hasn't been a file uploaded:
    def default_url(*args)
   #   # For Rails 3.1+ asset pipeline compatibility:
-      ActionController::Base.helpers.asset_path("http://localhost:3010/uploads/user/icon_path/" + [version_name, "default.png"].compact.join('_'))
+      backend_url = ENV.fetch('BACKEND_URL', 'http://localhost:3010')
+      ActionController::Base.helpers.asset_path("#{backend_url}/uploads/user/icon_path/" + [version_name, "default.png"].compact.join('_'))
   #
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
    end

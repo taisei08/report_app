@@ -36,7 +36,7 @@ interface Props {
 const EmailInput: React.FC<Props> = ({ handleIsSuccessful }) => {
   const classes = useStyles();
   const [formData, setFormData] = useState({
-    redirect_url: 'http://localhost:3000/settings/edit_new_password',
+    redirect_url: `${process.env.REACT_APP_FRONTEND_URL}/settings/edit_new_password`,
     email: '',
   });
   const [formState, setFormState] = useFormState();
