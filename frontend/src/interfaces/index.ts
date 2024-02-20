@@ -1,71 +1,92 @@
-// サインアップ
 export interface SignUpData {
-    userName: string
-    email: string
-    password: string
-    passwordConfirmation: string
-  }
-  
-  // サインイン
-  export interface SignInData {
-    email: string
-    password: string
-  }
-  
-  // ユーザー
-  export interface User {
-    id: number
-    uid: string
-    provider: string
-    email: string
-    userName: string
-    account_name?: string
-    image_path?: string
-    allowPasswordChange: boolean
-  }
+  userName: string
+  email: string
+  password: string
+  passwordConfirmation: string
+  confirmSuccessUrl: string
+}
 
-  // 投稿
-  export interface Posts {
-    post_id: number
-    user_id: number
-    title: string
-    description: string
-    field_id: number
-    sub_field_id: number
-    document_type: string
-    document_path: string
-  }
+export interface SignInData {
+  email: string
+  password: string
+}
 
-  export interface PostLists {
-    postId: number
-    userId: number
-    userName: string
-    iconPath: string
-    title: string
-    description: string
-    documentPath: string
-    createdAt: string
-    tags: string[]
-    averageRating: number
-  }
+export interface User {  
+  userId: number;
+  userName: string;
+  accountName: string;
+  iconPath: { url: string };
+  school: string;
+  facultyDepartment: string;
+  profileStatement: string;
+}
 
-  export interface Fields {
-    fieldId: number;
-    fieldName: string;
-  }
+export interface Posts {
+  title: string
+  description: string
+  fieldId: number
+  subFieldId: number
+  documentPath?: File
+  tags: string[]
+}
 
-  export interface Tags {
-    tag_name: string;
-  }
+export interface PostLists {
+  postId: number
+  userId: number
+  userName: string
+  iconPath: string
+  title: string
+  description: string
+  fieldId: number
+  subFieldId: number
+  documentPath?: { url: string };
+  createdAt: string
+  updatedAt: string
+  tags: { tagId: number; tagName: string }[];
+  averageRating: number
+}
 
-  export interface ReviewLists {
-    postId: number
-    userId: number
-    userName: string
-    iconPath: string
-    title: string
-    review: string
-    documentPath: string
-    createdAt: string
-    value: number
-  }
+export interface Fields {
+  id: number;
+  name: string;
+}
+
+export interface Tags {
+  tag_name: string;
+}
+
+export interface Review {
+  reviewId: number
+  postId: number
+  userId: number
+  userName: string
+  iconPath: string
+  title: string
+  review: string
+  documentPath: string
+  createdAt: string
+  value: number
+  replyLength: number
+}
+
+export interface Reply {
+  replyId: number;
+  userId: number;
+  userName: string;
+  iconPath: string;
+  createdAt: string;
+  reply: string;
+}
+
+export interface Notification {
+  id?: number;
+  action: string;
+  activeUserId: number;
+  accountName: string;
+  userName: string;
+  iconPath: string;
+  postId?: number;
+  reviewId?: number;
+  replyId?: number;
+  title?: string;
+}

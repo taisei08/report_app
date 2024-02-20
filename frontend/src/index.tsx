@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import "./index.css"
 import App from "./App"
 import Modal from 'react-modal';
+import { Box } from "@material-ui/core";
 
 
 Modal.setAppElement('#root');
@@ -14,6 +15,8 @@ if (rootElement) {
 
   root.render(
     <React.StrictMode>
+      <Box style={{ wordBreak: 'break-all' }}>
       <App />
-    </React.StrictMode>,
+      </Box>
+    </React.StrictMode>
 )}
