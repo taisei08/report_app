@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :followed, only: %i[index]
       resources :follows, only: %i[index create destroy]
       resources :follow_and_post_counts, only: %i[index]
+      resources :health_check, only: %i[index]
       resources :like_post_counts, only: %i[index]
       resources :like_posts, only: %i[index]
       resources :likes, only: %i[index create destroy]
