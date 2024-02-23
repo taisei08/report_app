@@ -13,6 +13,7 @@ services:
       - TZ=Asia/Tokyo
   backend:
     container_name: backend
+    platform: linux/x86_64
     build:
       context: ./backend
       dockerfile: ./Dockerfile
