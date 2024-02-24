@@ -6,8 +6,13 @@
 # Read more: https://github.com/cyu/rack-cors
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  
     allow do
-      origins ENV.fetch('FRONTEND_URL', 'http://localhost:3000')
+      if Rails.env.production?
+        origins 'https://web.papers-app.net'
+      else
+        origins 'http://localhost:3000' 
+      end
   
       resource '*',
           headers: :any,
