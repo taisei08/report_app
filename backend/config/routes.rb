@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         registrations: 'api/v1/auth/registrations',
         sessions: 'api/v1/auth/sessions',
         passwords: 'api/v1/auth/passwords',
+        confirmations: 'api/v1/auth/confirmations',
       }
 
       mount LetterOpenerWeb::Engine, at: "letter_opener" if Rails.env.development?
