@@ -176,7 +176,7 @@ const ReviewItem: React.FC<Props> = ({ review, currentUserId, handleDeleteReview
               </MenuItem>
             </Menu>
 
-            {replyFormVisible && <ReplyForm id={review.reviewId} fetchData={fetchData} setShowReplyData={setShowReplyData}/>}
+            {replyFormVisible && isSignedIn && <ReplyForm id={review.reviewId} fetchData={fetchData} setShowReplyData={setShowReplyData}/>}
 
             {showReplyData && replyLength > 0 && (
               <>
