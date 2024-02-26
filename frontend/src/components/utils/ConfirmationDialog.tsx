@@ -12,6 +12,7 @@ interface ConfirmationDialogProps {
   content: string;
   cancelText: string;
   confirmText: string;
+  isSubmitting?: boolean;
 }
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ 
@@ -21,7 +22,8 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   title, 
   content, 
   cancelText, 
-  confirmText 
+  confirmText,
+  isSubmitting = false
 }) => {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -33,7 +35,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         <Button onClick={onClose} color="primary">
           {cancelText}
         </Button>
-        <Button onClick={onConfirm} color="primary">
+        <Button onClick={onConfirm} color="primary" disabled={isSubmitting}>
           {confirmText}
         </Button>
       </DialogActions>

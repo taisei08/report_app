@@ -28,6 +28,7 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) =>
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -44,6 +45,7 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) =>
 
   const handleDeleteReply = async (replyId: number) => {
     try {
+      setIsSubmitting(true);
       const response = await client.delete(`/replies/${replyId}`, { headers: getAuthHeaders() });
       console.log('delete successfully', response);
       reply.reply = '';
@@ -51,6 +53,8 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) =>
       setShowConfirmation(false);
     } catch (error) {
       console.error('delete failed', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -98,6 +102,7 @@ const ReplyItem: React.FC<Props> = ({ reply, currentUserId, setReplyLength }) =>
         content="本当にリプライを削除しますか？"
         cancelText="戻る"
         confirmText="削除"
+        isSubmitting={isSubmitting}
       />
     </Box>
   );

@@ -121,6 +121,7 @@ const DeleteAccountPage: React.FC = () => {
         content="本当にアカウントを削除しますか？"
         cancelText="戻る"
         confirmText="消去"
+        isSubmitting={formState.isSubmitting}
       />
       {formState.alertSeverity && (
         <AlertMessage
