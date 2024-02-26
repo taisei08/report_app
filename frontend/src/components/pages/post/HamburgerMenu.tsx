@@ -29,7 +29,7 @@ const HamburgerMenu: React.FC<{ isYourPost: boolean }> = ({ isYourPost }) => {
   };
 
   const handleDelete = async () => {
-    setFormState({ alertMessageOpen: false });
+    setFormState({ alertMessageOpen: false, isSubmitting: true });
   
     try {
       await client.delete(`/posts/${postId}`, { headers: getAuthHeaders() });
@@ -43,7 +43,7 @@ const HamburgerMenu: React.FC<{ isYourPost: boolean }> = ({ isYourPost }) => {
       setShowConfirmation(false);
       setFormState({ alertSeverity: 'error', alertMessage: '投稿の削除に失敗しました' });
     } finally {
-      setFormState({ alertMessageOpen: true });
+      setFormState({ alertMessageOpen: true, isSubmitting: false });
     }
   };
   
@@ -81,6 +81,7 @@ const HamburgerMenu: React.FC<{ isYourPost: boolean }> = ({ isYourPost }) => {
         content="本当に投稿を削除しますか？"
         cancelText="戻る"
         confirmText="削除"
+        isSubmitting={formState.isSubmitting}
       />
       {formState.alertSeverity && (
         <AlertMessage

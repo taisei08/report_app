@@ -3,7 +3,7 @@ CarrierWave.configure do |config|
     config.asset_host = ENV.fetch('BACKEND_URL', 'http://localhost:3010')
     config.storage :fog
     config.fog_provider = 'fog/aws'
-    config.fog_directory  = ENV.fetch("BUCKET_CARRIERWAVE"),
+    config.fog_directory  = ENV.fetch("BUCKET_CARRIERWAVE")
     config.fog_public = false
     config.fog_credentials = {
       provider: 'AWS',
