@@ -47,7 +47,3 @@ https://web.papers-app.net
   - いいね通知
   - レビュー・リプライ通知
 - レスポンシブ対応
-
-この記事を執筆する際に参考にさせていただいた記事
-[【未経験開発 Rails/React/AWS/Docker/CircleCI】独学＋メンターでここまで出来た！Web知識ゼロからモダンな技術アプリ開発までに利用した5つのサービス](https://qiita.com/ddpmntcpbr/items/739dbb992b5ffac3fc2f#21-%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88%E6%96%B9%E9%87%9D)
-
