@@ -21,11 +21,9 @@ https://web.papers-app.net
 ### UIライブラリ
 - ``Material UI``
 
-## Infra
-### ``Docker / Docker Compose``
-開発環境をコンテナ化（Rails,MySQL,React）
-
-### ``AWS``
+### インフラ
+- ``Docker / Docker Compose`` : 開発環境をコンテナ化（Rails,MySQL,React）
+- ``AWS`` : Fargateへのデプロイ
 
 # 機能一覧
 - アカウント作成、ログイン、ログアウト機能
