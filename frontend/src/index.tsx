@@ -10,6 +10,9 @@ Modal.setAppElement('#root');
 
 const rootElement = document.getElementById('root');
 
+if (process.env.NODE_ENV !== "development")
+    console.log = () => {};
+
 if (rootElement) {
   const root = createRoot(rootElement);
 
