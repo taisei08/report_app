@@ -63,7 +63,7 @@ const Header = () => {
           <Link to="/">
             <img src="/logo_white.png" alt="logo" style={{ maxWidth: '80px', position: 'relative', top: '3px'}} />
           </Link>
-          <Container style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+          <Container style={{ display: "flex", marginRight: "0px", alignItems: "center", justifyContent: "flex-end" }}>
             <SearchForm />
             {!loading &&
               (isSignedIn ? (
