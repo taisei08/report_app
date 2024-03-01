@@ -238,6 +238,7 @@ const EditInput: React.FC<Props> = ({ handleIsSuccessful }) => {
         content="この内容で更新してもよろしいですか？"
         cancelText="戻る"
         confirmText="更新"
+        isSubmitting={formState.isSubmitting}
       />
       {formState.alertSeverity && (
         <AlertMessage

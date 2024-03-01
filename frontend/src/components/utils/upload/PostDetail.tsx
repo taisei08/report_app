@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { makeStyles, Chip, Card, CardHeader, CardContent, TextField, Button, MenuItem } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import client from "lib/api/client";
@@ -42,7 +41,6 @@ const PostDetail: React.FC<Props> = ({ submitFile, setPostId }) => {
     tags: []
   });
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     setFields(allFields);
@@ -228,6 +226,7 @@ const PostDetail: React.FC<Props> = ({ submitFile, setPostId }) => {
         content="この内容で投稿してもよろしいですか？"
         cancelText="戻る"
         confirmText="投稿"
+        isSubmitting={formState.isSubmitting}
       />
       {formState.alertSeverity && (
         <AlertMessage
