@@ -56,7 +56,7 @@ const ReviewItem: React.FC<Props> = ({ review, handlePostClick }) => {
               userId={review.userId}
               userName={review.userName}
               iconPath={review.iconPath}
-              createdAt={review.postCreatedAt}
+              createdAt={review.reviewCreatedAt}
             />
             <Typography
               variant="h6"
